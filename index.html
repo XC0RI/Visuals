@@ -16,30 +16,30 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
   }
 
-  /* ===== RESPONSIVE GLOW (BRIGHTER) ===== */
+  /* ===== RESPONSIVE GLOW (BIGGER + BRIGHTER) ===== */
   .glow {
     position: fixed;
     left: 50%;
     top: 50%;
-    width: min(55vmin, 620px);
-    height: min(55vmin, 620px);
+    width: min(62vmin, 700px);     /* ← etwas größer */
+    height: min(62vmin, 700px);
     transform: translate(-50%, -50%);
     border-radius: 50%;
     background: radial-gradient(
       circle,
-      rgba(255,255,255,0.60) 0%,
-      rgba(255,255,255,0.30) 25%,
-      rgba(255,255,255,0.12) 45%,
-      rgba(0,0,0,0) 70%
+      rgba(255,255,255,0.70) 0%,   /* ← heller Kern */
+      rgba(255,255,255,0.38) 25%,
+      rgba(255,255,255,0.16) 45%,
+      rgba(0,0,0,0) 72%
     );
-    filter: blur(5vmin);
+    filter: blur(5.5vmin);         /* weich behalten */
     transition: transform 0.25s ease, opacity 0.25s ease;
     pointer-events: none;
   }
 
   .pulse {
     transform: translate(-50%, -50%) scale(1.15);
-    opacity: 0.9;
+    opacity: 0.92;
   }
 
   /* ===== TEXT BASE ===== */
@@ -78,9 +78,9 @@
   @media (max-width: 600px) {
 
     .glow {
-      width: 52vmin;
-      height: 52vmin;
-      filter: blur(6vmin);
+      width: 58vmin;      /* proportional kleiner auf phones */
+      height: 58vmin;
+      filter: blur(6.5vmin);
     }
 
     .label {
