@@ -15,66 +15,44 @@
     cursor: pointer;
   }
 
-  #viewer {
+  .glow {
     position: fixed;
-    inset: 0;
-    width: 100vw;
-    height: 100vh;
-    object-fit: cover;
-    filter: grayscale(100%) blur(6px);
-    transition: opacity 0.25s ease;
-    user-select: none;
+    left: 50%;
+    top: 50%;
+    width: 280px;
+    height: 280px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      rgba(255,255,255,0.35) 0%,
+      rgba(255,255,255,0.15) 25%,
+      rgba(255,255,255,0.05) 45%,
+      rgba(0,0,0,0) 70%
+    );
+    filter: blur(40px);
+    transition: transform 0.25s ease, opacity 0.25s ease;
     pointer-events: none;
   }
 
-  /* subtle fade */
-  .fade {
-    opacity: 0;
+  .pulse {
+    transform: translate(-50%, -50%) scale(1.25);
+    opacity: 0.85;
   }
 </style>
 </head>
 
 <body>
 
-<img id="viewer" src="" alt="" />
+<div class="glow" id="glow"></div>
 
 <script>
-/* ===== CONFIG ===== */
+const glow = document.getElementById("glow");
 
-const images = [
-  "images/01.jpg",
-  "images/02.jpg",
-  "images/03.jpg",
-  "images/04.jpg"
-];
-
-const viewer = document.getElementById("viewer");
-
-/* ===== RANDOM PICK ===== */
-
-function randomImage() {
-  const i = Math.floor(Math.random() * images.length);
-  return images[i];
-}
-
-/* ===== CHANGE IMAGE ===== */
-
-function showRandom() {
-  viewer.classList.add("fade");
-
-  setTimeout(() => {
-    viewer.src = randomImage();
-    viewer.classList.remove("fade");
-  }, 180);
-}
-
-/* ===== INITIAL LOAD ===== */
-
-viewer.src = randomImage();
-
-/* ===== CLICK HANDLER ===== */
-
-document.body.addEventListener("click", showRandom);
+document.body.addEventListener("click", () => {
+  glow.classList.add("pulse");
+  setTimeout(() => glow.classList.remove("pulse"), 220);
+});
 </script>
 
 </body>
