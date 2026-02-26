@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Port Visuals</title>
+<title>Gate Visual Studios</title>
 
 <style>
   html, body {
@@ -13,31 +13,53 @@
     height: 100%;
     overflow: hidden;
     cursor: pointer;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
   }
 
+  /* ===== GLOW ===== */
   .glow {
     position: fixed;
     left: 50%;
     top: 50%;
-    width: 520px;              /* größerer Kreis */
-    height: 520px;
+    width: 780px;              /* größer */
+    height: 780px;
     transform: translate(-50%, -50%);
     border-radius: 50%;
     background: radial-gradient(
       circle,
-      rgba(255,255,255,0.38) 0%,
-      rgba(255,255,255,0.18) 25%,
-      rgba(255,255,255,0.06) 45%,
+      rgba(255,255,255,0.48) 0%,   /* etwas stärker */
+      rgba(255,255,255,0.22) 25%,
+      rgba(255,255,255,0.08) 45%,
       rgba(0,0,0,0) 70%
     );
-    filter: blur(70px);        /* weichere Kante */
+    filter: blur(90px);        /* gleicher weicher Charakter */
     transition: transform 0.25s ease, opacity 0.25s ease;
     pointer-events: none;
   }
 
   .pulse {
-    transform: translate(-50%, -50%) scale(1.25);
-    opacity: 0.85;
+    transform: translate(-50%, -50%) scale(1.22);
+    opacity: 0.9;
+  }
+
+  /* ===== TEXT UNTEN LINKS ===== */
+  .label {
+    position: fixed;
+    left: 28px;
+    bottom: 24px;
+    color: rgba(255,255,255,0.7);
+    font-size: 13px;
+    line-height: 1.4;
+    letter-spacing: 0.04em;
+    font-weight: 400;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .label strong {
+    display: block;
+    font-weight: 500;
+    color: rgba(255,255,255,0.85);
   }
 </style>
 </head>
@@ -46,12 +68,17 @@
 
 <div class="glow" id="glow"></div>
 
+<div class="label">
+  <strong>Gate Visual Studios</strong>
+  75018 Paris
+</div>
+
 <script>
   const glow = document.getElementById("glow");
 
   document.body.addEventListener("click", () => {
     glow.classList.add("pulse");
-    setTimeout(() => glow.classList.remove("pulse"), 220);
+    setTimeout(() => glow.classList.remove("pulse"), 240);
   });
 </script>
 
