@@ -16,23 +16,23 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
   }
 
-  /* ===== RESPONSIVE GLOW (FIXED) ===== */
+  /* ===== RESPONSIVE GLOW (BRIGHTER) ===== */
   .glow {
     position: fixed;
     left: 50%;
     top: 50%;
-    width: min(55vmin, 620px);   /* kleiner und sicher */
+    width: min(55vmin, 620px);
     height: min(55vmin, 620px);
     transform: translate(-50%, -50%);
     border-radius: 50%;
     background: radial-gradient(
       circle,
-      rgba(255,255,255,0.48) 0%,
-      rgba(255,255,255,0.22) 25%,
-      rgba(255,255,255,0.08) 45%,
+      rgba(255,255,255,0.60) 0%,
+      rgba(255,255,255,0.30) 25%,
+      rgba(255,255,255,0.12) 45%,
       rgba(0,0,0,0) 70%
     );
-    filter: blur(5vmin);         /* proportional aber kontrolliert */
+    filter: blur(5vmin);
     transition: transform 0.25s ease, opacity 0.25s ease;
     pointer-events: none;
   }
@@ -71,13 +71,14 @@
     font-size: clamp(16px, 1.8vw, 20px);
     font-weight: 500;
     letter-spacing: 0.05em;
+    color: #ffffff;
   }
 
   /* ===== MOBILE FIX ===== */
   @media (max-width: 600px) {
 
     .glow {
-      width: 52vmin;   /* kleiner auf mobile */
+      width: 52vmin;
       height: 52vmin;
       filter: blur(6vmin);
     }
@@ -90,7 +91,6 @@
       font-size: 15px;
     }
 
-    /* stack texts vertically */
     .label-left {
       bottom: 72px;
     }
