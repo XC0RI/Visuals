@@ -16,13 +16,13 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
   }
 
-  /* ===== GLOW ===== */
+  /* ===== RESPONSIVE GLOW ===== */
   .glow {
     position: fixed;
     left: 50%;
     top: 50%;
-    width: 780px;
-    height: 780px;
+    width: min(70vmin, 780px);     /* skaliert mit Screen */
+    height: min(70vmin, 780px);
     transform: translate(-50%, -50%);
     border-radius: 50%;
     background: radial-gradient(
@@ -32,49 +32,56 @@
       rgba(255,255,255,0.08) 45%,
       rgba(0,0,0,0) 70%
     );
-    filter: blur(90px);
+    filter: blur(6vmin);           /* proportionaler Blur */
     transition: transform 0.25s ease, opacity 0.25s ease;
     pointer-events: none;
   }
 
   .pulse {
-    transform: translate(-50%, -50%) scale(1.22);
+    transform: translate(-50%, -50%) scale(1.18);
     opacity: 0.9;
   }
 
   /* ===== BASE LABEL ===== */
   .label {
     position: fixed;
-    bottom: 32px;
+    bottom: clamp(18px, 4vh, 36px);
     color: #ffffff;
-    font-size: 17px;          /* insgesamt größer */
-    line-height: 1.55;
+    font-size: clamp(13px, 1.6vw, 17px);  /* responsive text */
+    line-height: 1.5;
     letter-spacing: 0.04em;
-    font-weight: 300;         /* dünner Grundtext */
+    font-weight: 300;
     user-select: none;
     pointer-events: none;
+    max-width: 42vw;
   }
 
   /* links */
   .label-left {
-    left: 36px;
+    left: clamp(16px, 3vw, 36px);
     text-align: left;
   }
 
   /* rechts */
   .label-right {
-    right: 36px;
+    right: clamp(16px, 3vw, 36px);
     text-align: right;
-    color: #ffffff;           /* explizit weiß */
   }
 
-  /* Studio Name stärker */
+  /* Studio Name */
   .label strong {
     display: block;
-    font-size: 19px;          /* größer */
-    font-weight: 500;         /* etwas dicker */
+    font-size: clamp(15px, 2vw, 19px);
+    font-weight: 500;
     letter-spacing: 0.05em;
     color: #ffffff;
+  }
+
+  /* ===== EXTRA SMALL PHONES ===== */
+  @media (max-width: 420px) {
+    .label {
+      max-width: 46vw;
+    }
   }
 </style>
 </head>
