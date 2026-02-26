@@ -1,1 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Port Visuals</title>
 
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #000;
+    overflow: hidden;
+    height: 100%;
+    font-family: system-ui, sans-serif;
+  }
+
+  #stage {
+    position: fixed;
+    inset: 0;
+    cursor: pointer;
+  }
+
+  .img {
+    position: absolute;
+    max-width: 40vw;
+    max-height: 40vh;
+    object-fit: contain;
+    user-select: none;
+    cursor: grab;
+    transition: transform 0.15s ease;
+  }
+
+  .img:active {
+    cursor: grabbing;
+  }
+</style>
+</head>
+
+<body>
+<div id="stage"></div>
+
+<script>
+/* ===== CONFIG ===== */
+
+const images = [
+  "images/01.jpg",
+  "images/02.jpg",
+  "images/03.jpg",
+  "images/04.jpg"
+];
+
+let index = 0;
+const stage = document.getElementById("stage");
+
+/* ===== CLICK TO ADD IMAGE ===== */
+
+stage.addEventListener("click", (e) => {
+  const img = document.createElement("img");
+  img.src = images[index];
+  img.className = "img";
+
+  // random starting position
+  img.style.left = (e.clientX - 150) + "px";
+  img.style.top = (e.clientY - 100) + "px";
+
+  makeDraggable(img);
+  stage.appendChild(img);
+
+  index = (index + 1) % images.length;
+});
+
+/* ===== DRAG FUNCTION ===== */
+
+function makeDraggable(el) {
+  let offsetX = 0;
+  let offsetY = 0;
+  let isDown = false;
+
+  el.addEventListener("mousedown", (e) => {
+    isDown = true;
+    offsetX = e.clientX - el.offsetLeft;
+    offsetY = e.clientY - el.offsetTop;
+    e.stopPropagation();
+  });
+
+  window.addEventListener("mousemove", (e) => {
+    if (!isDown) return;
+    el.style.left = (e.clientX - offsetX) + "px";
+    el.style.top = (e.clientY - offsetY) + "px";
+  });
+
+  window.addEventListener("mouseup", () => {
+    isDown = false;
+  });
+}
+</script>
+</body>
+</html>
