@@ -42,34 +42,38 @@
     opacity: 0.9;
   }
 
-  /* ===== LABEL BASE ===== */
+  /* ===== BASE LABEL ===== */
   .label {
     position: fixed;
-    bottom: 28px;
+    bottom: 32px;
     color: #ffffff;
-    font-size: 15px;          /* ← größer */
-    line-height: 1.5;
+    font-size: 17px;          /* insgesamt größer */
+    line-height: 1.55;
     letter-spacing: 0.04em;
-    font-weight: 400;
+    font-weight: 300;         /* dünner Grundtext */
     user-select: none;
     pointer-events: none;
   }
 
   /* links */
   .label-left {
-    left: 32px;
+    left: 36px;
     text-align: left;
   }
 
   /* rechts */
   .label-right {
-    right: 32px;
+    right: 36px;
     text-align: right;
+    color: #ffffff;           /* explizit weiß */
   }
 
+  /* Studio Name stärker */
   .label strong {
     display: block;
-    font-weight: 500;
+    font-size: 19px;          /* größer */
+    font-weight: 500;         /* etwas dicker */
+    letter-spacing: 0.05em;
     color: #ffffff;
   }
 </style>
