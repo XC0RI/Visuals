@@ -16,13 +16,13 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
   }
 
-  /* ===== RESPONSIVE GLOW ===== */
+  /* ===== RESPONSIVE GLOW (FIXED) ===== */
   .glow {
     position: fixed;
     left: 50%;
     top: 50%;
-    width: min(70vmin, 780px);     /* skaliert mit Screen */
-    height: min(70vmin, 780px);
+    width: min(55vmin, 620px);   /* kleiner und sicher */
+    height: min(55vmin, 620px);
     transform: translate(-50%, -50%);
     border-radius: 50%;
     background: radial-gradient(
@@ -32,55 +32,71 @@
       rgba(255,255,255,0.08) 45%,
       rgba(0,0,0,0) 70%
     );
-    filter: blur(6vmin);           /* proportionaler Blur */
+    filter: blur(5vmin);         /* proportional aber kontrolliert */
     transition: transform 0.25s ease, opacity 0.25s ease;
     pointer-events: none;
   }
 
   .pulse {
-    transform: translate(-50%, -50%) scale(1.18);
+    transform: translate(-50%, -50%) scale(1.15);
     opacity: 0.9;
   }
 
-  /* ===== BASE LABEL ===== */
+  /* ===== TEXT BASE ===== */
   .label {
     position: fixed;
-    bottom: clamp(18px, 4vh, 36px);
+    bottom: 32px;
     color: #ffffff;
-    font-size: clamp(13px, 1.6vw, 17px);  /* responsive text */
+    font-size: clamp(14px, 1.4vw, 17px);
     line-height: 1.5;
     letter-spacing: 0.04em;
     font-weight: 300;
     user-select: none;
     pointer-events: none;
-    max-width: 42vw;
+    max-width: 40vw;
   }
 
-  /* links */
   .label-left {
-    left: clamp(16px, 3vw, 36px);
+    left: 36px;
     text-align: left;
   }
 
-  /* rechts */
   .label-right {
-    right: clamp(16px, 3vw, 36px);
+    right: 36px;
     text-align: right;
   }
 
-  /* Studio Name */
   .label strong {
     display: block;
-    font-size: clamp(15px, 2vw, 19px);
+    font-size: clamp(16px, 1.8vw, 20px);
     font-weight: 500;
     letter-spacing: 0.05em;
-    color: #ffffff;
   }
 
-  /* ===== EXTRA SMALL PHONES ===== */
-  @media (max-width: 420px) {
+  /* ===== MOBILE FIX ===== */
+  @media (max-width: 600px) {
+
+    .glow {
+      width: 52vmin;   /* kleiner auf mobile */
+      height: 52vmin;
+      filter: blur(6vmin);
+    }
+
     .label {
-      max-width: 46vw;
+      max-width: none;
+      left: 20px !important;
+      right: 20px !important;
+      text-align: left;
+      font-size: 15px;
+    }
+
+    /* stack texts vertically */
+    .label-left {
+      bottom: 72px;
+    }
+
+    .label-right {
+      bottom: 28px;
     }
   }
 </style>
@@ -90,13 +106,11 @@
 
 <div class="glow" id="glow"></div>
 
-<!-- links -->
 <div class="label label-left">
   <strong>Gate Visual Studios</strong>
   75018 Paris
 </div>
 
-<!-- rechts -->
 <div class="label label-right">
   gate@visuals.xyz<br>
   0049 1512 9640529
