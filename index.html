@@ -19,18 +19,18 @@
     position: fixed;
     left: 50%;
     top: 50%;
-    width: 280px;
-    height: 280px;
+    width: 520px;              /* größerer Kreis */
+    height: 520px;
     transform: translate(-50%, -50%);
     border-radius: 50%;
     background: radial-gradient(
       circle,
-      rgba(255,255,255,0.35) 0%,
-      rgba(255,255,255,0.15) 25%,
-      rgba(255,255,255,0.05) 45%,
+      rgba(255,255,255,0.38) 0%,
+      rgba(255,255,255,0.18) 25%,
+      rgba(255,255,255,0.06) 45%,
       rgba(0,0,0,0) 70%
     );
-    filter: blur(40px);
+    filter: blur(70px);        /* weichere Kante */
     transition: transform 0.25s ease, opacity 0.25s ease;
     pointer-events: none;
   }
@@ -47,12 +47,12 @@
 <div class="glow" id="glow"></div>
 
 <script>
-const glow = document.getElementById("glow");
+  const glow = document.getElementById("glow");
 
-document.body.addEventListener("click", () => {
-  glow.classList.add("pulse");
-  setTimeout(() => glow.classList.remove("pulse"), 220);
-});
+  document.body.addEventListener("click", () => {
+    glow.classList.add("pulse");
+    setTimeout(() => glow.classList.remove("pulse"), 220);
+  });
 </script>
 
 </body>
