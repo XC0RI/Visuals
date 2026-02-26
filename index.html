@@ -42,24 +42,35 @@
     opacity: 0.9;
   }
 
-  /* ===== TEXT UNTEN LINKS ===== */
+  /* ===== LABEL BASE ===== */
   .label {
     position: fixed;
-    left: 28px;
-    bottom: 24px;
-    color: #ffffff;          /* ← jetzt echtes Weiß */
-    font-size: 13px;
-    line-height: 1.4;
+    bottom: 28px;
+    color: #ffffff;
+    font-size: 15px;          /* ← größer */
+    line-height: 1.5;
     letter-spacing: 0.04em;
     font-weight: 400;
     user-select: none;
     pointer-events: none;
   }
 
+  /* links */
+  .label-left {
+    left: 32px;
+    text-align: left;
+  }
+
+  /* rechts */
+  .label-right {
+    right: 32px;
+    text-align: right;
+  }
+
   .label strong {
     display: block;
     font-weight: 500;
-    color: #ffffff;          /* ← auch Weiß */
+    color: #ffffff;
   }
 </style>
 </head>
@@ -68,9 +79,16 @@
 
 <div class="glow" id="glow"></div>
 
-<div class="label">
+<!-- links -->
+<div class="label label-left">
   <strong>Gate Visual Studios</strong>
   75018 Paris
+</div>
+
+<!-- rechts -->
+<div class="label label-right">
+  gate@visuals.xyz<br>
+  0049 1512 9640529
 </div>
 
 <script>
