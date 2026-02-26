@@ -10,35 +10,33 @@
     margin: 0;
     padding: 0;
     background: #000;
-    overflow: hidden;
     height: 100%;
-    font-family: system-ui, sans-serif;
-  }
-
-  #stage {
-    position: fixed;
-    inset: 0;
+    overflow: hidden;
     cursor: pointer;
   }
 
-  .img {
-    position: absolute;
-    max-width: 40vw;
-    max-height: 40vh;
-    object-fit: contain;
+  #viewer {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    filter: grayscale(100%) blur(6px);
+    transition: opacity 0.25s ease;
     user-select: none;
-    cursor: grab;
-    transition: transform 0.15s ease;
+    pointer-events: none;
   }
 
-  .img:active {
-    cursor: grabbing;
+  /* subtle fade */
+  .fade {
+    opacity: 0;
   }
 </style>
 </head>
 
 <body>
-<div id="stage"></div>
+
+<img id="viewer" src="" alt="" />
 
 <script>
 /* ===== CONFIG ===== */
@@ -50,50 +48,34 @@ const images = [
   "images/04.jpg"
 ];
 
-let index = 0;
-const stage = document.getElementById("stage");
+const viewer = document.getElementById("viewer");
 
-/* ===== CLICK TO ADD IMAGE ===== */
+/* ===== RANDOM PICK ===== */
 
-stage.addEventListener("click", (e) => {
-  const img = document.createElement("img");
-  img.src = images[index];
-  img.className = "img";
-
-  // random starting position
-  img.style.left = (e.clientX - 150) + "px";
-  img.style.top = (e.clientY - 100) + "px";
-
-  makeDraggable(img);
-  stage.appendChild(img);
-
-  index = (index + 1) % images.length;
-});
-
-/* ===== DRAG FUNCTION ===== */
-
-function makeDraggable(el) {
-  let offsetX = 0;
-  let offsetY = 0;
-  let isDown = false;
-
-  el.addEventListener("mousedown", (e) => {
-    isDown = true;
-    offsetX = e.clientX - el.offsetLeft;
-    offsetY = e.clientY - el.offsetTop;
-    e.stopPropagation();
-  });
-
-  window.addEventListener("mousemove", (e) => {
-    if (!isDown) return;
-    el.style.left = (e.clientX - offsetX) + "px";
-    el.style.top = (e.clientY - offsetY) + "px";
-  });
-
-  window.addEventListener("mouseup", () => {
-    isDown = false;
-  });
+function randomImage() {
+  const i = Math.floor(Math.random() * images.length);
+  return images[i];
 }
+
+/* ===== CHANGE IMAGE ===== */
+
+function showRandom() {
+  viewer.classList.add("fade");
+
+  setTimeout(() => {
+    viewer.src = randomImage();
+    viewer.classList.remove("fade");
+  }, 180);
+}
+
+/* ===== INITIAL LOAD ===== */
+
+viewer.src = randomImage();
+
+/* ===== CLICK HANDLER ===== */
+
+document.body.addEventListener("click", showRandom);
 </script>
+
 </body>
 </html>
