@@ -145,17 +145,20 @@ html, body{
 /* ================= CONFIG ================= */
 
 const images = [
-  "images/01.jpeg",
-  "images/02.jpeg",
-  "images/03.jpeg",
-  "images/04.jpeg",
-  "images/05.jpeg",
-  "images/06.jpeg"
+  "./images/01.jpeg",
+  "./images/02.jpeg",
+  "./images/03.jpeg",
+  "./images/04.jpeg",
+  "./images/05.jpeg",
+  "./images/06.jpeg"
 ];
 
 let imgIndex = 0;
 const btn = document.getElementById("projectsBtn");
 const glow = document.getElementById("glow");
+
+/* 🔥 verhindert doppelte Bilder */
+const activeImages = new Map();
 
 /* ================= PROJECT CLICK ================= */
 
@@ -168,8 +171,17 @@ btn.addEventListener("click", (e)=>{
 
 function spawnImage(){
 
+  const src = images[imgIndex % images.length];
+
+  // wenn Bild schon existiert → entfernen
+  if(activeImages.has(src)){
+    const oldImg = activeImages.get(src);
+    oldImg.remove();
+    activeImages.delete(src);
+  }
+
   const img = document.createElement("img");
-  img.src = images[imgIndex % images.length];
+  img.src = src;
   img.className = "project-img";
 
   // random position (top-left bias)
@@ -181,6 +193,8 @@ function spawnImage(){
 
   makeDraggable(img);
   document.body.appendChild(img);
+
+  activeImages.set(src, img);
 
   imgIndex++;
 }
