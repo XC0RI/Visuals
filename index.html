@@ -43,7 +43,7 @@ html, body{
   opacity:.95;
 }
 
-/* ===== TEXT BASE ===== */
+/* ===== TEXT ===== */
 .projects-btn,
 .info-btn,
 .label,
@@ -52,7 +52,6 @@ html, body{
   color:#fff;
 }
 
-/* ===== LETTER ===== */
 .char{
   display:inline-block;
   transition:color .12s linear;
@@ -79,7 +78,7 @@ html, body{
   font-weight:600;
 }
 
-/* ===== TOP BUTTONS ===== */
+/* ===== BUTTONS ===== */
 .projects-btn{
   position:fixed;
   top:28px;
@@ -105,18 +104,14 @@ html, body{
   top:80px;
   right:32px;
   width:min(520px,60vw);
-
   font-size:clamp(12.5px,1.2vw,14px);
   line-height:1.45;
   letter-spacing:.035em;
   font-weight:250;
-
   opacity:0;
   transform:translateY(-10px);
   pointer-events:none;
   transition:opacity .25s ease, transform .25s ease;
-
-  /* ✨ saubere Wortumbrüche */
   word-break:normal;
   overflow-wrap:normal;
   hyphens:none;
@@ -127,7 +122,7 @@ html, body{
   pointer-events:auto;
 }
 
-/* ===== PROJECT IMAGES ===== */
+/* ===== IMAGES ===== */
 .project-img{
   position:fixed;
   height:auto;
@@ -141,34 +136,15 @@ html, body{
 
 /* ===== MOBILE ===== */
 @media (max-width:600px){
-
-  .label{
-    font-size:13px;
-    max-width:48vw;
-  }
-
-  .label-left{
-    left:16px;
-    bottom:28px;
-  }
-
-  .label-right{
-    right:16px;
-    bottom:28px;
-    text-align:right;
-  }
-
+  .label{ font-size:13px; max-width:48vw; }
+  .label-left{ left:16px; bottom:28px; }
+  .label-right{ right:16px; bottom:28px; text-align:right; }
   .projects-btn{ top:18px; left:16px; }
   .info-btn{ top:18px; right:16px; }
-
   .info-panel{
     top:64px;
     right:16px;
     width:calc(100vw - 32px);
-
-    word-break:normal;
-    overflow-wrap:normal;
-    hyphens:none;
   }
 }
 </style>
@@ -182,18 +158,18 @@ html, body{
 <div class="info-btn smart-text" id="infoBtn">Info</div>
 
 <div class="info-panel smart-text" id="infoPanel">
-Our practice operates at the intersection of architecture,<br> Kunst am Bau, and set design.<br>
-Informed by professional experience in Zurich, Munich, and Aachen,<br> we investigate and develop the visual language of architecture and design.
+Our practice operates at the intersection of architecture, Kunst am Bau, and set design.<br>
+Informed by professional experience in Zurich, Munich, and Aachen, we investigate and develop the visual language of architecture and design.
 </div>
 
 <div class="label label-left smart-text">
-  <strong>Gate Visual Studio</strong>
-  75018 Paris
+<strong>Gate Visual Studios</strong>
+75018 Paris
 </div>
 
 <div class="label label-right smart-text">
-  gate@visuals.xyz<br>
-  0049 1512 9640529
+gate@visuals.xyz<br>
+0049 1512 9640529
 </div>
 
 <script>
@@ -212,9 +188,12 @@ const images=[
   "./images/12.jpeg",
   "./images/13.jpeg",
   "./images/14.jpeg"
+  
 ];
 
 let imgIndex=0;
+let zCounter=200; // 🔥 global stacking
+
 const btn=document.getElementById("projectsBtn");
 const glow=document.getElementById("glow");
 const activeImages=new Map();
@@ -283,6 +262,10 @@ function spawnImage(){
   img.src=src;
   img.className="project-img";
 
+  // 🔥 IMMER GANZ VORNE
+  zCounter++;
+  img.style.zIndex=zCounter;
+
   img.onload=()=>{
     const ratio=img.naturalWidth/img.naturalHeight;
     const base=Math.min(window.innerWidth,window.innerHeight);
@@ -314,7 +297,10 @@ function makeDraggable(el){
     down=true;
     ox=x-el.offsetLeft;
     oy=y-el.offsetTop;
-    el.style.zIndex=500;
+
+    // 🔥 beim Drag auch nach vorne
+    zCounter++;
+    el.style.zIndex=zCounter;
   };
 
   const move=(x,y)=>{
