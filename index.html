@@ -6,99 +6,119 @@
 <title>Gate Visual Studios</title>
 
 <style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    background: #000;
-    height: 100%;
-    overflow: hidden;
-    cursor: pointer;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+html, body{
+  margin:0;
+  padding:0;
+  background:#000;
+  height:100%;
+  overflow:hidden;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  color:#fff;
+}
+
+/* ===== GLOW ===== */
+.glow{
+  position:fixed;
+  left:50%;
+  top:50%;
+  width:min(62vmin,700px);
+  height:min(62vmin,700px);
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  background:radial-gradient(
+    circle,
+    rgba(255,255,255,0.70) 0%,
+    rgba(255,255,255,0.38) 25%,
+    rgba(255,255,255,0.16) 45%,
+    rgba(0,0,0,0) 72%
+  );
+  filter:blur(5.5vmin);
+  pointer-events:none;
+  transition:transform .25s ease, opacity .25s ease;
+}
+
+.pulse{
+  transform:translate(-50%,-50%) scale(1.15);
+  opacity:.92;
+}
+
+/* ===== LABELS ===== */
+.label{
+  position:fixed;
+  bottom:32px;
+  font-size:clamp(14px,1.4vw,17px);
+  line-height:1.5;
+  letter-spacing:.04em;
+  font-weight:300;
+  user-select:none;
+  pointer-events:none;
+  max-width:40vw;
+}
+
+.label-left{ left:36px; text-align:left; }
+.label-right{ right:36px; text-align:right; }
+
+.label strong{
+  display:block;
+  font-size:clamp(16px,1.8vw,20px);
+  font-weight:500;
+}
+
+/* ===== PROJECTS BUTTON ===== */
+.projects-btn{
+  position:fixed;
+  top:28px;
+  left:32px;
+  font-size:clamp(14px,1.4vw,17px);
+  letter-spacing:.04em;
+  font-weight:300;
+  cursor:pointer;
+  z-index:50;
+}
+
+/* ===== PROJECT IMAGES ===== */
+.project-img{
+  position:fixed;
+  width:min(28vmin,260px);
+  aspect-ratio:1/1;
+  object-fit:cover;
+  cursor:grab;
+  user-select:none;
+  z-index:40;
+  touch-action:none;
+}
+
+.project-img:active{ cursor:grabbing; }
+
+/* ===== MOBILE ===== */
+@media (max-width:600px){
+
+  .glow{
+    width:58vmin;
+    height:58vmin;
+    filter:blur(6.5vmin);
   }
 
-  /* ===== RESPONSIVE GLOW (BIGGER + BRIGHTER) ===== */
-  .glow {
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    width: min(62vmin, 700px);     /* ← etwas größer */
-    height: min(62vmin, 700px);
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    background: radial-gradient(
-      circle,
-      rgba(255,255,255,0.70) 0%,   /* ← heller Kern */
-      rgba(255,255,255,0.38) 25%,
-      rgba(255,255,255,0.16) 45%,
-      rgba(0,0,0,0) 72%
-    );
-    filter: blur(5.5vmin);         /* weich behalten */
-    transition: transform 0.25s ease, opacity 0.25s ease;
-    pointer-events: none;
+  .label{
+    max-width:none;
+    left:20px!important;
+    right:20px!important;
+    text-align:left;
+    font-size:15px;
   }
 
-  .pulse {
-    transform: translate(-50%, -50%) scale(1.15);
-    opacity: 0.92;
+  .label-left{ bottom:72px; }
+  .label-right{ bottom:28px; }
+
+  .projects-btn{
+    top:22px;
+    left:20px;
   }
 
-  /* ===== TEXT BASE ===== */
-  .label {
-    position: fixed;
-    bottom: 32px;
-    color: #ffffff;
-    font-size: clamp(14px, 1.4vw, 17px);
-    line-height: 1.5;
-    letter-spacing: 0.04em;
-    font-weight: 300;
-    user-select: none;
-    pointer-events: none;
-    max-width: 40vw;
+  .project-img{
+    width:min(38vmin,220px);
   }
-
-  .label-left {
-    left: 36px;
-    text-align: left;
-  }
-
-  .label-right {
-    right: 36px;
-    text-align: right;
-  }
-
-  .label strong {
-    display: block;
-    font-size: clamp(16px, 1.8vw, 20px);
-    font-weight: 500;
-    letter-spacing: 0.05em;
-    color: #ffffff;
-  }
-
-  /* ===== MOBILE FIX ===== */
-  @media (max-width: 600px) {
-
-    .glow {
-      width: 58vmin;      /* proportional kleiner auf phones */
-      height: 58vmin;
-      filter: blur(6.5vmin);
-    }
-
-    .label {
-      max-width: none;
-      left: 20px !important;
-      right: 20px !important;
-      text-align: left;
-      font-size: 15px;
-    }
-
-    .label-left {
-      bottom: 72px;
-    }
-
-    .label-right {
-      bottom: 28px;
-    }
-  }
+}
 </style>
 </head>
 
@@ -106,23 +126,116 @@
 
 <div class="glow" id="glow"></div>
 
+<!-- Projects trigger -->
+<div class="projects-btn" id="projectsBtn">Projects</div>
+
+<!-- footer left -->
 <div class="label label-left">
   <strong>Gate Visual Studios</strong>
   75018 Paris
 </div>
 
+<!-- footer right -->
 <div class="label label-right">
   gate@visuals.xyz<br>
   0049 1512 9640529
 </div>
 
 <script>
-  const glow = document.getElementById("glow");
+/* ================= CONFIG ================= */
 
-  document.body.addEventListener("click", () => {
-    glow.classList.add("pulse");
-    setTimeout(() => glow.classList.remove("pulse"), 240);
+const images = [
+  "images/01.png",
+  "images/02.png",
+  "images/03.png",
+  "images/04.png"
+];
+
+let imgIndex = 0;
+const btn = document.getElementById("projectsBtn");
+const glow = document.getElementById("glow");
+
+/* ================= PROJECT CLICK ================= */
+
+btn.addEventListener("click", (e)=>{
+  e.stopPropagation();
+  spawnImage();
+});
+
+/* ================= SPAWN IMAGE ================= */
+
+function spawnImage(){
+
+  const img = document.createElement("img");
+  img.src = images[imgIndex % images.length];
+  img.className = "project-img";
+
+  // random position (biased top-left)
+  const maxX = window.innerWidth * 0.35;
+  const maxY = window.innerHeight * 0.35;
+
+  img.style.left = (Math.random()*maxX + 20) + "px";
+  img.style.top  = (Math.random()*maxY + 20) + "px";
+
+  makeDraggable(img);
+  document.body.appendChild(img);
+
+  imgIndex++;
+}
+
+/* ================= DRAG (MOUSE + TOUCH) ================= */
+
+function makeDraggable(el){
+
+  let offsetX=0, offsetY=0, isDown=false;
+
+  const start = (clientX, clientY)=>{
+    isDown=true;
+    offsetX = clientX - el.offsetLeft;
+    offsetY = clientY - el.offsetTop;
+    el.style.zIndex = Date.now();
+  };
+
+  const move = (clientX, clientY)=>{
+    if(!isDown) return;
+    el.style.left = (clientX-offsetX)+"px";
+    el.style.top  = (clientY-offsetY)+"px";
+  };
+
+  const end = ()=> isDown=false;
+
+  /* mouse */
+  el.addEventListener("mousedown", e=>{
+    e.preventDefault();
+    start(e.clientX,e.clientY);
   });
+
+  window.addEventListener("mousemove", e=>{
+    move(e.clientX,e.clientY);
+  });
+
+  window.addEventListener("mouseup", end);
+
+  /* touch */
+  el.addEventListener("touchstart", e=>{
+    const t=e.touches[0];
+    start(t.clientX,t.clientY);
+  },{passive:false});
+
+  window.addEventListener("touchmove", e=>{
+    const t=e.touches[0];
+    if(t) move(t.clientX,t.clientY);
+  },{passive:false});
+
+  window.addEventListener("touchend", end);
+}
+
+/* ================= GLOW CLICK ================= */
+
+document.body.addEventListener("click", ()=>{
+  glow.classList.add("pulse");
+  setTimeout(()=>glow.classList.remove("pulse"),240);
+});
 </script>
 
 </body>
