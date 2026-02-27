@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Gate Visual Studios</title>
- 
+
 <style>
 html, body{
   margin:0;
@@ -27,19 +27,19 @@ html, body{
   border-radius:50%;
   background:radial-gradient(
     circle,
-    rgba(255,255,255,0.70) 0%,
-    rgba(255,255,255,0.38) 25%,
-    rgba(255,255,255,0.16) 45%,
+    rgba(255,255,255,0.75) 0%,
+    rgba(255,255,255,0.42) 25%,
+    rgba(255,255,255,0.18) 45%,
     rgba(0,0,0,0) 72%
   );
-  filter:blur(5.5vmin);
+  filter:blur(5.2vmin);
   pointer-events:none;
   transition:transform .25s ease, opacity .25s ease;
 }
 
 .pulse{
   transform:translate(-50%,-50%) scale(1.15);
-  opacity:.92;
+  opacity:.95;
 }
 
 /* ===== LABELS ===== */
@@ -60,8 +60,8 @@ html, body{
 
 .label strong{
   display:block;
-  font-size:clamp(16px,1.8vw,20px);
-  font-weight:500;
+  font-size:clamp(18px,2vw,22px);
+  font-weight:600;
 }
 
 /* ===== PROJECTS BUTTON ===== */
@@ -145,10 +145,12 @@ html, body{
 /* ================= CONFIG ================= */
 
 const images = [
-  "images/01.png",
-  "images/02.png",
-  "images/03.png",
-  "images/04.png"
+  "images/01.jpeg",
+  "images/02.jpeg",
+  "images/03.jpeg",
+  "images/04.jpeg",
+  "images/05.jpeg",
+  "images/06.jpeg"
 ];
 
 let imgIndex = 0;
@@ -170,7 +172,7 @@ function spawnImage(){
   img.src = images[imgIndex % images.length];
   img.className = "project-img";
 
-  // random position (biased top-left)
+  // random position (top-left bias)
   const maxX = window.innerWidth * 0.35;
   const maxY = window.innerHeight * 0.35;
 
@@ -204,7 +206,6 @@ function makeDraggable(el){
 
   const end = ()=> isDown=false;
 
-  /* mouse */
   el.addEventListener("mousedown", e=>{
     e.preventDefault();
     start(e.clientX,e.clientY);
@@ -216,7 +217,6 @@ function makeDraggable(el){
 
   window.addEventListener("mouseup", end);
 
-  /* touch */
   el.addEventListener("touchstart", e=>{
     const t=e.touches[0];
     start(t.clientX,t.clientY);
