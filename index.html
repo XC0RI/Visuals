@@ -52,7 +52,7 @@ html, body{
   color:#fff;
 }
 
-/* ===== LETTER WRAPS ===== */
+/* ===== LETTER ===== */
 .char{
   display:inline-block;
   transition:color .12s linear;
@@ -72,6 +72,7 @@ html, body{
 }
 .label-left{ left:36px; text-align:left; }
 .label-right{ right:36px; text-align:right; }
+
 .label strong{
   display:block;
   font-size:clamp(18px,2vw,22px);
@@ -131,7 +132,7 @@ html, body{
 }
 .project-img:active{ cursor:grabbing; }
 
-/* ===== MOBILE FIX ===== */
+/* ===== MOBILE ===== */
 @media (max-width:600px){
   .label{
     font-size:13px;
@@ -196,35 +197,45 @@ const btn = document.getElementById("projectsBtn");
 const glow = document.getElementById("glow");
 const activeImages = new Map();
 
-/* ===== SAFE LETTER WRAP ===== */
+/* ===== ROBUST WRAP ===== */
 function wrapSmartText(){
+
   document.querySelectorAll(".smart-text").forEach(el=>{
-    if (el.dataset.wrapped) return;
+    if (el.dataset.wrapped === "true") return;
 
-    function wrapNode(node){
-      if (node.nodeType === Node.TEXT_NODE){
-        const text = node.textContent;
-        const frag = document.createDocumentFragment();
+    const walker = document.createTreeWalker(
+      el,
+      NodeFilter.SHOW_TEXT,
+      null,
+      false
+    );
 
-        for (const char of text){
-          if (char === " "){
-            frag.appendChild(document.createTextNode(" "));
-          } else {
-            const span = document.createElement("span");
-            span.className = "char";
-            span.textContent = char;
-            frag.appendChild(span);
-          }
-        }
-        node.replaceWith(frag);
-      }
-      else if (node.nodeType === Node.ELEMENT_NODE){
-        node.childNodes.forEach(child => wrapNode(child));
-      }
+    const textNodes = [];
+    while (walker.nextNode()){
+      textNodes.push(walker.currentNode);
     }
 
-    wrapNode(el);
-    el.dataset.wrapped = "true";
+    textNodes.forEach(node=>{
+      const text=node.nodeValue;
+      if(!text.trim()) return;
+
+      const frag=document.createDocumentFragment();
+
+      for(const ch of text){
+        if(ch===" "){
+          frag.appendChild(document.createTextNode(" "));
+        }else{
+          const span=document.createElement("span");
+          span.className="char";
+          span.textContent=ch;
+          frag.appendChild(span);
+        }
+      }
+
+      node.parentNode.replaceChild(frag,node);
+    });
+
+    el.dataset.wrapped="true";
   });
 }
 wrapSmartText();
@@ -239,7 +250,6 @@ infoBtn.addEventListener("click",(e)=>{
   infoOpen=!infoOpen;
   infoPanel.classList.toggle("show",infoOpen);
   infoBtn.textContent = infoOpen ? "−" : "Info";
-  wrapSmartText();
   updateTextContrast();
 });
 
@@ -258,28 +268,28 @@ function spawnImage(){
     activeImages.delete(src);
   }
 
-  const img = document.createElement("img");
-  img.src = src;
-  img.className = "project-img";
+  const img=document.createElement("img");
+  img.src=src;
+  img.className="project-img";
 
-  img.onload = () => {
-    const ratio = img.naturalWidth / img.naturalHeight;
-    const base = Math.min(window.innerWidth, window.innerHeight);
+  img.onload=()=>{
+    const ratio=img.naturalWidth/img.naturalHeight;
+    const base=Math.min(window.innerWidth,window.innerHeight);
 
-    if (ratio > 1.25) {
-      img.style.width = Math.min(base * 0.40, 440) + "px";
-    } else if (ratio < 0.8) {
-      img.style.width = Math.min(base * 0.28, 320) + "px";
-    } else {
-      img.style.width = Math.min(base * 0.34, 380) + "px";
+    if(ratio>1.25){
+      img.style.width=Math.min(base*0.40,440)+"px";
+    }else if(ratio<0.8){
+      img.style.width=Math.min(base*0.28,320)+"px";
+    }else{
+      img.style.width=Math.min(base*0.34,380)+"px";
     }
   };
 
-  const maxX = window.innerWidth * 0.35;
-  const maxY = window.innerHeight * 0.35;
+  const maxX=window.innerWidth*0.35;
+  const maxY=window.innerHeight*0.35;
 
-  img.style.left = (Math.random()*maxX + 20) + "px";
-  img.style.top  = (Math.random()*maxY + 20) + "px";
+  img.style.left=(Math.random()*maxX+20)+"px";
+  img.style.top =(Math.random()*maxY+20)+"px";
 
   makeDraggable(img);
   document.body.appendChild(img);
@@ -291,7 +301,7 @@ function spawnImage(){
 
 /* ===== DRAG ===== */
 function makeDraggable(el){
-  let ox=0, oy=0, down=false;
+  let ox=0,oy=0,down=false;
 
   const start=(x,y)=>{
     down=true;
@@ -328,22 +338,23 @@ function makeDraggable(el){
 
 /* ===== PER-LETTER CONTRAST ===== */
 function updateTextContrast(){
-  const chars = document.querySelectorAll(".char");
+
+  const chars=document.querySelectorAll(".char");
 
   chars.forEach(char=>{
-    const rect = char.getBoundingClientRect();
-    let brightness = null;
+    const rect=char.getBoundingClientRect();
+    let brightness=null;
 
     activeImages.forEach(img=>{
-      const imgRect = img.getBoundingClientRect();
+      const imgRect=img.getBoundingClientRect();
 
-      const intersects =
-        !(imgRect.right < rect.left ||
-          imgRect.left > rect.right ||
-          imgRect.bottom < rect.top ||
-          imgRect.top > rect.bottom);
+      const intersects=
+        !(imgRect.right<rect.left||
+          imgRect.left>rect.right||
+          imgRect.bottom<rect.top||
+          imgRect.top>rect.bottom);
 
-      if (!intersects) return;
+      if(!intersects) return;
 
       try{
         const canvas=document.createElement("canvas");
@@ -370,16 +381,16 @@ function updateTextContrast(){
       return;
     }
 
-    if (brightness > 0.75) char.style.color="#000000";
-    else if (brightness > 0.6) char.style.color="#333333";
-    else if (brightness > 0.45) char.style.color="#777777";
-    else if (brightness > 0.3) char.style.color="#bbbbbb";
+    if(brightness>0.75) char.style.color="#000000";
+    else if(brightness>0.6) char.style.color="#333333";
+    else if(brightness>0.45) char.style.color="#777777";
+    else if(brightness>0.3) char.style.color="#bbbbbb";
     else char.style.color="#ffffff";
   });
 }
 
 /* ===== GLOW ===== */
-document.body.addEventListener("click", ()=>{
+document.body.addEventListener("click",()=>{
   glow.classList.add("pulse");
   setTimeout(()=>glow.classList.remove("pulse"),320);
 });
