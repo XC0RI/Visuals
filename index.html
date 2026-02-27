@@ -109,12 +109,12 @@ html, body{
   pointer-events:auto;
 }
 
-/* ===== PROJECT IMAGES ===== */
+/* ===== PROJECT IMAGES (UPDATED) ===== */
 .project-img{
   position:fixed;
   width:min(28vmin,260px);
-  aspect-ratio:1/1;
-  object-fit:cover;
+  height:auto;              /* ← wichtig */
+  object-fit:contain;       /* ← Originalformat */
   cursor:grab;
   user-select:none;
   z-index:40;
