@@ -34,12 +34,13 @@ html, body{
   );
   filter:blur(5.2vmin);
   pointer-events:none;
-  transition:transform .25s ease, opacity .25s ease;
+  z-index:5;
 }
 
-.pulse{
-  transform:translate(-50%,-50%) scale(1.15);
-  opacity:.95;
+.label,
+.projects-btn,
+.info-btn{
+  z-index:1000; /* 🔥 immer über Bildern */
 }
 
 /* ===== LABELS ===== */
@@ -53,6 +54,7 @@ html, body{
   user-select:none;
   pointer-events:none;
   max-width:40vw;
+  transition:color .15s linear;
 }
 
 .label-left{ left:36px; text-align:left; }
@@ -73,7 +75,6 @@ html, body{
   letter-spacing:.04em;
   font-weight:300;
   cursor:pointer;
-  z-index:60;
 }
 
 .info-btn{
@@ -84,7 +85,6 @@ html, body{
   letter-spacing:.04em;
   font-weight:300;
   cursor:pointer;
-  z-index:60;
 }
 
 /* ===== INFO PANEL ===== */
@@ -109,52 +109,23 @@ html, body{
   pointer-events:auto;
 }
 
-/* ===== PROJECT IMAGES (UPDATED) ===== */
+/* ===== PROJECT IMAGES ===== */
 .project-img{
   position:fixed;
-  width:min(28vmin,260px);
-  height:auto;              /* ← wichtig */
-  object-fit:contain;       /* ← Originalformat */
+  height:auto;
+  object-fit:contain;
   cursor:grab;
   user-select:none;
   z-index:40;
   touch-action:none;
+  transition:width .2s ease;
 }
 
 .project-img:active{ cursor:grabbing; }
 
 /* ===== MOBILE ===== */
 @media (max-width:600px){
-
-  .glow{
-    width:58vmin;
-    height:58vmin;
-    filter:blur(6.5vmin);
-  }
-
-  .label{
-    max-width:none;
-    left:20px!important;
-    right:20px!important;
-    text-align:left;
-    font-size:15px;
-  }
-
-  .label-left{ bottom:72px; }
-  .label-right{ bottom:28px; }
-
-  .projects-btn{ top:22px; left:20px; }
-  .info-btn{ top:22px; right:20px; }
-
-  .info-panel{
-    top:70px;
-    right:20px;
-    width:calc(100vw - 40px);
-  }
-
-  .project-img{
-    width:min(38vmin,220px);
-  }
+  .project-img{ max-width:70vw; }
 }
 </style>
 </head>
@@ -172,7 +143,7 @@ Informed by professional experience in Zurich, Munich, and Aachen, we investigat
 </div>
 
 <div class="label label-left">
-  <strong>Gate Visual Studio</strong>
+  <strong>Gate Visual Studios</strong>
   75018 Paris
 </div>
 
@@ -198,42 +169,53 @@ const btn = document.getElementById("projectsBtn");
 const glow = document.getElementById("glow");
 const activeImages = new Map();
 
-/* INFO TOGGLE */
+/* ================= INFO ================= */
+
 const infoBtn = document.getElementById("infoBtn");
 const infoPanel = document.getElementById("infoPanel");
 let infoOpen = false;
 
-infoBtn.addEventListener("click", (e)=>{
+infoBtn.addEventListener("click",(e)=>{
   e.stopPropagation();
-  infoOpen = !infoOpen;
-
-  if(infoOpen){
-    infoPanel.classList.add("show");
-    infoBtn.textContent = "−";
-  }else{
-    infoPanel.classList.remove("show");
-    infoBtn.textContent = "Info";
-  }
+  infoOpen=!infoOpen;
+  infoPanel.classList.toggle("show",infoOpen);
+  infoBtn.textContent = infoOpen ? "−" : "Info";
 });
 
-/* PROJECT CLICK */
-btn.addEventListener("click", (e)=>{
+/* ================= SPAWN ================= */
+
+btn.addEventListener("click",(e)=>{
   e.stopPropagation();
   spawnImage();
 });
 
 function spawnImage(){
+
   const src = images[imgIndex % images.length];
 
   if(activeImages.has(src)){
-    const oldImg = activeImages.get(src);
-    oldImg.remove();
+    activeImages.get(src).remove();
     activeImages.delete(src);
   }
 
   const img = document.createElement("img");
   img.src = src;
   img.className = "project-img";
+
+  /* 🔥 Größe nach Format */
+  img.onload = () => {
+    const ratio = img.naturalWidth / img.naturalHeight;
+
+    let base = Math.min(window.innerWidth, window.innerHeight);
+
+    if (ratio > 1.25) {
+      img.style.width = Math.min(base * 0.32, 340) + "px"; // landscape größer
+    } else if (ratio < 0.8) {
+      img.style.width = Math.min(base * 0.22, 240) + "px"; // portrait kleiner
+    } else {
+      img.style.width = Math.min(base * 0.27, 280) + "px"; // square mittel
+    }
+  };
 
   const maxX = window.innerWidth * 0.35;
   const maxY = window.innerHeight * 0.35;
@@ -243,35 +225,33 @@ function spawnImage(){
 
   makeDraggable(img);
   document.body.appendChild(img);
-  activeImages.set(src, img);
+  activeImages.set(src,img);
 
   imgIndex++;
 }
 
-/* DRAG */
+/* ================= DRAG ================= */
+
 function makeDraggable(el){
-  let offsetX=0, offsetY=0, isDown=false;
+  let ox=0, oy=0, down=false;
 
   const start=(x,y)=>{
-    isDown=true;
-    offsetX=x-el.offsetLeft;
-    offsetY=y-el.offsetTop;
+    down=true;
+    ox=x-el.offsetLeft;
+    oy=y-el.offsetTop;
     el.style.zIndex=Date.now();
   };
 
   const move=(x,y)=>{
-    if(!isDown) return;
-    el.style.left=(x-offsetX)+"px";
-    el.style.top=(y-offsetY)+"px";
+    if(!down) return;
+    el.style.left=(x-ox)+"px";
+    el.style.top =(y-oy)+"px";
+    updateTextContrast();
   };
 
-  const end=()=>isDown=false;
+  const end=()=>down=false;
 
-  el.addEventListener("mousedown",e=>{
-    e.preventDefault();
-    start(e.clientX,e.clientY);
-  });
-
+  el.addEventListener("mousedown",e=>{e.preventDefault();start(e.clientX,e.clientY);});
   window.addEventListener("mousemove",e=>move(e.clientX,e.clientY));
   window.addEventListener("mouseup",end);
 
@@ -288,10 +268,38 @@ function makeDraggable(el){
   window.addEventListener("touchend",end);
 }
 
-/* GLOW */
+/* ================= SMART CONTRAST ================= */
+
+function updateTextContrast(){
+
+  const labels = document.querySelectorAll(".label, .projects-btn, .info-btn");
+
+  // simple stepped brightness simulation
+  let brightness = 0;
+
+  activeImages.forEach(img=>{
+    const rect = img.getBoundingClientRect();
+    const area = rect.width * rect.height;
+    brightness += area;
+  });
+
+  brightness = Math.min(brightness / (window.innerWidth * window.innerHeight), 1);
+
+  let color;
+
+  if (brightness > 0.55) color = "#000";
+  else if (brightness > 0.35) color = "#555";
+  else if (brightness > 0.2) color = "#aaa";
+  else color = "#fff";
+
+  labels.forEach(el => el.style.color = color);
+}
+
+/* ================= GLOW ================= */
+
 document.body.addEventListener("click", ()=>{
-  glow.classList.add("pulse");
-  setTimeout(()=>glow.classList.remove("pulse"),240);
+  glow.style.transform = "translate(-50%,-50%) scale(1.15)";
+  setTimeout(()=>glow.style.transform="translate(-50%,-50%)",240);
 });
 </script>
 
