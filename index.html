@@ -64,7 +64,7 @@ html, body{
   font-weight:600;
 }
 
-/* ===== PROJECTS BUTTON ===== */
+/* ===== TOP BUTTONS ===== */
 .projects-btn{
   position:fixed;
   top:28px;
@@ -73,7 +73,40 @@ html, body{
   letter-spacing:.04em;
   font-weight:300;
   cursor:pointer;
-  z-index:50;
+  z-index:60;
+}
+
+.info-btn{
+  position:fixed;
+  top:28px;
+  right:32px;
+  font-size:clamp(14px,1.4vw,17px);
+  letter-spacing:.04em;
+  font-weight:300;
+  cursor:pointer;
+  z-index:60;
+}
+
+/* ===== INFO PANEL ===== */
+.info-panel{
+  position:fixed;
+  top:80px;
+  right:32px;
+  width:min(420px,80vw);
+  font-size:clamp(14px,1.4vw,16px);
+  line-height:1.6;
+  letter-spacing:.03em;
+  font-weight:300;
+  opacity:0;
+  transform:translateY(-10px);
+  pointer-events:none;
+  transition:opacity .25s ease, transform .25s ease;
+}
+
+.info-panel.show{
+  opacity:1;
+  transform:translateY(0);
+  pointer-events:auto;
 }
 
 /* ===== PROJECT IMAGES ===== */
@@ -110,9 +143,13 @@ html, body{
   .label-left{ bottom:72px; }
   .label-right{ bottom:28px; }
 
-  .projects-btn{
-    top:22px;
-    left:20px;
+  .projects-btn{ top:22px; left:20px; }
+  .info-btn{ top:22px; right:20px; }
+
+  .info-panel{
+    top:70px;
+    right:20px;
+    width:calc(100vw - 40px);
   }
 
   .project-img{
@@ -126,24 +163,25 @@ html, body{
 
 <div class="glow" id="glow"></div>
 
-<!-- Projects trigger -->
 <div class="projects-btn" id="projectsBtn">Projects</div>
+<div class="info-btn" id="infoBtn">Info</div>
 
-<!-- footer left -->
+<div class="info-panel" id="infoPanel">
+Our practice operates at the intersection of architecture, Kunst am Bau, and set design.<br><br>
+Informed by professional experience in Zurich, Munich, and Aachen, we investigate and develop the visual language of architecture and design.
+</div>
+
 <div class="label label-left">
   <strong>Gate Visual Studios</strong>
   75018 Paris
 </div>
 
-<!-- footer right -->
 <div class="label label-right">
   gate@visuals.xyz<br>
   0049 1512 9640529
 </div>
 
 <script>
-/* ================= CONFIG ================= */
-
 const images = [
   "./images/01.jpeg",
   "./images/02.jpeg",
@@ -156,24 +194,35 @@ const images = [
 let imgIndex = 0;
 const btn = document.getElementById("projectsBtn");
 const glow = document.getElementById("glow");
-
-/* 🔥 verhindert doppelte Bilder */
 const activeImages = new Map();
 
-/* ================= PROJECT CLICK ================= */
+/* ===== INFO TOGGLE ===== */
+const infoBtn = document.getElementById("infoBtn");
+const infoPanel = document.getElementById("infoPanel");
+let infoOpen = false;
 
+infoBtn.addEventListener("click", (e)=>{
+  e.stopPropagation();
+  infoOpen = !infoOpen;
+
+  if(infoOpen){
+    infoPanel.classList.add("show");
+    infoBtn.textContent = "−";
+  }else{
+    infoPanel.classList.remove("show");
+    infoBtn.textContent = "Info";
+  }
+});
+
+/* ===== PROJECT CLICK ===== */
 btn.addEventListener("click", (e)=>{
   e.stopPropagation();
   spawnImage();
 });
 
-/* ================= SPAWN IMAGE ================= */
-
 function spawnImage(){
-
   const src = images[imgIndex % images.length];
 
-  // wenn Bild schon existiert → entfernen
   if(activeImages.has(src)){
     const oldImg = activeImages.get(src);
     oldImg.remove();
@@ -184,7 +233,6 @@ function spawnImage(){
   img.src = src;
   img.className = "project-img";
 
-  // random position (top-left bias)
   const maxX = window.innerWidth * 0.35;
   const maxY = window.innerHeight * 0.35;
 
@@ -193,59 +241,52 @@ function spawnImage(){
 
   makeDraggable(img);
   document.body.appendChild(img);
-
   activeImages.set(src, img);
 
   imgIndex++;
 }
 
-/* ================= DRAG (MOUSE + TOUCH) ================= */
-
+/* ===== DRAG ===== */
 function makeDraggable(el){
-
   let offsetX=0, offsetY=0, isDown=false;
 
-  const start = (clientX, clientY)=>{
+  const start=(x,y)=>{
     isDown=true;
-    offsetX = clientX - el.offsetLeft;
-    offsetY = clientY - el.offsetTop;
-    el.style.zIndex = Date.now();
+    offsetX=x-el.offsetLeft;
+    offsetY=y-el.offsetTop;
+    el.style.zIndex=Date.now();
   };
 
-  const move = (clientX, clientY)=>{
+  const move=(x,y)=>{
     if(!isDown) return;
-    el.style.left = (clientX-offsetX)+"px";
-    el.style.top  = (clientY-offsetY)+"px";
+    el.style.left=(x-offsetX)+"px";
+    el.style.top=(y-offsetY)+"px";
   };
 
-  const end = ()=> isDown=false;
+  const end=()=>isDown=false;
 
-  el.addEventListener("mousedown", e=>{
+  el.addEventListener("mousedown",e=>{
     e.preventDefault();
     start(e.clientX,e.clientY);
   });
 
-  window.addEventListener("mousemove", e=>{
-    move(e.clientX,e.clientY);
-  });
+  window.addEventListener("mousemove",e=>move(e.clientX,e.clientY));
+  window.addEventListener("mouseup",end);
 
-  window.addEventListener("mouseup", end);
-
-  el.addEventListener("touchstart", e=>{
+  el.addEventListener("touchstart",e=>{
     const t=e.touches[0];
     start(t.clientX,t.clientY);
   },{passive:false});
 
-  window.addEventListener("touchmove", e=>{
+  window.addEventListener("touchmove",e=>{
     const t=e.touches[0];
     if(t) move(t.clientX,t.clientY);
   },{passive:false});
 
-  window.addEventListener("touchend", end);
+  window.addEventListener("touchend",end);
 }
 
-/* ================= GLOW CLICK ================= */
-
+/* ===== GLOW ===== */
 document.body.addEventListener("click", ()=>{
   glow.classList.add("pulse");
   setTimeout(()=>glow.classList.remove("pulse"),240);
