@@ -16,14 +16,14 @@ html, body{
   color:#fff;
 }
 
-/* ===== GLOW ===== */
+/* ===== GLOW (smooth again) ===== */
 .glow{
   position:fixed;
   left:50%;
   top:50%;
   width:min(62vmin,700px);
   height:min(62vmin,700px);
-  transform:translate(-50%,-50%);
+  transform:translate(-50%,-50%) scale(1);
   border-radius:50%;
   background:radial-gradient(
     circle,
@@ -35,15 +35,22 @@ html, body{
   filter:blur(5.2vmin);
   pointer-events:none;
   z-index:5;
+  transition:transform .35s cubic-bezier(.22,.61,.36,1),
+             opacity .35s ease;
 }
 
-.label,
-.projects-btn,
-.info-btn{
-  z-index:1000; /* 🔥 immer über Bildern */
+.glow.pulse{
+  transform:translate(-50%,-50%) scale(1.18);
+  opacity:.95;
 }
 
 /* ===== LABELS ===== */
+.label,
+.projects-btn,
+.info-btn{
+  z-index:1000;
+}
+
 .label{
   position:fixed;
   bottom:32px;
@@ -54,7 +61,8 @@ html, body{
   user-select:none;
   pointer-events:none;
   max-width:40vw;
-  transition:color .15s linear;
+  color:#fff;
+  transition:color .18s linear;
 }
 
 .label-left{ left:36px; text-align:left; }
@@ -75,6 +83,8 @@ html, body{
   letter-spacing:.04em;
   font-weight:300;
   cursor:pointer;
+  color:#fff;
+  transition:color .18s linear;
 }
 
 .info-btn{
@@ -85,6 +95,8 @@ html, body{
   letter-spacing:.04em;
   font-weight:300;
   cursor:pointer;
+  color:#fff;
+  transition:color .18s linear;
 }
 
 /* ===== INFO PANEL ===== */
@@ -118,14 +130,32 @@ html, body{
   user-select:none;
   z-index:40;
   touch-action:none;
-  transition:width .2s ease;
 }
 
 .project-img:active{ cursor:grabbing; }
 
 /* ===== MOBILE ===== */
 @media (max-width:600px){
-  .project-img{ max-width:70vw; }
+
+  .label{
+    max-width:none;
+    left:20px!important;
+    right:20px!important;
+    text-align:left;
+    font-size:15px;
+  }
+
+  .label-left{ bottom:72px; }
+  .label-right{ bottom:28px; }
+
+  .projects-btn{ top:22px; left:20px; }
+  .info-btn{ top:22px; right:20px; }
+
+  .info-panel{
+    top:70px;
+    right:20px;
+    width:calc(100vw - 40px);
+  }
 }
 </style>
 </head>
@@ -169,8 +199,7 @@ const btn = document.getElementById("projectsBtn");
 const glow = document.getElementById("glow");
 const activeImages = new Map();
 
-/* ================= INFO ================= */
-
+/* ===== INFO ===== */
 const infoBtn = document.getElementById("infoBtn");
 const infoPanel = document.getElementById("infoPanel");
 let infoOpen = false;
@@ -182,8 +211,7 @@ infoBtn.addEventListener("click",(e)=>{
   infoBtn.textContent = infoOpen ? "−" : "Info";
 });
 
-/* ================= SPAWN ================= */
-
+/* ===== SPAWN ===== */
 btn.addEventListener("click",(e)=>{
   e.stopPropagation();
   spawnImage();
@@ -202,18 +230,16 @@ function spawnImage(){
   img.src = src;
   img.className = "project-img";
 
-  /* 🔥 Größe nach Format */
   img.onload = () => {
     const ratio = img.naturalWidth / img.naturalHeight;
-
-    let base = Math.min(window.innerWidth, window.innerHeight);
+    const base = Math.min(window.innerWidth, window.innerHeight);
 
     if (ratio > 1.25) {
-      img.style.width = Math.min(base * 0.32, 340) + "px"; // landscape größer
+      img.style.width = Math.min(base * 0.38, 420) + "px";
     } else if (ratio < 0.8) {
-      img.style.width = Math.min(base * 0.22, 240) + "px"; // portrait kleiner
+      img.style.width = Math.min(base * 0.26, 300) + "px";
     } else {
-      img.style.width = Math.min(base * 0.27, 280) + "px"; // square mittel
+      img.style.width = Math.min(base * 0.32, 360) + "px";
     }
   };
 
@@ -227,11 +253,12 @@ function spawnImage(){
   document.body.appendChild(img);
   activeImages.set(src,img);
 
+  updateTextContrast();
+
   imgIndex++;
 }
 
-/* ================= DRAG ================= */
-
+/* ===== DRAG ===== */
 function makeDraggable(el){
   let ox=0, oy=0, down=false;
 
@@ -268,38 +295,41 @@ function makeDraggable(el){
   window.addEventListener("touchend",end);
 }
 
-/* ================= SMART CONTRAST ================= */
-
+/* ===== TRUE OVERLAP CONTRAST ===== */
 function updateTextContrast(){
 
   const labels = document.querySelectorAll(".label, .projects-btn, .info-btn");
 
-  // simple stepped brightness simulation
-  let brightness = 0;
+  labels.forEach(label => {
 
-  activeImages.forEach(img=>{
-    const rect = img.getBoundingClientRect();
-    const area = rect.width * rect.height;
-    brightness += area;
+    const labelRect = label.getBoundingClientRect();
+    let overlapped = false;
+
+    activeImages.forEach(img => {
+      const imgRect = img.getBoundingClientRect();
+
+      const intersects =
+        !(imgRect.right < labelRect.left ||
+          imgRect.left > labelRect.right ||
+          imgRect.bottom < labelRect.top ||
+          imgRect.top > labelRect.bottom);
+
+      if (intersects) overlapped = true;
+    });
+
+    if (!overlapped){
+      label.style.color = "#ffffff";
+    } else {
+      label.style.color = "#000000";
+    }
+
   });
-
-  brightness = Math.min(brightness / (window.innerWidth * window.innerHeight), 1);
-
-  let color;
-
-  if (brightness > 0.55) color = "#000";
-  else if (brightness > 0.35) color = "#555";
-  else if (brightness > 0.2) color = "#aaa";
-  else color = "#fff";
-
-  labels.forEach(el => el.style.color = color);
 }
 
-/* ================= GLOW ================= */
-
+/* ===== GLOW CLICK (smooth) ===== */
 document.body.addEventListener("click", ()=>{
-  glow.style.transform = "translate(-50%,-50%) scale(1.15)";
-  setTimeout(()=>glow.style.transform="translate(-50%,-50%)",240);
+  glow.classList.add("pulse");
+  setTimeout(()=>glow.classList.remove("pulse"),320);
 });
 </script>
 
