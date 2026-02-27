@@ -3,6 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+<!-- verhindert iOS Telefonnummer-Links -->
+<meta name="format-detection" content="telephone=no" />
+
 <title>Gate Visual Studios</title>
 
 <style>
@@ -44,14 +48,19 @@ html, body{
   opacity:.95;
 }
 
-/* ===== TEXT ALWAYS ON TOP ===== */
+/* ===== TEXT BASE ===== */
 .projects-btn,
 .info-btn,
 .label,
 .info-panel{
   z-index:9999;
   color:#fff;
-  transition:color .18s linear;
+}
+
+/* ===== LETTER WRAPS ===== */
+.char{
+  display:inline-block;
+  transition:color .12s linear;
 }
 
 /* ===== LABELS ===== */
@@ -110,7 +119,7 @@ html, body{
   opacity:0;
   transform:translateY(-10px);
   pointer-events:none;
-  transition:opacity .25s ease, transform .25s ease, color .18s linear;
+  transition:opacity .25s ease, transform .25s ease;
 }
 
 .info-panel.show{
@@ -126,33 +135,38 @@ html, body{
   object-fit:contain;
   cursor:grab;
   user-select:none;
-  z-index:100; /* unter text */
+  z-index:100;
   touch-action:none;
 }
 
 .project-img:active{ cursor:grabbing; }
 
-/* ===== MOBILE ===== */
+/* ===== MOBILE FIX ===== */
 @media (max-width:600px){
 
   .label{
-    max-width:none;
-    left:20px!important;
-    right:20px!important;
-    text-align:left;
-    font-size:15px;
+    font-size:13px;
+    max-width:48vw;
   }
 
-  .label-left{ bottom:72px; }
-  .label-right{ bottom:28px; }
+  .label-left{
+    left:16px;
+    bottom:28px;
+  }
 
-  .projects-btn{ top:22px; left:20px; }
-  .info-btn{ top:22px; right:20px; }
+  .label-right{
+    right:16px;
+    bottom:28px;
+    text-align:right;
+  }
+
+  .projects-btn{ top:18px; left:16px; }
+  .info-btn{ top:18px; right:16px; }
 
   .info-panel{
-    top:70px;
-    right:20px;
-    width:calc(100vw - 40px);
+    top:64px;
+    right:16px;
+    width:calc(100vw - 32px);
   }
 }
 </style>
@@ -162,25 +176,27 @@ html, body{
 
 <div class="glow" id="glow"></div>
 
-<div class="projects-btn" id="projectsBtn">Projects</div>
-<div class="info-btn" id="infoBtn">Info</div>
+<div class="projects-btn smart-text" id="projectsBtn">Projects</div>
+<div class="info-btn smart-text" id="infoBtn">Info</div>
 
-<div class="info-panel" id="infoPanel">
+<div class="info-panel smart-text" id="infoPanel">
 Our practice operates at the intersection of architecture, Kunst am Bau, and set design.<br>
 Informed by professional experience in Zurich, Munich, and Aachen, we investigate and develop the visual language of architecture and design.
 </div>
 
-<div class="label label-left">
+<div class="label label-left smart-text">
   <strong>Gate Visual Studios</strong>
   75018 Paris
 </div>
 
-<div class="label label-right">
+<div class="label label-right smart-text">
   gate@visuals.xyz<br>
   0049 1512 9640529
 </div>
 
 <script>
+/* ================= CONFIG ================= */
+
 const images = [
   "./images/01.jpeg",
   "./images/02.jpeg",
@@ -197,7 +213,22 @@ const btn = document.getElementById("projectsBtn");
 const glow = document.getElementById("glow");
 const activeImages = new Map();
 
-/* ===== INFO ===== */
+/* ================= WRAP TEXT PER LETTER ================= */
+
+function wrapSmartText(){
+  document.querySelectorAll(".smart-text").forEach(el=>{
+    if(el.dataset.wrapped) return;
+
+    el.innerHTML = el.innerHTML.replace(/([^\s<])/g,
+      '<span class="char">$1</span>');
+    el.dataset.wrapped = "true";
+  });
+}
+
+wrapSmartText();
+
+/* ================= INFO ================= */
+
 const infoBtn = document.getElementById("infoBtn");
 const infoPanel = document.getElementById("infoPanel");
 let infoOpen = false;
@@ -207,10 +238,12 @@ infoBtn.addEventListener("click",(e)=>{
   infoOpen=!infoOpen;
   infoPanel.classList.toggle("show",infoOpen);
   infoBtn.textContent = infoOpen ? "−" : "Info";
+  wrapSmartText();
   updateTextContrast();
 });
 
-/* ===== SPAWN ===== */
+/* ================= SPAWN ================= */
+
 btn.addEventListener("click",(e)=>{
   e.stopPropagation();
   spawnImage();
@@ -234,11 +267,11 @@ function spawnImage(){
     const base = Math.min(window.innerWidth, window.innerHeight);
 
     if (ratio > 1.25) {
-      img.style.width = Math.min(base * 0.38, 420) + "px";
+      img.style.width = Math.min(base * 0.40, 440) + "px";
     } else if (ratio < 0.8) {
-      img.style.width = Math.min(base * 0.26, 300) + "px";
+      img.style.width = Math.min(base * 0.28, 320) + "px";
     } else {
-      img.style.width = Math.min(base * 0.32, 360) + "px";
+      img.style.width = Math.min(base * 0.34, 380) + "px";
     }
   };
 
@@ -256,7 +289,8 @@ function spawnImage(){
   imgIndex++;
 }
 
-/* ===== DRAG ===== */
+/* ================= DRAG ================= */
+
 function makeDraggable(el){
   let ox=0, oy=0, down=false;
 
@@ -264,7 +298,7 @@ function makeDraggable(el){
     down=true;
     ox=x-el.offsetLeft;
     oy=y-el.offsetTop;
-    el.style.zIndex=500; // unter text
+    el.style.zIndex=500;
   };
 
   const move=(x,y)=>{
@@ -293,74 +327,64 @@ function makeDraggable(el){
   window.addEventListener("touchend",end);
 }
 
-/* ===== TRUE CONTRAST ===== */
+/* ================= PER-LETTER CONTRAST ================= */
+
 function updateTextContrast(){
 
-  const elements = document.querySelectorAll(
-    ".label, .projects-btn, .info-btn, .info-panel.show"
-  );
+  const chars = document.querySelectorAll(".char");
 
-  elements.forEach(label => {
+  chars.forEach(char=>{
 
-    const labelRect = label.getBoundingClientRect();
-    let sampledBrightness = null;
+    const rect = char.getBoundingClientRect();
+    let brightness = null;
 
-    activeImages.forEach(img => {
-
+    activeImages.forEach(img=>{
       const imgRect = img.getBoundingClientRect();
 
       const intersects =
-        !(imgRect.right < labelRect.left ||
-          imgRect.left > labelRect.right ||
-          imgRect.bottom < labelRect.top ||
-          imgRect.top > labelRect.bottom);
+        !(imgRect.right < rect.left ||
+          imgRect.left > rect.right ||
+          imgRect.bottom < rect.top ||
+          imgRect.top > rect.bottom);
 
       if (!intersects) return;
 
-      try {
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
+      try{
+        const canvas=document.createElement("canvas");
+        const ctx=canvas.getContext("2d");
+        const s=12;
+        canvas.width=s;
+        canvas.height=s;
+        ctx.drawImage(img,0,0,s,s);
 
-        const s = 20;
-        canvas.width = s;
-        canvas.height = s;
+        const data=ctx.getImageData(0,0,s,s).data;
 
-        ctx.drawImage(img, 0, 0, s, s);
-
-        const data = ctx.getImageData(0,0,s,s).data;
-
-        let sum = 0;
-        for (let i=0;i<data.length;i+=4){
-          const r=data[i], g=data[i+1], b=data[i+2];
-          const lum = 0.2126*r + 0.7152*g + 0.0722*b;
-          sum += lum;
+        let sum=0;
+        for(let i=0;i<data.length;i+=4){
+          sum+=0.2126*data[i]+0.7152*data[i+1]+0.0722*data[i+2];
         }
-
-        sampledBrightness = sum / (data.length/4) / 255;
-
-      } catch(e){
-        sampledBrightness = 0.5;
+        brightness=sum/(data.length/4)/255;
+      }catch(e){
+        brightness=0.5;
       }
     });
 
-    if (sampledBrightness === null){
-      label.style.color = "#ffffff";
+    if(brightness===null){
+      char.style.color="#ffffff";
       return;
     }
 
-    let color;
+    if (brightness > 0.75) char.style.color="#000000";
+    else if (brightness > 0.6) char.style.color="#333333";
+    else if (brightness > 0.45) char.style.color="#777777";
+    else if (brightness > 0.3) char.style.color="#bbbbbb";
+    else char.style.color="#ffffff";
 
-    if (sampledBrightness > 0.75) color = "#000000";
-    else if (sampledBrightness > 0.6) color = "#333333";
-    else if (sampledBrightness > 0.45) color = "#777777";
-    else if (sampledBrightness > 0.3) color = "#bbbbbb";
-    else color = "#ffffff";
-
-    label.style.color = color;
   });
 }
 
 /* ===== GLOW ===== */
+
 document.body.addEventListener("click", ()=>{
   glow.classList.add("pulse");
   setTimeout(()=>glow.classList.remove("pulse"),320);
