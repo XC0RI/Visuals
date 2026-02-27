@@ -34,7 +34,7 @@ html, body{
   );
   filter:blur(5.2vmin);
   pointer-events:none;
-  z-index:5;
+  z-index:10;
   transition:transform .35s cubic-bezier(.22,.61,.36,1),
              opacity .35s ease;
 }
@@ -44,15 +44,17 @@ html, body{
   opacity:.95;
 }
 
-/* ===== TEXT ELEMENTS ===== */
-.label,
+/* ===== TEXT ALWAYS ON TOP ===== */
 .projects-btn,
-.info-btn{
-  z-index:1000;
+.info-btn,
+.label,
+.info-panel{
+  z-index:9999;
   color:#fff;
   transition:color .18s linear;
 }
 
+/* ===== LABELS ===== */
 .label{
   position:fixed;
   bottom:32px;
@@ -108,7 +110,7 @@ html, body{
   opacity:0;
   transform:translateY(-10px);
   pointer-events:none;
-  transition:opacity .25s ease, transform .25s ease;
+  transition:opacity .25s ease, transform .25s ease, color .18s linear;
 }
 
 .info-panel.show{
@@ -124,7 +126,7 @@ html, body{
   object-fit:contain;
   cursor:grab;
   user-select:none;
-  z-index:40;
+  z-index:100; /* unter text */
   touch-action:none;
 }
 
@@ -205,6 +207,7 @@ infoBtn.addEventListener("click",(e)=>{
   infoOpen=!infoOpen;
   infoPanel.classList.toggle("show",infoOpen);
   infoBtn.textContent = infoOpen ? "−" : "Info";
+  updateTextContrast();
 });
 
 /* ===== SPAWN ===== */
@@ -261,7 +264,7 @@ function makeDraggable(el){
     down=true;
     ox=x-el.offsetLeft;
     oy=y-el.offsetTop;
-    el.style.zIndex=Date.now();
+    el.style.zIndex=500; // unter text
   };
 
   const move=(x,y)=>{
@@ -290,12 +293,14 @@ function makeDraggable(el){
   window.addEventListener("touchend",end);
 }
 
-/* ===== TRUE BRIGHTNESS SAMPLING ===== */
+/* ===== TRUE CONTRAST ===== */
 function updateTextContrast(){
 
-  const labels = document.querySelectorAll(".label, .projects-btn, .info-btn");
+  const elements = document.querySelectorAll(
+    ".label, .projects-btn, .info-btn, .info-panel.show"
+  );
 
-  labels.forEach(label => {
+  elements.forEach(label => {
 
     const labelRect = label.getBoundingClientRect();
     let sampledBrightness = null;
@@ -355,7 +360,7 @@ function updateTextContrast(){
   });
 }
 
-/* ===== GLOW CLICK ===== */
+/* ===== GLOW ===== */
 document.body.addEventListener("click", ()=>{
   glow.classList.add("pulse");
   setTimeout(()=>glow.classList.remove("pulse"),320);
