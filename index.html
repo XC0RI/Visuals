@@ -3,10 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-
-<!-- verhindert iOS Telefonnummer-Links -->
 <meta name="format-detection" content="telephone=no" />
-
 <title>Gate Visual Studios</title>
 
 <style>
@@ -39,10 +36,8 @@ html, body{
   filter:blur(5.2vmin);
   pointer-events:none;
   z-index:10;
-  transition:transform .35s cubic-bezier(.22,.61,.36,1),
-             opacity .35s ease;
+  transition:transform .35s cubic-bezier(.22,.61,.36,1), opacity .35s ease;
 }
-
 .glow.pulse{
   transform:translate(-50%,-50%) scale(1.18);
   opacity:.95;
@@ -75,10 +70,8 @@ html, body{
   pointer-events:none;
   max-width:40vw;
 }
-
 .label-left{ left:36px; text-align:left; }
 .label-right{ right:36px; text-align:right; }
-
 .label strong{
   display:block;
   font-size:clamp(18px,2vw,22px);
@@ -95,7 +88,6 @@ html, body{
   font-weight:300;
   cursor:pointer;
 }
-
 .info-btn{
   position:fixed;
   top:28px;
@@ -121,7 +113,6 @@ html, body{
   pointer-events:none;
   transition:opacity .25s ease, transform .25s ease;
 }
-
 .info-panel.show{
   opacity:1;
   transform:translateY(0);
@@ -138,31 +129,25 @@ html, body{
   z-index:100;
   touch-action:none;
 }
-
 .project-img:active{ cursor:grabbing; }
 
 /* ===== MOBILE FIX ===== */
 @media (max-width:600px){
-
   .label{
     font-size:13px;
     max-width:48vw;
   }
-
   .label-left{
     left:16px;
     bottom:28px;
   }
-
   .label-right{
     right:16px;
     bottom:28px;
     text-align:right;
   }
-
   .projects-btn{ top:18px; left:16px; }
   .info-btn{ top:18px; right:16px; }
-
   .info-panel{
     top:64px;
     right:16px;
@@ -195,8 +180,6 @@ Informed by professional experience in Zurich, Munich, and Aachen, we investigat
 </div>
 
 <script>
-/* ================= CONFIG ================= */
-
 const images = [
   "./images/01.jpeg",
   "./images/02.jpeg",
@@ -213,22 +196,40 @@ const btn = document.getElementById("projectsBtn");
 const glow = document.getElementById("glow");
 const activeImages = new Map();
 
-/* ================= WRAP TEXT PER LETTER ================= */
-
+/* ===== SAFE LETTER WRAP ===== */
 function wrapSmartText(){
   document.querySelectorAll(".smart-text").forEach(el=>{
-    if(el.dataset.wrapped) return;
+    if (el.dataset.wrapped) return;
 
-    el.innerHTML = el.innerHTML.replace(/([^\s<])/g,
-      '<span class="char">$1</span>');
+    function wrapNode(node){
+      if (node.nodeType === Node.TEXT_NODE){
+        const text = node.textContent;
+        const frag = document.createDocumentFragment();
+
+        for (const char of text){
+          if (char === " "){
+            frag.appendChild(document.createTextNode(" "));
+          } else {
+            const span = document.createElement("span");
+            span.className = "char";
+            span.textContent = char;
+            frag.appendChild(span);
+          }
+        }
+        node.replaceWith(frag);
+      }
+      else if (node.nodeType === Node.ELEMENT_NODE){
+        node.childNodes.forEach(child => wrapNode(child));
+      }
+    }
+
+    wrapNode(el);
     el.dataset.wrapped = "true";
   });
 }
-
 wrapSmartText();
 
-/* ================= INFO ================= */
-
+/* ===== INFO ===== */
 const infoBtn = document.getElementById("infoBtn");
 const infoPanel = document.getElementById("infoPanel");
 let infoOpen = false;
@@ -242,8 +243,7 @@ infoBtn.addEventListener("click",(e)=>{
   updateTextContrast();
 });
 
-/* ================= SPAWN ================= */
-
+/* ===== SPAWN ===== */
 btn.addEventListener("click",(e)=>{
   e.stopPropagation();
   spawnImage();
@@ -289,8 +289,7 @@ function spawnImage(){
   imgIndex++;
 }
 
-/* ================= DRAG ================= */
-
+/* ===== DRAG ===== */
 function makeDraggable(el){
   let ox=0, oy=0, down=false;
 
@@ -327,14 +326,11 @@ function makeDraggable(el){
   window.addEventListener("touchend",end);
 }
 
-/* ================= PER-LETTER CONTRAST ================= */
-
+/* ===== PER-LETTER CONTRAST ===== */
 function updateTextContrast(){
-
   const chars = document.querySelectorAll(".char");
 
   chars.forEach(char=>{
-
     const rect = char.getBoundingClientRect();
     let brightness = null;
 
@@ -379,12 +375,10 @@ function updateTextContrast(){
     else if (brightness > 0.45) char.style.color="#777777";
     else if (brightness > 0.3) char.style.color="#bbbbbb";
     else char.style.color="#ffffff";
-
   });
 }
 
 /* ===== GLOW ===== */
-
 document.body.addEventListener("click", ()=>{
   glow.classList.add("pulse");
   setTimeout(()=>glow.classList.remove("pulse"),320);
