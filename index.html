@@ -51,10 +51,13 @@ html,body{
   top:80px;
   right:32px;
   width:min(520px,60vw);
+  font-size:14px;
+  line-height:1.45;
+  letter-spacing:.03em;
   opacity:0;
   transform:translateY(-10px);
   pointer-events:none;
-  transition:.25s;
+  transition:opacity .25s ease, transform .25s ease;
   z-index:9999;
 }
 .info-panel.show{
@@ -76,9 +79,7 @@ html,body{
   color:inherit;
   text-decoration:none;
 }
-.label-right a:hover{
-  text-decoration:underline;
-}
+.label-right a:hover{ text-decoration:underline; }
 </style>
 </head>
 
@@ -89,7 +90,9 @@ html,body{
 
 <div class="info-panel smart-text" id="infoPanel">
 Our practice operates at the intersection of architecture,<br>
-Kunst am Bau, and set design.
+Kunst am Bau, and set design.<br>
+Informed by professional experience in Zurich, Munich, and Aachen,<br>
+we investigate and develop the visual language of architecture and design.
 </div>
 
 <div class="label label-left smart-text">
@@ -194,7 +197,7 @@ function spawnImage(){
 }
 
 /* =========================================================
-   ZOOM (DESKTOP + MOBILE)
+   ZOOM (FASTER)
 ========================================================= */
 function setupZoom(img){
 
@@ -209,7 +212,7 @@ function setupZoom(img){
     requestAnimationFrame(()=>wheelLock=false);
 
     let scale=parseFloat(img.dataset.scale);
-    scale+=e.deltaY*-0.0014;
+    scale+=e.deltaY*-0.0025; // 🚀 schneller
     scale=Math.min(Math.max(1,scale),3);
 
     img.dataset.scale=scale;
@@ -217,7 +220,7 @@ function setupZoom(img){
     scheduleContrast();
   },{passive:false});
 
-  // Mobile pinch
+  // Mobile pinch (faster)
   let pinchStartDist=0;
   let pinchStartScale=1;
 
