@@ -157,16 +157,24 @@ wrapSmartText();
 
 const ALL_CHARS=document.querySelectorAll(".char");
 
-/* ================= INFO ================= */
+/* ================= INFO TOGGLE (UPDATED) ================= */
 const infoBtn=document.getElementById("infoBtn");
 const infoPanel=document.getElementById("infoPanel");
 const glow=document.getElementById("glow");
 
 let infoOpen=false;
+
+function updateInfoLabel(){
+  infoBtn.textContent = infoOpen ? "−" : "Info";
+  infoBtn.dataset.wrapped = "";
+  wrapSmartText();
+}
+
 infoBtn.onclick=(e)=>{
   e.stopPropagation();
   infoOpen=!infoOpen;
   infoPanel.classList.toggle("show",infoOpen);
+  updateInfoLabel();
 };
 
 /* ================= GLOW ================= */
