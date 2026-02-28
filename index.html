@@ -6,7 +6,7 @@
 <meta name="format-detection" content="telephone=no" />
 <title>Gate Visual Studios</title>
 
-<!-- ===== ROBUSTES FAVICON ===== -->
+<!-- ===== FAVICON ===== -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,
 <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>
 <rect width='64' height='64' fill='black'/>
@@ -28,6 +28,7 @@ html, body{
   color:#fff;
 }
 
+/* ===== GLOW ===== */
 .glow{
   position:fixed;
   left:50%;
@@ -36,13 +37,11 @@ html, body{
   height:min(62vmin,700px);
   transform:translate(-50%,-50%) scale(1);
   border-radius:50%;
-  background:radial-gradient(
-    circle,
+  background:radial-gradient(circle,
     rgba(255,255,255,0.75) 0%,
     rgba(255,255,255,0.42) 25%,
     rgba(255,255,255,0.18) 45%,
-    rgba(0,0,0,0) 72%
-  );
+    rgba(0,0,0,0) 72%);
   filter:blur(5.2vmin);
   pointer-events:none;
   z-index:10;
@@ -53,6 +52,53 @@ html, body{
   opacity:.95;
 }
 
+/* ===== BUTTONS ===== */
+.projects-btn{ position:fixed; top:28px; left:32px; cursor:pointer; z-index:9999; }
+.info-btn{ position:fixed; top:28px; right:32px; cursor:pointer; z-index:9999; }
+
+/* ===== INFO PANEL ===== */
+.info-panel{
+  position:fixed;
+  top:80px;
+  right:32px;
+  width:min(520px,60vw);
+  font-size:clamp(12.5px,1.2vw,14px);
+  line-height:1.45;
+  letter-spacing:.035em;
+  font-weight:250;
+  opacity:0;
+  transform:translateY(-10px);
+  pointer-events:none;
+  transition:opacity .25s ease, transform .25s ease;
+  z-index:9999;
+}
+.info-panel.show{
+  opacity:1;
+  transform:translateY(0);
+  pointer-events:auto;
+}
+
+/* ===== LABELS ===== */
+.label{
+  position:fixed;
+  bottom:32px;
+  font-size:clamp(14px,1.4vw,17px);
+  letter-spacing:.04em;
+  font-weight:300;
+  pointer-events:none;
+  z-index:9999;
+}
+.label-left{ left:36px; }
+.label-right{ right:36px; text-align:right; }
+.label-right a{ pointer-events:auto; }
+
+a.mail-link{
+  color:inherit;
+  text-decoration:none;
+}
+a.mail-link:hover{ text-decoration:underline; }
+
+/* ===== IMAGES ===== */
 .project-img{
   position:fixed;
   object-fit:contain;
@@ -64,28 +110,6 @@ html, body{
 }
 .project-img:active{ cursor:grabbing; }
 .project-img.zoom-mode{ cursor:zoom-out; }
-
-a.mail-link{
-  color:inherit;
-  text-decoration:none;
-  pointer-events:auto;
-}
-a.mail-link:hover{ text-decoration:underline; }
-
-.label{
-  position:fixed;
-  bottom:32px;
-  font-size:clamp(14px,1.4vw,17px);
-  letter-spacing:.04em;
-  font-weight:300;
-  pointer-events:none;
-}
-.label-left{ left:36px; }
-.label-right{ right:36px; text-align:right; }
-.label-right a{ pointer-events:auto; }
-
-.projects-btn{ position:fixed; top:28px; left:32px; cursor:pointer; }
-.info-btn{ position:fixed; top:28px; right:32px; cursor:pointer; }
 </style>
 </head>
 
@@ -95,6 +119,13 @@ a.mail-link:hover{ text-decoration:underline; }
 
 <div class="projects-btn" id="projectsBtn">Projects</div>
 <div class="info-btn" id="infoBtn">Info</div>
+
+<div class="info-panel" id="infoPanel">
+Our practice operates at the intersection of architecture,<br>
+Kunst am Bau, and set design.<br>
+Informed by professional experience in Zurich, Munich, and Aachen,<br>
+we investigate and develop the visual language of architecture and design.
+</div>
 
 <div class="label label-left">
 <strong>Gate Visual Studio</strong><br>
@@ -118,6 +149,18 @@ let imgIndex=0;
 let zCounter=200;
 const btn=document.getElementById("projectsBtn");
 const glow=document.getElementById("glow");
+
+/* ===== INFO ===== */
+const infoBtn=document.getElementById("infoBtn");
+const infoPanel=document.getElementById("infoPanel");
+let infoOpen=false;
+
+infoBtn.addEventListener("click",(e)=>{
+  e.stopPropagation();
+  infoOpen=!infoOpen;
+  infoPanel.classList.toggle("show",infoOpen);
+  infoBtn.textContent=infoOpen?"−":"Info";
+});
 
 /* ===== SPAWN ===== */
 btn.addEventListener("click",(e)=>{
@@ -153,9 +196,8 @@ function spawnImage(){
   imgIndex++;
 }
 
-/* ===== OPTION A ZOOM (stabil) ===== */
+/* ===== ZOOM ===== */
 function enableZoom(img){
-
   img.addEventListener("wheel",(e)=>{
     if(img.dataset.zoomActive!=="true") return;
     e.preventDefault();
