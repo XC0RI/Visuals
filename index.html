@@ -20,6 +20,7 @@ html,body{
   overflow:hidden;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
   color:#fff;
+  overscroll-behavior:none;
 }
 
 /* ===== GLOW ===== */
@@ -154,6 +155,9 @@ function wrapSmartText(){
 }
 wrapSmartText();
 
+/* cache chars once (performance patch) */
+const ALL_CHARS = document.querySelectorAll(".char");
+
 /* ================= INFO ================= */
 const infoBtn=document.getElementById("infoBtn");
 const infoPanel=document.getElementById("infoPanel");
@@ -183,8 +187,18 @@ const images=[
 let imgIndex=0;
 let zCounter=200;
 const activeImages=new Set();
+const MAX_IMAGES=18;
 
 document.getElementById("projectsBtn").onclick=spawnImage;
+
+function normalizeZ(){
+  let z=200;
+  [...activeImages].forEach(img=>{
+    z++;
+    img.style.zIndex=z;
+  });
+  zCounter=z;
+}
 
 function spawnImage(){
   const img=document.createElement("img");
@@ -211,6 +225,18 @@ function spawnImage(){
 
   document.body.appendChild(img);
   activeImages.add(img);
+
+  /* limit images (memory patch) */
+  if(activeImages.size>MAX_IMAGES){
+    const first=activeImages.values().next().value;
+    if(first){
+      first.remove();
+      activeImages.delete(first);
+    }
+  }
+
+  if(zCounter>10000) normalizeZ();
+
   scheduleContrast();
   imgIndex++;
 }
@@ -220,7 +246,6 @@ function setupZoom(img){
 
   let wheelLock=false;
 
-  // Desktop
   img.addEventListener("wheel",(e)=>{
     if(img.dataset.zoomActive!=="true") return;
     e.preventDefault();
@@ -238,7 +263,6 @@ function setupZoom(img){
     scheduleContrast();
   },{passive:false});
 
-  // Mobile pinch
   let pinchStartDist=0;
   let pinchStartScale=1;
 
@@ -295,8 +319,17 @@ function setupDrag(el){
   const move=(x,y)=>{
     if(!down) return;
     if(Math.abs(x-sx)>4 || Math.abs(y-sy)>4) moved=true;
-    el.style.left=(x-ox)+"px";
-    el.style.top =(y-oy)+"px";
+
+    const nx=x-ox;
+    const ny=y-oy;
+
+    if(nx!==el._lastX || ny!==el._lastY){
+      el.style.left=nx+"px";
+      el.style.top =ny+"px";
+      el._lastX=nx;
+      el._lastY=ny;
+    }
+
     scheduleContrast();
   };
 
@@ -307,7 +340,6 @@ function setupDrag(el){
     down=false;
   };
 
-  // Desktop
   el.addEventListener("mousedown",e=>{
     e.preventDefault();
     start(e.clientX,e.clientY);
@@ -315,7 +347,6 @@ function setupDrag(el){
   window.addEventListener("mousemove",e=>move(e.clientX,e.clientY));
   window.addEventListener("mouseup",end);
 
-  // Mobile drag
   el.addEventListener("touchstart",e=>{
     if(e.touches.length!==1) return;
     const t=e.touches[0];
@@ -355,7 +386,7 @@ function scheduleContrast(){
 }
 
 function updateTextContrast(){
-  const chars=document.querySelectorAll(".char");
+  const chars=ALL_CHARS;
   chars.forEach(char=>{
     const rect=char.getBoundingClientRect();
     let covered=false;
