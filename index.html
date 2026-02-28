@@ -155,8 +155,7 @@ function wrapSmartText(){
 }
 wrapSmartText();
 
-/* cache chars once (performance patch) */
-const ALL_CHARS = document.querySelectorAll(".char");
+const ALL_CHARS=document.querySelectorAll(".char");
 
 /* ================= INFO ================= */
 const infoBtn=document.getElementById("infoBtn");
@@ -226,7 +225,6 @@ function spawnImage(){
   document.body.appendChild(img);
   activeImages.add(img);
 
-  /* limit images (memory patch) */
   if(activeImages.size>MAX_IMAGES){
     const first=activeImages.values().next().value;
     if(first){
@@ -333,8 +331,13 @@ function setupDrag(el){
     scheduleContrast();
   };
 
-  const end=()=>{
-    if(!moved && el.dataset.isPinching!=="true"){
+  const end=(e)=>{
+    if(
+      !moved &&
+      el.dataset.isPinching!=="true" &&
+      e &&
+      (e.target===el || el.contains(e.target))
+    ){
       toggleZoom(el);
     }
     down=false;
@@ -345,7 +348,7 @@ function setupDrag(el){
     start(e.clientX,e.clientY);
   });
   window.addEventListener("mousemove",e=>move(e.clientX,e.clientY));
-  window.addEventListener("mouseup",end);
+  window.addEventListener("mouseup",e=>end(e));
 
   el.addEventListener("touchstart",e=>{
     if(e.touches.length!==1) return;
@@ -359,7 +362,7 @@ function setupDrag(el){
     move(t.clientX,t.clientY);
   },{passive:false});
 
-  window.addEventListener("touchend",end);
+  window.addEventListener("touchend",e=>end(e));
 }
 
 /* ================= ZOOM TOGGLE ================= */
