@@ -112,9 +112,6 @@ html, body{
   transform:translateY(-10px);
   pointer-events:none;
   transition:opacity .25s ease, transform .25s ease;
-  word-break:normal;
-  overflow-wrap:normal;
-  hyphens:none;
 }
 .info-panel.show{
   opacity:1;
@@ -131,8 +128,14 @@ html, body{
   user-select:none;
   z-index:100;
   touch-action:none;
+  transition: transform .25s cubic-bezier(.22,.61,.36,1);
 }
 .project-img:active{ cursor:grabbing; }
+
+.project-img.zoomed{
+  transform: scale(1.35);
+  cursor:zoom-out;
+}
 
 /* ===== MOBILE ===== */
 @media (max-width:600px){
@@ -174,45 +177,40 @@ gate@visuals.xyz<br>
 
 <script>
 const images=[
-  "./images/01.jpeg",
-  "./images/02.jpeg",
-  "./images/03.jpeg",
-  "./images/04.jpeg",
-  "./images/05.jpeg",
-  "./images/06.jpeg",
-  "./images/07.jpeg",
-  "./images/08.jpeg",
-  "./images/09.jpeg",
-  "./images/10.jpeg",
-  "./images/11.jpeg",
-  "./images/12.jpeg",
-  "./images/13.jpeg",
-  "./images/14.jpeg"
-  
+  "./images/01.jpeg","./images/02.jpeg","./images/03.jpeg","./images/04.jpeg",
+  "./images/05.jpeg","./images/06.jpeg","./images/07.jpeg","./images/08.jpeg",
+  "./images/09.jpeg","./images/10.jpeg","./images/11.jpeg","./images/12.jpeg",
+  "./images/13.jpeg","./images/14.jpeg"
 ];
 
 let imgIndex=0;
-let zCounter=200; // 🔥 global stacking
-
+let zCounter=200;
 const btn=document.getElementById("projectsBtn");
 const glow=document.getElementById("glow");
 const activeImages=new Map();
+
+/* ===== PERFORMANCE THROTTLE ===== */
+let contrastScheduled=false;
+function scheduleContrast(){
+  if(contrastScheduled) return;
+  contrastScheduled=true;
+  requestAnimationFrame(()=>{
+    updateTextContrast();
+    contrastScheduled=false;
+  });
+}
 
 /* ===== WRAP ===== */
 function wrapSmartText(){
   document.querySelectorAll(".smart-text").forEach(el=>{
     if(el.dataset.wrapped==="true") return;
-
     const walker=document.createTreeWalker(el,NodeFilter.SHOW_TEXT,null,false);
     const nodes=[];
     while(walker.nextNode()) nodes.push(walker.currentNode);
-
     nodes.forEach(node=>{
       const text=node.nodeValue;
       if(!text.trim()) return;
-
       const frag=document.createDocumentFragment();
-
       for(const ch of text){
         if(ch===" ") frag.appendChild(document.createTextNode(" "));
         else{
@@ -224,7 +222,6 @@ function wrapSmartText(){
       }
       node.parentNode.replaceChild(frag,node);
     });
-
     el.dataset.wrapped="true";
   });
 }
@@ -240,7 +237,7 @@ infoBtn.addEventListener("click",(e)=>{
   infoOpen=!infoOpen;
   infoPanel.classList.toggle("show",infoOpen);
   infoBtn.textContent=infoOpen?"−":"Info";
-  updateTextContrast();
+  scheduleContrast();
 });
 
 /* ===== SPAWN ===== */
@@ -250,7 +247,6 @@ btn.addEventListener("click",(e)=>{
 });
 
 function spawnImage(){
-
   const src=images[imgIndex%images.length];
 
   if(activeImages.has(src)){
@@ -259,34 +255,55 @@ function spawnImage(){
   }
 
   const img=document.createElement("img");
+  img.crossOrigin="anonymous";
   img.src=src;
   img.className="project-img";
 
-  // 🔥 IMMER GANZ VORNE
   zCounter++;
   img.style.zIndex=zCounter;
 
   img.onload=()=>{
     const ratio=img.naturalWidth/img.naturalHeight;
     const base=Math.min(window.innerWidth,window.innerHeight);
-
     if(ratio>1.25) img.style.width=Math.min(base*0.42,460)+"px";
     else if(ratio<0.8) img.style.width=Math.min(base*0.30,340)+"px";
     else img.style.width=Math.min(base*0.36,400)+"px";
   };
 
-  const maxX=window.innerWidth*0.35;
-  const maxY=window.innerHeight*0.35;
+  img.style.left=(Math.random()*window.innerWidth*0.35+20)+"px";
+  img.style.top =(Math.random()*window.innerHeight*0.35+20)+"px";
 
-  img.style.left=(Math.random()*maxX+20)+"px";
-  img.style.top =(Math.random()*maxY+20)+"px";
-
+  enableZoom(img);
   makeDraggable(img);
+
   document.body.appendChild(img);
   activeImages.set(src,img);
 
-  updateTextContrast();
+  scheduleContrast();
   imgIndex++;
+}
+
+/* ===== ZOOM ===== */
+function enableZoom(img){
+
+  // desktop hover proximity
+  document.addEventListener("mousemove",(e)=>{
+    const rect=img.getBoundingClientRect();
+    const cx=rect.left+rect.width/2;
+    const cy=rect.top+rect.height/2;
+    const dist=Math.hypot(e.clientX-cx,e.clientY-cy);
+
+    if(dist<140) img.classList.add("zoomed");
+    else img.classList.remove("zoomed");
+  });
+
+  // mobile tap toggle
+  img.addEventListener("click",(e)=>{
+    e.stopPropagation();
+    img.classList.toggle("zoomed");
+    zCounter++;
+    img.style.zIndex=zCounter;
+  });
 }
 
 /* ===== DRAG ===== */
@@ -297,8 +314,6 @@ function makeDraggable(el){
     down=true;
     ox=x-el.offsetLeft;
     oy=y-el.offsetTop;
-
-    // 🔥 beim Drag auch nach vorne
     zCounter++;
     el.style.zIndex=zCounter;
   };
@@ -307,7 +322,7 @@ function makeDraggable(el){
     if(!down) return;
     el.style.left=(x-ox)+"px";
     el.style.top =(y-oy)+"px";
-    updateTextContrast();
+    scheduleContrast();
   };
 
   const end=()=>down=false;
@@ -335,7 +350,6 @@ function makeDraggable(el){
 
 /* ===== CONTRAST ===== */
 function updateTextContrast(){
-
   const chars=document.querySelectorAll(".char");
 
   chars.forEach(char=>{
@@ -344,7 +358,6 @@ function updateTextContrast(){
 
     activeImages.forEach(img=>{
       const imgRect=img.getBoundingClientRect();
-
       const intersects=
         !(imgRect.right<rect.left||
           imgRect.left>rect.right||
@@ -360,7 +373,6 @@ function updateTextContrast(){
         canvas.width=s;
         canvas.height=s;
         ctx.drawImage(img,0,0,s,s);
-
         const data=ctx.getImageData(0,0,s,s).data;
 
         let sum=0;
