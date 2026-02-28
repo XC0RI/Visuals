@@ -6,15 +6,15 @@
 <meta name="format-detection" content="telephone=no" />
 <title>Gate Visual Studios</title>
 
-<!-- ===== FAVICON (G déformé) ===== -->
+<!-- ===== ROBUSTES FAVICON ===== -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,
 <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>
 <rect width='64' height='64' fill='black'/>
 <text x='50%' y='54%' dominant-baseline='middle' text-anchor='middle'
 font-family='Arial, Helvetica, sans-serif'
-font-size='42'
+font-size='44'
 fill='white'
-transform='skewX(-12)'>G</text>
+transform='skewX(-18) scale(1.05,0.95)'>G</text>
 </svg>">
 
 <style>
@@ -28,7 +28,6 @@ html, body{
   color:#fff;
 }
 
-/* ===== GLOW ===== */
 .glow{
   position:fixed;
   left:50%;
@@ -54,22 +53,25 @@ html, body{
   opacity:.95;
 }
 
-.char{
-  display:inline-block;
-  transition:color .12s linear;
+.project-img{
+  position:fixed;
+  object-fit:contain;
+  cursor:grab;
+  user-select:none;
+  touch-action:none;
+  transform-origin:center center;
+  transition:transform .12s linear;
 }
+.project-img:active{ cursor:grabbing; }
+.project-img.zoom-mode{ cursor:zoom-out; }
 
-/* ===== LINKS ===== */
 a.mail-link{
   color:inherit;
   text-decoration:none;
   pointer-events:auto;
 }
-a.mail-link:hover{
-  text-decoration:underline;
-}
+a.mail-link:hover{ text-decoration:underline; }
 
-/* ===== LABELS ===== */
 .label{
   position:fixed;
   bottom:32px;
@@ -84,20 +86,6 @@ a.mail-link:hover{
 
 .projects-btn{ position:fixed; top:28px; left:32px; cursor:pointer; }
 .info-btn{ position:fixed; top:28px; right:32px; cursor:pointer; }
-
-/* ===== IMAGES ===== */
-.project-img{
-  position:fixed;
-  height:auto;
-  object-fit:contain;
-  cursor:grab;
-  user-select:none;
-  touch-action:none;
-  transform-origin:center center;
-  transition:transform .12s linear;
-}
-.project-img:active{ cursor:grabbing; }
-.project-img.zoom-mode{ cursor:zoom-out; }
 </style>
 </head>
 
@@ -105,15 +93,15 @@ a.mail-link:hover{
 
 <div class="glow" id="glow"></div>
 
-<div class="projects-btn smart-text" id="projectsBtn">Projects</div>
-<div class="info-btn smart-text" id="infoBtn">Info</div>
+<div class="projects-btn" id="projectsBtn">Projects</div>
+<div class="info-btn" id="infoBtn">Info</div>
 
-<div class="label label-left smart-text">
+<div class="label label-left">
 <strong>Gate Visual Studio</strong><br>
 75018 Paris
 </div>
 
-<div class="label label-right smart-text">
+<div class="label label-right">
 <a href="mailto:gate@visuals.xyz" class="mail-link">gate@visuals.xyz</a><br>
 0049 1512 9640529
 </div>
@@ -130,18 +118,6 @@ let imgIndex=0;
 let zCounter=200;
 const btn=document.getElementById("projectsBtn");
 const glow=document.getElementById("glow");
-const activeImages=new Map();
-
-/* ===== THROTTLE ===== */
-let contrastScheduled=false;
-function scheduleContrast(){
-  if(contrastScheduled) return;
-  contrastScheduled=true;
-  requestAnimationFrame(()=>{
-    updateTextContrast();
-    contrastScheduled=false;
-  });
-}
 
 /* ===== SPAWN ===== */
 btn.addEventListener("click",(e)=>{
@@ -163,7 +139,6 @@ function spawnImage(){
   img.style.zIndex=zCounter;
 
   img.onload=()=>{
-    const ratio=img.naturalWidth/img.naturalHeight;
     const base=Math.min(window.innerWidth,window.innerHeight);
     img.style.width=Math.min(base*0.36,400)+"px";
   };
@@ -175,38 +150,14 @@ function spawnImage(){
   makeDraggable(img);
 
   document.body.appendChild(img);
-  activeImages.set(src,img);
-
-  scheduleContrast();
   imgIndex++;
 }
 
-/* ===== OPTION A ZOOM ===== */
+/* ===== OPTION A ZOOM (stabil) ===== */
 function enableZoom(img){
 
-  // clic → activer mode zoom
-  img.addEventListener("click",(e)=>{
-    e.stopPropagation();
-
-    const active = img.dataset.zoomActive==="true";
-
-    if(active){
-      img.dataset.zoomActive="false";
-      img.dataset.scale=1;
-      img.style.transform="scale(1)";
-      img.classList.remove("zoom-mode");
-    }else{
-      img.dataset.zoomActive="true";
-      img.classList.add("zoom-mode");
-      zCounter++;
-      img.style.zIndex=zCounter;
-    }
-  });
-
-  // molette zoom
   img.addEventListener("wheel",(e)=>{
     if(img.dataset.zoomActive!=="true") return;
-
     e.preventDefault();
 
     let scale=parseFloat(img.dataset.scale);
@@ -218,26 +169,41 @@ function enableZoom(img){
   },{passive:false});
 }
 
-/* ===== DRAG ===== */
+/* ===== DRAG (ANTI-ZITTERN) ===== */
 function makeDraggable(el){
   let ox=0,oy=0,down=false;
+  let startX=0,startY=0;
+  let moved=false;
 
   const start=(x,y)=>{
     down=true;
+    moved=false;
+    startX=x;
+    startY=y;
     ox=x-el.offsetLeft;
     oy=y-el.offsetTop;
+
     zCounter++;
     el.style.zIndex=zCounter;
   };
 
   const move=(x,y)=>{
     if(!down) return;
+
+    if(Math.abs(x-startX)>4 || Math.abs(y-startY)>4){
+      moved=true;
+    }
+
     el.style.left=(x-ox)+"px";
     el.style.top =(y-oy)+"px";
-    scheduleContrast();
   };
 
-  const end=()=>down=false;
+  const end=()=>{
+    if(!moved){
+      toggleZoom(el);
+    }
+    down=false;
+  };
 
   el.addEventListener("mousedown",e=>{
     e.preventDefault();
@@ -260,8 +226,20 @@ function makeDraggable(el){
   window.addEventListener("touchend",end);
 }
 
-/* ===== CONTRAST (inchangé) ===== */
-function updateTextContrast(){}
+/* ===== ZOOM TOGGLE ===== */
+function toggleZoom(img){
+  const active = img.dataset.zoomActive==="true";
+
+  if(active){
+    img.dataset.zoomActive="false";
+    img.dataset.scale=1;
+    img.style.transform="scale(1)";
+    img.classList.remove("zoom-mode");
+  }else{
+    img.dataset.zoomActive="true";
+    img.classList.add("zoom-mode");
+  }
+}
 
 /* ===== GLOW ===== */
 document.body.addEventListener("click",()=>{
