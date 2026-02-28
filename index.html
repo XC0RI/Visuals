@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Gate Visual Studios</title>
 
-<!-- ===== PREMIUM FAVICON ===== -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,
 <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>
 <rect width='64' height='64' fill='black'/>
@@ -23,7 +22,7 @@ html,body{
   color:#fff;
 }
 
-/* ===== CENTER GLOW ===== */
+/* ===== GLOW ===== */
 .glow{
   position:fixed;
   left:50%;
@@ -47,7 +46,7 @@ html,body{
   opacity:.95;
 }
 
-/* ===== TEXT CONTRAST ===== */
+/* ===== TEXT ===== */
 .char{
   display:inline-block;
   transition:color .12s linear;
@@ -191,8 +190,10 @@ function spawnImage(){
   const img=document.createElement("img");
   img.src=images[imgIndex%images.length];
   img.className="project-img";
+
   img.dataset.scale=1;
   img.dataset.zoomActive="false";
+  img.dataset.isPinching="false";
 
   zCounter++;
   img.style.zIndex=zCounter;
@@ -219,7 +220,7 @@ function setupZoom(img){
 
   let wheelLock=false;
 
-  // desktop
+  // Desktop
   img.addEventListener("wheel",(e)=>{
     if(img.dataset.zoomActive!=="true") return;
     e.preventDefault();
@@ -237,7 +238,7 @@ function setupZoom(img){
     scheduleContrast();
   },{passive:false});
 
-  // mobile pinch
+  // Mobile pinch
   let pinchStartDist=0;
   let pinchStartScale=1;
 
@@ -245,6 +246,7 @@ function setupZoom(img){
     if(e.touches.length!==2) return;
 
     img.dataset.zoomActive="true";
+    img.dataset.isPinching="true";
 
     const dx=e.touches[0].clientX-e.touches[1].clientX;
     const dy=e.touches[0].clientY-e.touches[1].clientY;
@@ -268,6 +270,10 @@ function setupZoom(img){
     img.style.transform=`scale(${scale})`;
     scheduleContrast();
   },{passive:false});
+
+  img.addEventListener("touchend",()=>{
+    setTimeout(()=>{ img.dataset.isPinching="false"; },40);
+  });
 }
 
 /* ================= DRAG ================= */
@@ -295,11 +301,13 @@ function setupDrag(el){
   };
 
   const end=()=>{
-    if(!moved) toggleZoom(el);
+    if(!moved && el.dataset.isPinching!=="true"){
+      toggleZoom(el);
+    }
     down=false;
   };
 
-  // desktop
+  // Desktop
   el.addEventListener("mousedown",e=>{
     e.preventDefault();
     start(e.clientX,e.clientY);
@@ -307,7 +315,7 @@ function setupDrag(el){
   window.addEventListener("mousemove",e=>move(e.clientX,e.clientY));
   window.addEventListener("mouseup",end);
 
-  // mobile
+  // Mobile drag
   el.addEventListener("touchstart",e=>{
     if(e.touches.length!==1) return;
     const t=e.touches[0];
