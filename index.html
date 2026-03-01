@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Gate Visual Studios</title>
 
-<!-- ✅ FIXED FAVICON -->
 <link rel="icon" href="./favicon.svg" type="image/svg+xml">
 <link rel="shortcut icon" href="./favicon.svg">
 
@@ -203,6 +202,16 @@ document.body.addEventListener("click",()=>{
   setTimeout(()=>glow.classList.remove("pulse"),320);
 });
 
+/* ================= SHUFFLE ================= */
+function shuffleArray(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
 /* ================= IMAGE SYSTEM ================= */
 const images=[
 "./images/01.jpeg","./images/02.jpeg","./images/03.jpeg","./images/04.jpeg",
@@ -211,14 +220,70 @@ const images=[
 "./images/13.jpeg","./images/14.jpeg"
 ];
 
+let shuffledImages=shuffleArray(images);
 let imgIndex=0;
+
 let zCounter=200;
 const activeImages=new Set();
 const MAX_IMAGES=18;
 
 document.getElementById("projectsBtn").onclick=spawnImage;
 
-/* … REST DEINES JS BLEIBT UNVERÄNDERT … */
+function normalizeZ(){
+  let z=200;
+  [...activeImages].forEach(img=>{
+    z++;
+    img.style.zIndex=z;
+  });
+  zCounter=z;
+}
+
+function spawnImage(){
+  const img=document.createElement("img");
+  img.src=shuffledImages[imgIndex];
+  img.className="project-img";
+
+  img.dataset.scale=1;
+  img.dataset.zoomActive="false";
+  img.dataset.isPinching="false";
+
+  zCounter++;
+  img.style.zIndex=zCounter;
+
+  img.onload=()=>{
+    const base=Math.min(window.innerWidth,window.innerHeight);
+    img.style.width=Math.min(base*0.36,400)+"px";
+  };
+
+  img.style.left=(Math.random()*window.innerWidth*0.35+20)+"px";
+  img.style.top =(Math.random()*window.innerHeight*0.35+20)+"px";
+
+  setupZoom(img);
+  setupDrag(img);
+
+  document.body.appendChild(img);
+  activeImages.add(img);
+
+  if(activeImages.size>MAX_IMAGES){
+    const first=activeImages.values().next().value;
+    if(first){
+      first.remove();
+      activeImages.delete(first);
+    }
+  }
+
+  if(zCounter>10000) normalizeZ();
+
+  imgIndex++;
+  if(imgIndex>=shuffledImages.length){
+    shuffledImages=shuffleArray(images);
+    imgIndex=0;
+  }
+
+  scheduleContrast();
+}
+
+/* === rest of your JS unchanged === */
 </script>
 
 </body>
