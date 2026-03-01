@@ -44,13 +44,11 @@ html,body{
   opacity:.95;
 }
 
-/* ===== TEXT ===== */
 .char{
   display:inline-block;
   transition:color .12s linear;
 }
 
-/* ===== IMAGES ===== */
 .project-img{
   position:fixed;
   object-fit:contain;
@@ -62,7 +60,6 @@ html,body{
 }
 .project-img:active{ cursor:grabbing; }
 
-/* ===== UI ===== */
 .projects-btn{ position:fixed; top:28px; left:32px; cursor:pointer; z-index:9999;}
 .info-btn{ position:fixed; top:28px; right:32px; cursor:pointer; z-index:9999;}
 
@@ -99,7 +96,7 @@ html,body{
   text-decoration:none;
 }
 
-/* ================= MOBILE PORTRAIT FIX ================= */
+/* MOBILE */
 @media (max-width: 600px) and (orientation: portrait){
   .projects-btn,
   .info-btn,
@@ -108,13 +105,11 @@ html,body{
     font-size:13px;
     letter-spacing:0.04em;
   }
-
   .info-panel{
     width:72vw;
     right:20px;
     line-height:1.5;
   }
-
   .projects-btn{ left:20px; }
   .info-btn{ right:20px; }
   .label-left{ left:20px; }
@@ -126,7 +121,6 @@ html,body{
 <body>
 
 <div class="glow" id="glow"></div>
-
 <div class="projects-btn smart-text" id="projectsBtn">Projects</div>
 <div class="info-btn smart-text" id="infoBtn">Info</div>
 
@@ -147,7 +141,7 @@ we investigate and develop the visual language of architecture and design.
 </div>
 
 <script>
-/* ================= SMART TEXT ================= */
+/* SMART TEXT */
 function wrapSmartText(){
   document.querySelectorAll(".smart-text").forEach(el=>{
     if(el.dataset.wrapped) return;
@@ -176,7 +170,7 @@ wrapSmartText();
 
 const ALL_CHARS=document.querySelectorAll(".char");
 
-/* ================= INFO TOGGLE ================= */
+/* INFO */
 const infoBtn=document.getElementById("infoBtn");
 const infoPanel=document.getElementById("infoPanel");
 const glow=document.getElementById("glow");
@@ -185,7 +179,7 @@ let infoOpen=false;
 
 function updateInfoLabel(){
   infoBtn.textContent = infoOpen ? "−" : "Info";
-  infoBtn.dataset.wrapped = "";
+  infoBtn.dataset.wrapped="";
   wrapSmartText();
 }
 
@@ -196,13 +190,12 @@ infoBtn.onclick=(e)=>{
   updateInfoLabel();
 };
 
-/* ================= GLOW ================= */
 document.body.addEventListener("click",()=>{
   glow.classList.add("pulse");
   setTimeout(()=>glow.classList.remove("pulse"),320);
 });
 
-/* ================= SHUFFLE ================= */
+/* SHUFFLE */
 function shuffleArray(arr){
   const a=[...arr];
   for(let i=a.length-1;i>0;i--){
@@ -212,7 +205,7 @@ function shuffleArray(arr){
   return a;
 }
 
-/* ================= IMAGE SYSTEM ================= */
+/* IMAGES */
 const images=[
 "./images/01.jpeg","./images/02.jpeg","./images/03.jpeg","./images/04.jpeg",
 "./images/05.jpeg","./images/06.jpeg","./images/07.jpeg","./images/08.jpeg",
@@ -229,23 +222,10 @@ const MAX_IMAGES=18;
 
 document.getElementById("projectsBtn").onclick=spawnImage;
 
-function normalizeZ(){
-  let z=200;
-  [...activeImages].forEach(img=>{
-    z++;
-    img.style.zIndex=z;
-  });
-  zCounter=z;
-}
-
 function spawnImage(){
   const img=document.createElement("img");
   img.src=shuffledImages[imgIndex];
   img.className="project-img";
-
-  img.dataset.scale=1;
-  img.dataset.zoomActive="false";
-  img.dataset.isPinching="false";
 
   zCounter++;
   img.style.zIndex=zCounter;
@@ -258,32 +238,15 @@ function spawnImage(){
   img.style.left=(Math.random()*window.innerWidth*0.35+20)+"px";
   img.style.top =(Math.random()*window.innerHeight*0.35+20)+"px";
 
-  setupZoom(img);
-  setupDrag(img);
-
   document.body.appendChild(img);
   activeImages.add(img);
-
-  if(activeImages.size>MAX_IMAGES){
-    const first=activeImages.values().next().value;
-    if(first){
-      first.remove();
-      activeImages.delete(first);
-    }
-  }
-
-  if(zCounter>10000) normalizeZ();
 
   imgIndex++;
   if(imgIndex>=shuffledImages.length){
     shuffledImages=shuffleArray(images);
     imgIndex=0;
   }
-
-  scheduleContrast();
 }
-
-/* === rest of your JS unchanged === */
 </script>
 
 </body>
