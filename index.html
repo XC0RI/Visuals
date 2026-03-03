@@ -57,7 +57,7 @@ html,body{
 }
 .project-img:active{ cursor:grabbing; }
 
-/* ===== TYPO SCALE FIX ===== */
+/* ===== TYPO SCALE ===== */
 .projects-btn,
 .filter-list,
 .info-btn{
@@ -221,27 +221,6 @@ projectsBtn.onclick=(e)=>{
   filterList.classList.toggle("show",filtersOpen);
 };
 
-const activeImages=new Map();
-let zCounter=200;
-
-document.querySelectorAll(".filter-item").forEach(el=>{
-  el.onclick=(e)=>{
-    e.stopPropagation();
-
-    const newFilter=el.dataset.filter;
-
-    // ⭐ wenn Filter wechselt → alle Bilder löschen
-    if(newFilter !== activeFilter){
-      activeImages.forEach(img=>img.remove());
-      activeImages.clear();
-    }
-
-    activeFilter=newFilter;
-
-    spawnImage(); // jedes Mal ein neues Bild
-  };
-});
-
 /* IMAGES */
 const images=[
   {src:"./images/01.jpeg",color:"color"},
@@ -256,31 +235,71 @@ const images=[
   {src:"./images/10.jpeg",color:"mono"},
   {src:"./images/11.jpeg",color:"color"},
   {src:"./images/12.jpeg",color:"color"},
-  {src:"./images/13.jpeg",color:"color"},
+  {src:"./images/13.jpeg",color:"mono"},
   {src:"./images/14.jpeg",color:"mono"},
   {src:"./images/15.jpeg",color:"mono"},
   {src:"./images/16.jpeg",color:"mono"}
 ];
+
+const activeImages=new Map();
+let zCounter=200;
+
+/* ===== SHUFFLE QUEUES ===== */
+const queues={};
+
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
 
 function getFiltered(){
   if(activeFilter==="all") return images;
   return images.filter(i=>i.color===activeFilter);
 }
 
-function spawnImage(){
+function nextFromQueue(){
   const pool=getFiltered();
-  if(!pool.length) return;
+  if(!pool.length) return null;
 
-  const data=pool[Math.floor(Math.random()*pool.length)];
+  if(!queues[activeFilter] || queues[activeFilter].length===0){
+    queues[activeFilter]=shuffle(pool.map(i=>i.src));
+  }
 
-  if(activeImages.has(data.src)){
-    const old=activeImages.get(data.src);
+  return queues[activeFilter].pop();
+}
+
+document.querySelectorAll(".filter-item").forEach(el=>{
+  el.onclick=(e)=>{
+    e.stopPropagation();
+
+    const newFilter=el.dataset.filter;
+
+    if(newFilter!==activeFilter){
+      activeImages.forEach(img=>img.remove());
+      activeImages.clear();
+    }
+
+    activeFilter=newFilter;
+    spawnImage();
+  };
+});
+
+function spawnImage(){
+  const src=nextFromQueue();
+  if(!src) return;
+
+  if(activeImages.has(src)){
+    const old=activeImages.get(src);
     old.remove();
-    activeImages.delete(data.src);
+    activeImages.delete(src);
   }
 
   const img=document.createElement("img");
-  img.src=data.src;
+  img.src=src;
   img.className="project-img";
   img.dataset.scale=1;
   img.dataset.isPinching="false";
@@ -300,7 +319,7 @@ function spawnImage(){
   setupDrag(img);
 
   document.body.appendChild(img);
-  activeImages.set(data.src,img);
+  activeImages.set(src,img);
 }
 
 /* ZOOM */
