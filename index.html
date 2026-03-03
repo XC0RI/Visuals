@@ -211,24 +211,17 @@ projectsBtn.onclick=(e)=>{
   e.stopPropagation();
   filtersOpen=!filtersOpen;
   filterList.classList.toggle("show",filtersOpen);
-
-  // wenn Menü schon offen war → neues Bild
-  if(filtersOpen === false){
-    spawnImage();
-  }
 };
 
 document.querySelectorAll(".filter-item").forEach(el=>{
   el.onclick=(e)=>{
     e.stopPropagation();
     activeFilter=el.dataset.filter;
-    clearImages();
-    imgIndex=0;
-    spawnImage(); // ⭐ wichtig
+    spawnImage(); // ⭐ jedes Mal neues Bild
   };
 });
 
-/* IMAGES WITH TAGS */
+/* IMAGES */
 const images=[
   {src:"./images/01.jpeg",color:"color"},
   {src:"./images/02.jpeg",color:"color"},
@@ -248,10 +241,8 @@ const images=[
   {src:"./images/16.jpeg",color:"mono"}
 ];
 
-let filteredPool=[];
-let imgIndex=0;
 let zCounter=200;
-const activeImages=new Set();
+const activeImages=new Map(); // key = src
 
 function getFiltered(){
   if(activeFilter==="all") return images;
@@ -259,11 +250,17 @@ function getFiltered(){
 }
 
 function spawnImage(){
-  filteredPool=getFiltered();
-  if(!filteredPool.length) return;
+  const pool=getFiltered();
+  if(!pool.length) return;
 
-  const data=filteredPool[imgIndex%filteredPool.length];
-  imgIndex++;
+  const data=pool[Math.floor(Math.random()*pool.length)];
+
+  // ⭐ falls Bild schon existiert → altes entfernen
+  if(activeImages.has(data.src)){
+    const old=activeImages.get(data.src);
+    old.remove();
+    activeImages.delete(data.src);
+  }
 
   const img=document.createElement("img");
   img.src=data.src;
@@ -286,13 +283,7 @@ function spawnImage(){
   setupDrag(img);
 
   document.body.appendChild(img);
-  activeImages.add(img);
-}
-
-function clearImages(){
-  activeImages.forEach(img=>img.remove());
-  activeImages.clear();
-  imgIndex=0;
+  activeImages.set(data.src,img);
 }
 
 /* ZOOM */
