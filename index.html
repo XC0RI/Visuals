@@ -57,10 +57,17 @@ html,body{
 }
 .project-img:active{ cursor:grabbing; }
 
-/* ===== TYPO SCALE ===== */
+/* ===== TYPO HIERARCHY ===== */
+
+/* groß wie früher */
 .projects-btn,
-.filter-list,
 .info-btn{
+  font-size:16px;
+}
+
+/* klein (nur Dropdown + Info Text) */
+.filter-list,
+.info-panel{
   font-size:14px;
 }
 
@@ -97,7 +104,6 @@ html,body{
   top:80px;
   right:32px;
   width:min(520px,60vw);
-  font-size:14px;
   line-height:1.45;
   opacity:0;
   transform:translateY(-10px);
@@ -221,7 +227,7 @@ projectsBtn.onclick=(e)=>{
   filterList.classList.toggle("show",filtersOpen);
 };
 
-/* IMAGES */
+/* ===== IMAGE LOGIC (unchanged good version) ===== */
 const images=[
   {src:"./images/01.jpeg",color:"color"},
   {src:"./images/02.jpeg",color:"color"},
@@ -243,8 +249,6 @@ const images=[
 
 const activeImages=new Map();
 let zCounter=200;
-
-/* ===== SHUFFLE QUEUES ===== */
 const queues={};
 
 function shuffle(arr){
