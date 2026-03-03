@@ -44,10 +44,7 @@ html,body{
   opacity:.95;
 }
 
-.char{
-  display:inline-block;
-  transition:color .12s linear;
-}
+.char{ display:inline-block; }
 
 .project-img{
   position:fixed;
@@ -63,6 +60,31 @@ html,body{
 .projects-btn{ position:fixed; top:28px; left:32px; cursor:pointer; z-index:9999;}
 .info-btn{ position:fixed; top:28px; right:32px; cursor:pointer; z-index:9999;}
 
+/* ===== FILTER LIST ===== */
+.filter-list{
+  position:fixed;
+  top:70px;
+  left:32px;
+  opacity:0;
+  transform:translateY(-6px);
+  pointer-events:none;
+  transition:.25s;
+  z-index:9999;
+}
+.filter-list.show{
+  opacity:1;
+  transform:translateY(0);
+  pointer-events:auto;
+}
+.filter-item{
+  margin:14px 0;
+  cursor:pointer;
+}
+.filter-item[data-filter="all"]{ color:#ffffff; }
+.filter-item[data-filter="mono"]{ color:#bfbfbf; }
+.filter-item[data-filter="color"]{ color:#ff4d4d; }
+
+/* INFO PANEL */
 .info-panel{
   position:fixed;
   top:80px;
@@ -97,19 +119,9 @@ html,body{
 }
 
 /* MOBILE */
-@media (max-width: 600px) and (orientation: portrait){
-  .projects-btn,
-  .info-btn,
-  .label,
-  .info-panel{
-    font-size:13px;
-    letter-spacing:0.04em;
-  }
-  .info-panel{
-    width:72vw;
-    right:20px;
-    line-height:1.5;
-  }
+@media (max-width:600px){
+  .filter-item{ margin:8px 0; }
+  .filter-list{ left:20px; top:64px; }
   .projects-btn{ left:20px; }
   .info-btn{ right:20px; }
   .label-left{ left:20px; }
@@ -121,7 +133,15 @@ html,body{
 <body>
 
 <div class="glow" id="glow"></div>
+
 <div class="projects-btn smart-text" id="projectsBtn">Projects</div>
+
+<div class="filter-list smart-text" id="filterList">
+  <div class="filter-item" data-filter="all">All</div>
+  <div class="filter-item" data-filter="mono">Monochrome</div>
+  <div class="filter-item" data-filter="color">Color</div>
+</div>
+
 <div class="info-btn smart-text" id="infoBtn">Info</div>
 
 <div class="info-panel smart-text" id="infoPanel">
@@ -175,56 +195,74 @@ const infoBtn=document.getElementById("infoBtn");
 const infoPanel=document.getElementById("infoPanel");
 let infoOpen=false;
 
-function updateInfoLabel(){
-  infoBtn.textContent = infoOpen ? "−" : "Info";
-  infoBtn.dataset.wrapped="";
-  wrapSmartText();
-}
-
 infoBtn.onclick=(e)=>{
   e.stopPropagation();
   infoOpen=!infoOpen;
   infoPanel.classList.toggle("show",infoOpen);
-  updateInfoLabel();
 };
 
-document.body.addEventListener("click",()=>{
-  glow.classList.add("pulse");
-  setTimeout(()=>glow.classList.remove("pulse"),320);
+/* FILTER UI */
+const projectsBtn=document.getElementById("projectsBtn");
+const filterList=document.getElementById("filterList");
+
+let filtersOpen=false;
+let activeFilter="all";
+
+projectsBtn.onclick=(e)=>{
+  e.stopPropagation();
+  filtersOpen=!filtersOpen;
+  filterList.classList.toggle("show",filtersOpen);
+};
+
+document.querySelectorAll(".filter-item").forEach(el=>{
+  el.onclick=(e)=>{
+    e.stopPropagation();
+    activeFilter=el.dataset.filter;
+    clearImages();
+    spawnImage();
+  };
 });
 
-/* SHUFFLE */
-function shuffleArray(arr){
-  const a=[...arr];
-  for(let i=a.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [a[i],a[j]]=[a[j],a[i]];
-  }
-  return a;
-}
-
-/* IMAGES */
+/* IMAGES WITH TAGS */
 const images=[
-"./images/01.jpeg","./images/02.jpeg","./images/03.jpeg","./images/04.jpeg",
-"./images/05.jpeg","./images/06.jpeg","./images/07.jpeg","./images/08.jpeg",
-"./images/09.jpeg","./images/10.jpeg","./images/11.jpeg","./images/12.jpeg",
-"./images/13.jpeg","./images/14.jpeg","./images/15.jpeg","./images/16.jpeg"
+  {src:"./images/01.jpeg",color:"mono"},
+  {src:"./images/02.jpeg",color:"color"},
+  {src:"./images/03.jpeg",color:"mono"},
+  {src:"./images/04.jpeg",color:"color"},
+  {src:"./images/05.jpeg",color:"mono"},
+  {src:"./images/06.jpeg",color:"color"},
+  {src:"./images/07.jpeg",color:"mono"},
+  {src:"./images/08.jpeg",color:"color"},
+  {src:"./images/09.jpeg",color:"mono"},
+  {src:"./images/10.jpeg",color:"color"},
+  {src:"./images/11.jpeg",color:"mono"},
+  {src:"./images/12.jpeg",color:"color"},
+  {src:"./images/13.jpeg",color:"mono"},
+  {src:"./images/14.jpeg",color:"color"},
+  {src:"./images/15.jpeg",color:"mono"},
+  {src:"./images/16.jpeg",color:"color"}
 ];
 
-let shuffledImages=shuffleArray(images);
+let filteredPool=[];
 let imgIndex=0;
-
 let zCounter=200;
 const activeImages=new Set();
-const MAX_IMAGES=18;
 
-document.getElementById("projectsBtn").onclick=spawnImage;
+function getFiltered(){
+  if(activeFilter==="all") return images;
+  return images.filter(i=>i.color===activeFilter);
+}
 
 function spawnImage(){
-  const img=document.createElement("img");
-  img.src=shuffledImages[imgIndex];
-  img.className="project-img";
+  filteredPool=getFiltered();
+  if(!filteredPool.length) return;
 
+  const data=filteredPool[imgIndex%filteredPool.length];
+  imgIndex++;
+
+  const img=document.createElement("img");
+  img.src=data.src;
+  img.className="project-img";
   img.dataset.scale=1;
   img.dataset.isPinching="false";
 
@@ -244,15 +282,15 @@ function spawnImage(){
 
   document.body.appendChild(img);
   activeImages.add(img);
-
-  imgIndex++;
-  if(imgIndex>=shuffledImages.length){
-    shuffledImages=shuffleArray(images);
-    imgIndex=0;
-  }
 }
 
-/* ===== ZOOM ===== */
+function clearImages(){
+  activeImages.forEach(img=>img.remove());
+  activeImages.clear();
+  imgIndex=0;
+}
+
+/* ZOOM */
 function setupZoom(img){
   img.addEventListener("wheel",(e)=>{
     e.preventDefault();
@@ -292,7 +330,7 @@ function setupZoom(img){
   });
 }
 
-/* ===== DRAG ===== */
+/* DRAG */
 function setupDrag(el){
   let down=false,sx=0,sy=0,ox=0,oy=0;
 
@@ -311,9 +349,7 @@ function setupDrag(el){
     el.style.top =(y-oy)+"px";
   };
 
-  const end=()=>{
-    down=false;
-  };
+  const end=()=>{ down=false; };
 
   el.addEventListener("mousedown",e=>{
     e.preventDefault();
@@ -336,6 +372,12 @@ function setupDrag(el){
 
   window.addEventListener("touchend",end);
 }
+
+/* GLOW */
+document.body.addEventListener("click",()=>{
+  glow.classList.add("pulse");
+  setTimeout(()=>glow.classList.remove("pulse"),320);
+});
 </script>
 
 </body>
