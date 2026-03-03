@@ -211,6 +211,11 @@ projectsBtn.onclick=(e)=>{
   e.stopPropagation();
   filtersOpen=!filtersOpen;
   filterList.classList.toggle("show",filtersOpen);
+
+  // wenn Menü schon offen war → neues Bild
+  if(filtersOpen === false){
+    spawnImage();
+  }
 };
 
 document.querySelectorAll(".filter-item").forEach(el=>{
@@ -219,6 +224,7 @@ document.querySelectorAll(".filter-item").forEach(el=>{
     activeFilter=el.dataset.filter;
     clearImages();
     imgIndex=0;
+    spawnImage(); // ⭐ wichtig
   };
 });
 
