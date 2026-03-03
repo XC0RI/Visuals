@@ -76,13 +76,12 @@ html,body{
   transform:translateY(0);
   pointer-events:auto;
 }
+
 .filter-item{
-  margin:14px 0;
+  margin:28px 0;
   cursor:pointer;
+  color:#ffffff;
 }
-.filter-item[data-filter="all"]{ color:#ffffff; }
-.filter-item[data-filter="mono"]{ color:#bfbfbf; }
-.filter-item[data-filter="color"]{ color:#ff4d4d; }
 
 /* INFO PANEL */
 .info-panel{
@@ -120,7 +119,7 @@ html,body{
 
 /* MOBILE */
 @media (max-width:600px){
-  .filter-item{ margin:8px 0; }
+  .filter-item{ margin:14px 0; }
   .filter-list{ left:20px; top:64px; }
   .projects-btn{ left:20px; }
   .info-btn{ right:20px; }
@@ -219,7 +218,7 @@ document.querySelectorAll(".filter-item").forEach(el=>{
     e.stopPropagation();
     activeFilter=el.dataset.filter;
     clearImages();
-    spawnImage();
+    imgIndex=0;
   };
 });
 
