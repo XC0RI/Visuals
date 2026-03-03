@@ -57,6 +57,14 @@ html,body{
 }
 .project-img:active{ cursor:grabbing; }
 
+/* ===== TYPO SCALE FIX ===== */
+.projects-btn,
+.filter-list,
+.info-btn{
+  font-size:14px;
+}
+
+/* positions */
 .projects-btn{ position:fixed; top:28px; left:32px; cursor:pointer; z-index:9999;}
 .info-btn{ position:fixed; top:28px; right:32px; cursor:pointer; z-index:9999;}
 
@@ -213,11 +221,24 @@ projectsBtn.onclick=(e)=>{
   filterList.classList.toggle("show",filtersOpen);
 };
 
+const activeImages=new Map();
+let zCounter=200;
+
 document.querySelectorAll(".filter-item").forEach(el=>{
   el.onclick=(e)=>{
     e.stopPropagation();
-    activeFilter=el.dataset.filter;
-    spawnImage(); // ⭐ jedes Mal neues Bild
+
+    const newFilter=el.dataset.filter;
+
+    // ⭐ wenn Filter wechselt → alle Bilder löschen
+    if(newFilter !== activeFilter){
+      activeImages.forEach(img=>img.remove());
+      activeImages.clear();
+    }
+
+    activeFilter=newFilter;
+
+    spawnImage(); // jedes Mal ein neues Bild
   };
 });
 
@@ -241,9 +262,6 @@ const images=[
   {src:"./images/16.jpeg",color:"mono"}
 ];
 
-let zCounter=200;
-const activeImages=new Map(); // key = src
-
 function getFiltered(){
   if(activeFilter==="all") return images;
   return images.filter(i=>i.color===activeFilter);
@@ -255,7 +273,6 @@ function spawnImage(){
 
   const data=pool[Math.floor(Math.random()*pool.length)];
 
-  // ⭐ falls Bild schon existiert → altes entfernen
   if(activeImages.has(data.src)){
     const old=activeImages.get(data.src);
     old.remove();
