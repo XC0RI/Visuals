@@ -175,8 +175,9 @@ font-size:13px;
 
 .info-panel{
 right:18px;
+left:40vw;
 font-size:13px;
-width:70vw;
+width:auto;
 }
 
 }
@@ -211,7 +212,7 @@ we investigate and develop the visual language of architecture and design.
 </div>
 
 <div class="label label-right smart-text">
-info@gatevisuals.xyz<br>
+<a href="mailto:info@gatevisuals.xyz">info@gatevisuals.xyz</a><br>
 0049 1512 9640529
 </div>
 
@@ -336,7 +337,7 @@ activeImages.set(item.src,img);
 
 }
 
-/* DRAG + TOUCH */
+/* DRAG */
 
 function setupDrag(el){
 
@@ -382,7 +383,7 @@ window.addEventListener("touchend",end);
 
 }
 
-/* ZOOM + PINCH */
+/* ZOOM */
 
 function setupZoom(img){
 
@@ -451,6 +452,7 @@ filterList.classList.toggle("show",filtersOpen);
 document.querySelectorAll(".filter-item").forEach(el=>{
 
 el.onclick=(e)=>{
+
 e.stopPropagation();
 
 const newFilter=el.dataset.filter;
@@ -476,7 +478,9 @@ let infoOpen=false;
 
 infoBtn.onclick=(e)=>{
 e.stopPropagation();
+
 infoOpen=!infoOpen;
+
 infoPanel.classList.toggle("show",infoOpen);
 
 infoBtn.textContent=infoOpen ? "–" : "Info";
