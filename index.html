@@ -1,19 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>Gate Visual Studio - Digital Image Making</title>
 
-<meta name="description" content="Gate Visual Studio operates across architecture, Kunst am Bau and set design. Digital image making across disciplines. Based in Paris." />
-<link rel="canonical" href="https://gatevisuals.xyz/" />
-
-<meta property="og:title" content="Gate Visual Studio - Digital Image Making">
-<meta property="og:description" content="Digital image making across architecture, Kunst am Bau and set design. Based in Paris.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://gatevisuals.xyz/">
-<meta property="og:image" content="https://gatevisuals.xyz/images/01.jpeg">
+<meta name="description" content="Gate Visual Studio operates across architecture, Kunst am Bau and set design. Digital image making across disciplines. Based in Paris.">
 
 <link rel="icon" href="./favicon.svg" type="image/svg+xml">
 
@@ -30,7 +23,7 @@ color:#fff;
 overscroll-behavior:none;
 }
 
-/* ===== TEXT ===== */
+/* TEXT */
 
 .smart-text{
 mix-blend-mode:difference;
@@ -47,7 +40,7 @@ white-space:nowrap;
 display:inline-block;
 }
 
-/* ===== GLOW ===== */
+/* GLOW */
 
 .glow{
 position:fixed;
@@ -55,7 +48,7 @@ left:50%;
 top:50%;
 width:min(62vmin,700px);
 height:min(62vmin,700px);
-transform:translate(-50%,-50%) scale(1);
+transform:translate(-50%,-50%);
 border-radius:50%;
 background:radial-gradient(circle,
 rgba(255,255,255,0.75) 0%,
@@ -65,15 +58,14 @@ rgba(0,0,0,0) 72%);
 filter:blur(5.2vmin);
 pointer-events:none;
 z-index:10;
-transition:transform .35s cubic-bezier(.22,.61,.36,1), opacity .35s ease;
+transition:.35s;
 }
 
 .glow.pulse{
-transform:translate(-50%,-50%) scale(1.18);
-opacity:.95;
+transform:translate(-50%,-50%) scale(1.2);
 }
 
-/* ===== IMAGES ===== */
+/* IMAGES */
 
 .project-img{
 position:fixed;
@@ -89,7 +81,7 @@ will-change:transform;
 cursor:grabbing;
 }
 
-/* ===== UI ===== */
+/* UI */
 
 .projects-btn,
 .info-btn{
@@ -134,7 +126,7 @@ pointer-events:auto;
 }
 
 .filter-item{
-margin:28px 0;
+margin:24px 0;
 cursor:pointer;
 }
 
@@ -164,9 +156,7 @@ font-size:16px;
 z-index:9999;
 }
 
-.label-left{
-left:36px;
-}
+.label-left{ left:36px; }
 
 .label-right{
 right:36px;
@@ -174,37 +164,17 @@ text-align:right;
 }
 
 .label-right a{
-pointer-events:auto;
 color:inherit;
 text-decoration:none;
 }
 
 @media (max-width:600px){
 
-.filter-item{
-margin:14px 0;
-}
-
-.filter-list{
-left:20px;
-top:64px;
-}
-
-.projects-btn{
-left:20px;
-}
-
-.info-btn{
-right:20px;
-}
-
-.label-left{
-left:20px;
-}
-
-.label-right{
-right:20px;
-}
+.filter-list{ left:20px; }
+.projects-btn{ left:20px; }
+.info-btn{ right:20px; }
+.label-left{ left:20px; }
+.label-right{ right:20px; }
 
 }
 
@@ -233,7 +203,8 @@ we investigate and develop the visual language of architecture and design.
 </div>
 
 <div class="label label-left smart-text">
-<strong>Gate Visual Studio</strong><br>75018 Paris
+<strong>Gate Visual Studio</strong><br>
+75018 Paris
 </div>
 
 <div class="label label-right smart-text">
@@ -243,7 +214,7 @@ we investigate and develop the visual language of architecture and design.
 
 <script>
 
-/* ===== SMART TEXT WRAP ===== */
+/* TEXT WRAP */
 
 function wrapSmartText(){
 
@@ -294,7 +265,7 @@ node.parentNode.replaceChild(frag,node);
 
 });
 
-el.dataset.wrapped="true";
+el.dataset.wrapped=true;
 
 });
 
@@ -302,7 +273,151 @@ el.dataset.wrapped="true";
 
 wrapSmartText();
 
-/* ===== INFO TOGGLE ===== */
+/* IMAGE DATA */
+
+const images=[
+{src:"./images/01.jpeg",color:"color"},
+{src:"./images/02.jpeg",color:"color"},
+{src:"./images/03.jpeg",color:"color"},
+{src:"./images/04.jpeg",color:"color"},
+{src:"./images/05.jpeg",color:"color"},
+{src:"./images/06.jpeg",color:"color"},
+{src:"./images/07.jpeg",color:"color"},
+{src:"./images/08.jpeg",color:"color"},
+{src:"./images/09.jpeg",color:"mono"},
+{src:"./images/10.jpeg",color:"mono"},
+{src:"./images/11.jpeg",color:"color"},
+{src:"./images/12.jpeg",color:"color"},
+{src:"./images/13.jpeg",color:"color"},
+{src:"./images/14.jpeg",color:"mono"},
+{src:"./images/15.jpeg",color:"mono"},
+{src:"./images/16.jpeg",color:"mono"}
+];
+
+let activeFilter="all";
+let zCounter=200;
+
+/* SPAWN IMAGE */
+
+function spawnImage(){
+
+let pool = activeFilter==="all"
+? images
+: images.filter(i=>i.color===activeFilter);
+
+if(!pool.length) return;
+
+const item = pool[Math.floor(Math.random()*pool.length)];
+
+const img=document.createElement("img");
+
+img.src=item.src;
+img.className="project-img";
+img.dataset.scale="1";
+
+zCounter++;
+img.style.zIndex=zCounter;
+
+img.style.left=(Math.random()*window.innerWidth*0.35+20)+"px";
+img.style.top=(Math.random()*window.innerHeight*0.35+20)+"px";
+
+img.onload=()=>{
+const base=Math.min(window.innerWidth,window.innerHeight);
+img.style.width=Math.min(base*0.36,400)+"px";
+};
+
+setupDrag(img);
+setupZoom(img);
+
+document.body.appendChild(img);
+
+}
+
+/* DRAG */
+
+function setupDrag(el){
+
+let down=false;
+let ox=0;
+let oy=0;
+
+el.addEventListener("mousedown",e=>{
+down=true;
+ox=e.clientX-el.offsetLeft;
+oy=e.clientY-el.offsetTop;
+});
+
+window.addEventListener("mousemove",e=>{
+if(!down) return;
+
+el.style.left=(e.clientX-ox)+"px";
+el.style.top=(e.clientY-oy)+"px";
+});
+
+window.addEventListener("mouseup",()=>{
+down=false;
+});
+
+}
+
+/* ZOOM */
+
+function setupZoom(img){
+
+img.addEventListener("wheel",(e)=>{
+
+e.preventDefault();
+
+let scale=parseFloat(img.dataset.scale);
+
+scale+=e.deltaY*-0.002;
+
+scale=Math.min(Math.max(1,scale),3);
+
+img.dataset.scale=scale;
+
+img.style.transform=`scale(${scale})`;
+
+});
+
+}
+
+/* PROJECT BUTTON */
+
+const projectsBtn=document.getElementById("projectsBtn");
+const filterList=document.getElementById("filterList");
+
+let filtersOpen=false;
+
+projectsBtn.onclick=(e)=>{
+
+e.stopPropagation();
+
+filtersOpen=!filtersOpen;
+
+filterList.classList.toggle("show",filtersOpen);
+
+spawnImage();
+
+};
+
+/* FILTER */
+
+document.querySelectorAll(".filter-item").forEach(el=>{
+
+el.onclick=(e)=>{
+
+e.stopPropagation();
+
+activeFilter=el.dataset.filter;
+
+spawnImage();
+
+};
+
+});
+
+/* INFO */
 
 const infoBtn=document.getElementById("infoBtn");
 const infoPanel=document.getElementById("infoPanel");
@@ -317,24 +432,24 @@ infoOpen=!infoOpen;
 
 infoPanel.classList.toggle("show",infoOpen);
 
-if(infoOpen){
-infoBtn.textContent="–";
-}else{
-infoBtn.textContent="Info";
-}
+infoBtn.textContent=infoOpen ? "–" : "Info";
 
-infoBtn.dataset.wrapped="";
+infoBtn.dataset.wrapped=false;
+
 wrapSmartText();
 
 };
 
-/* ===== GLOW ===== */
+/* GLOW */
 
 const glow=document.getElementById("glow");
 
 document.body.addEventListener("click",()=>{
+
 glow.classList.add("pulse");
-setTimeout(()=>glow.classList.remove("pulse"),320);
+
+setTimeout(()=>glow.classList.remove("pulse"),300);
+
 });
 
 </script>
