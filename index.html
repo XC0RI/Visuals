@@ -25,14 +25,8 @@ position:relative;
 z-index:10000;
 }
 
-.word{
-display:inline-block;
-white-space:nowrap;
-}
-
-.char{
-display:inline-block;
-}
+.word{display:inline-block;white-space:nowrap;}
+.char{display:inline-block;}
 
 .glow{
 position:fixed;
@@ -53,11 +47,6 @@ z-index:10;
 transition:.35s;
 }
 
-.glow.pulse{
-transform:translate(-50%,-50%) scale(1.18);
-opacity:.95;
-}
-
 .project-img{
 position:fixed;
 object-fit:contain;
@@ -68,9 +57,7 @@ transform-origin:center center;
 will-change:transform;
 }
 
-.project-img:active{
-cursor:grabbing;
-}
+.project-img:active{cursor:grabbing;}
 
 .projects-btn,
 .info-btn{
@@ -154,9 +141,7 @@ pointer-events:auto;
 
 .projects-btn,
 .info-btn,
-.label{
-font-size:13px;
-}
+.label{ font-size:13px; }
 
 .filter-item{
 margin:16px 0;
@@ -182,7 +167,6 @@ width:auto;
 <div class="projects-btn smart-text" id="projectsBtn">Projects</div>
 
 <div class="filter-list smart-text" id="filterList">
-<div class="filter-item" data-filter="all">All</div>
 <div class="filter-item" data-filter="mono">Monochrome</div>
 <div class="filter-item" data-filter="color">Color</div>
 </div>
@@ -208,10 +192,10 @@ we investigate and develop the visual language of architecture and design.
 
 <script>
 
+/* TEXT WRAP */
+
 function wrapSmartText(){
-
 document.querySelectorAll(".smart-text").forEach(el=>{
-
 if(el.dataset.wrapped) return;
 
 const walker=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);
@@ -220,7 +204,6 @@ const nodes=[];
 while(walker.nextNode()) nodes.push(walker.currentNode);
 
 nodes.forEach(node=>{
-
 const text=node.nodeValue;
 if(!text.trim()) return;
 
@@ -228,37 +211,32 @@ const frag=document.createDocumentFragment();
 const words=text.split(" ");
 
 words.forEach((word,i)=>{
-
 const wordSpan=document.createElement("span");
 wordSpan.className="word";
 
 for(const ch of word){
-
 const span=document.createElement("span");
 span.className="char";
 span.textContent=ch;
 wordSpan.appendChild(span);
-
 }
 
 frag.appendChild(wordSpan);
 
 if(i!==words.length-1)
 frag.appendChild(document.createTextNode(" "));
-
 });
 
 node.parentNode.replaceChild(frag,node);
-
 });
 
 el.dataset.wrapped=true;
-
 });
-
 }
 
 wrapSmartText();
+
+/* IMAGE DATA */
 
 const images=[
 {src:"./images/01.jpeg",color:"color"},
@@ -279,50 +257,35 @@ const images=[
 {src:"./images/16.jpeg",color:"mono"}
 ];
 
-function preloadImages(){
-images.forEach(item=>{
-const img=new Image();
-img.src=item.src;
-});
-}
-preloadImages();
+/* SYSTEM */
 
-let activeFilter="all";
+let activeFilter=null;
+let queue=[];
+let index=0;
 let zCounter=200;
-const activeImages=new Map();
 
-let imageQueue=[];
-let queueIndex=0;
-
-function shuffleArray(array){
-for(let i=array.length-1;i>0;i--){
+function shuffle(a){
+for(let i=a.length-1;i>0;i--){
 const j=Math.floor(Math.random()*(i+1));
-[array[i],array[j]]=[array[j],array[i]];
+[a[i],a[j]]=[a[j],a[i]];
 }
-return array;
+return a;
+}
+
+function resetQueue(filter){
+queue=shuffle(images.filter(i=>i.color===filter));
+index=0;
 }
 
 function spawnImage(){
 
-const pool = activeFilter==="all"
-? images
-: images.filter(i=>i.color===activeFilter);
-
-if(imageQueue.length===0){
-imageQueue = shuffleArray([...pool]);
-queueIndex = 0;
+if(index>=queue.length){
+queue=shuffle([...queue]);
+index=0;
 }
 
-if(queueIndex>=imageQueue.length){
-imageQueue = shuffleArray([...pool]);
-queueIndex = 0;
-}
-
-const item = imageQueue[queueIndex];
-queueIndex++;
-
-activeImages.forEach(img=>img.remove());
-activeImages.clear();
+const item=queue[index];
+index++;
 
 const img=document.createElement("img");
 img.src=item.src;
@@ -332,21 +295,25 @@ img.dataset.scale="1";
 zCounter++;
 img.style.zIndex=zCounter;
 
-img.style.left=(Math.random()*window.innerWidth*0.35+20)+"px";
-img.style.top=(Math.random()*window.innerHeight*0.35+20)+"px";
+const margin=40;
+
+img.style.left=Math.random()*(window.innerWidth-margin*2)+margin+"px";
+img.style.top=Math.random()*(window.innerHeight-margin*2)+margin+"px";
 
 img.onload=()=>{
-const base=Math.min(window.innerWidth,window.innerHeight);
-img.style.width=Math.min(base*0.36,400)+"px";
+let base=Math.min(window.innerWidth,window.innerHeight);
+let size=base*0.32;
+if(window.innerWidth<600) size=base*0.55;
+img.style.width=Math.min(size,420)+"px";
 };
 
 setupDrag(img);
 setupZoom(img);
 
 document.body.appendChild(img);
-activeImages.set(item.src,img);
-
 }
+
+/* DRAG */
 
 function setupDrag(el){
 
@@ -366,7 +333,7 @@ el.style.left=(x-ox)+"px";
 el.style.top=(y-oy)+"px";
 };
 
-const end=()=>{ down=false; };
+const end=()=>{down=false;}
 
 el.addEventListener("mousedown",e=>{
 e.preventDefault();
@@ -375,8 +342,9 @@ start(e.clientX,e.clientY);
 
 window.addEventListener("mousemove",e=>move(e.clientX,e.clientY));
 window.addEventListener("mouseup",end);
-
 }
+
+/* ZOOM */
 
 function setupZoom(img){
 
@@ -391,19 +359,22 @@ img.dataset.scale=scale;
 img.style.transform=`scale(${scale})`;
 
 },{passive:false});
-
 }
+
+/* PROJECT MENU */
 
 const projectsBtn=document.getElementById("projectsBtn");
 const filterList=document.getElementById("filterList");
 
-let filtersOpen=false;
+let open=false;
 
 projectsBtn.onclick=(e)=>{
 e.stopPropagation();
-filtersOpen=!filtersOpen;
-filterList.classList.toggle("show",filtersOpen);
+open=!open;
+filterList.classList.toggle("show",open);
 };
+
+/* FILTER CLICK */
 
 document.querySelectorAll(".filter-item").forEach(el=>{
 
@@ -411,52 +382,21 @@ el.onclick=(e)=>{
 
 e.stopPropagation();
 
-activeFilter=el.dataset.filter;
+const newFilter=el.dataset.filter;
 
-imageQueue=[];
-queueIndex=0;
+/* category change */
+if(activeFilter!==newFilter){
 
-spawnImage();
+document.querySelectorAll(".project-img").forEach(i=>i.remove());
 
-};
+activeFilter=newFilter;
+resetQueue(newFilter);
 
-});
-
-const infoBtn=document.getElementById("infoBtn");
-const infoPanel=document.getElementById("infoPanel");
-
-let infoOpen=false;
-
-infoBtn.onclick=(e)=>{
-e.stopPropagation();
-
-infoOpen=!infoOpen;
-
-infoPanel.classList.toggle("show",infoOpen);
-
-infoBtn.textContent=infoOpen ? "–" : "Info";
-
-infoBtn.dataset.wrapped=false;
-wrapSmartText();
-};
-
-const glow=document.getElementById("glow");
-
-document.body.addEventListener("click",(e)=>{
-
-if(
-e.target.closest(".projects-btn") ||
-e.target.closest(".filter-list") ||
-e.target.closest(".info-btn") ||
-e.target.closest(".info-panel")
-){
-return;
 }
 
-glow.classList.add("pulse");
-setTimeout(()=>glow.classList.remove("pulse"),320);
-
 spawnImage();
+
+};
 
 });
 
