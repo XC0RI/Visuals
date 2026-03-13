@@ -298,6 +298,24 @@ let activeFilter="all";
 let zCounter=200;
 const activeImages=new Map();
 
+/* NEW QUEUE SYSTEM */
+
+let imageQueue=[];
+let queueIndex=0;
+
+function shuffleArray(array){
+
+for(let i=array.length-1;i>0;i--){
+
+const j=Math.floor(Math.random()*(i+1));
+[array[i],array[j]]=[array[j],array[i]];
+
+}
+
+return array;
+
+}
+
 /* SPAWN */
 
 function spawnImage(){
@@ -306,7 +324,15 @@ const pool = activeFilter==="all"
 ? images
 : images.filter(i=>i.color===activeFilter);
 
-const item=pool[Math.floor(Math.random()*pool.length)];
+if(queueIndex>=imageQueue.length){
+
+imageQueue = shuffleArray([...pool]);
+queueIndex = 0;
+
+}
+
+const item = imageQueue[queueIndex];
+queueIndex++;
 
 if(activeImages.has(item.src)){
 activeImages.get(item.src).remove();
@@ -460,6 +486,8 @@ const newFilter=el.dataset.filter;
 if(newFilter!==activeFilter){
 activeImages.forEach(img=>img.remove());
 activeImages.clear();
+imageQueue=[];
+queueIndex=0;
 }
 
 activeFilter=newFilter;
