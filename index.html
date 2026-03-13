@@ -294,11 +294,24 @@ const images=[
 {src:"./images/16.jpeg",color:"mono"}
 ];
 
+/* PRELOAD IMAGES */
+
+function preloadImages(){
+
+images.forEach(item=>{
+const img=new Image();
+img.src=item.src;
+});
+
+}
+
+preloadImages();
+
+/* IMAGE SYSTEM */
+
 let activeFilter="all";
 let zCounter=200;
 const activeImages=new Map();
-
-/* NEW QUEUE SYSTEM */
 
 let imageQueue=[];
 let queueIndex=0;
@@ -306,10 +319,8 @@ let queueIndex=0;
 function shuffleArray(array){
 
 for(let i=array.length-1;i>0;i--){
-
 const j=Math.floor(Math.random()*(i+1));
 [array[i],array[j]]=[array[j],array[i]];
-
 }
 
 return array;
@@ -393,29 +404,11 @@ start(e.clientX,e.clientY);
 window.addEventListener("mousemove",e=>move(e.clientX,e.clientY));
 window.addEventListener("mouseup",end);
 
-el.addEventListener("touchstart",e=>{
-if(e.touches.length!==1) return;
-const t=e.touches[0];
-start(t.clientX,t.clientY);
-},{passive:false});
-
-window.addEventListener("touchmove",e=>{
-if(!down || e.touches.length!==1) return;
-const t=e.touches[0];
-move(t.clientX,t.clientY);
-},{passive:false});
-
-window.addEventListener("touchend",end);
-
 }
 
 /* ZOOM */
 
 function setupZoom(img){
-
-let pinchStartDist=0;
-let pinchStartScale=1;
-let isPinching=false;
 
 img.addEventListener("wheel",(e)=>{
 e.preventDefault();
@@ -428,35 +421,6 @@ img.dataset.scale=scale;
 img.style.transform=`scale(${scale})`;
 
 },{passive:false});
-
-img.addEventListener("touchstart",(e)=>{
-if(e.touches.length===2){
-isPinching=true;
-const dx=e.touches[0].clientX-e.touches[1].clientX;
-const dy=e.touches[0].clientY-e.touches[1].clientY;
-pinchStartDist=Math.hypot(dx,dy);
-pinchStartScale=parseFloat(img.dataset.scale);
-}
-},{passive:true});
-
-img.addEventListener("touchmove",(e)=>{
-if(!isPinching || e.touches.length!==2) return;
-
-const dx=e.touches[0].clientX-e.touches[1].clientX;
-const dy=e.touches[0].clientY-e.touches[1].clientY;
-const dist=Math.hypot(dx,dy);
-
-let scale=pinchStartScale*(dist/pinchStartDist);
-scale=Math.min(Math.max(1,scale),3);
-
-img.dataset.scale=scale;
-img.style.transform=`scale(${scale})`;
-
-},{passive:false});
-
-img.addEventListener("touchend",()=>{
-isPinching=false;
-});
 
 }
 
