@@ -16,7 +16,6 @@ height:100%;
 overflow:hidden;
 font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
 color:#fff;
-overscroll-behavior:none;
 }
 
 .smart-text{
@@ -28,25 +27,6 @@ z-index:10000;
 .word{display:inline-block;white-space:nowrap;}
 .char{display:inline-block;}
 
-.glow{
-position:fixed;
-left:50%;
-top:50%;
-width:min(62vmin,700px);
-height:min(62vmin,700px);
-transform:translate(-50%,-50%);
-border-radius:50%;
-background:radial-gradient(circle,
-rgba(255,255,255,0.75) 0%,
-rgba(255,255,255,0.42) 25%,
-rgba(255,255,255,0.18) 45%,
-rgba(0,0,0,0) 72%);
-filter:blur(5.2vmin);
-pointer-events:none;
-z-index:10;
-transition:.35s;
-}
-
 .project-img{
 position:fixed;
 object-fit:contain;
@@ -54,10 +34,7 @@ cursor:grab;
 user-select:none;
 touch-action:none;
 transform-origin:center center;
-will-change:transform;
 }
-
-.project-img:active{cursor:grabbing;}
 
 .projects-btn,
 .info-btn{
@@ -126,7 +103,6 @@ text-align:right;
 .label-right a{
 color:white;
 text-decoration:none;
-pointer-events:auto;
 }
 
 @media (max-width:600px){
@@ -162,11 +138,10 @@ width:auto;
 
 <body>
 
-<div class="glow" id="glow"></div>
-
 <div class="projects-btn smart-text" id="projectsBtn">Projects</div>
 
 <div class="filter-list smart-text" id="filterList">
+<div class="filter-item" data-filter="all">All</div>
 <div class="filter-item" data-filter="mono">Monochrome</div>
 <div class="filter-item" data-filter="color">Color</div>
 </div>
@@ -191,50 +166,6 @@ we investigate and develop the visual language of architecture and design.
 </div>
 
 <script>
-
-/* TEXT WRAP */
-
-function wrapSmartText(){
-document.querySelectorAll(".smart-text").forEach(el=>{
-if(el.dataset.wrapped) return;
-
-const walker=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);
-const nodes=[];
-
-while(walker.nextNode()) nodes.push(walker.currentNode);
-
-nodes.forEach(node=>{
-const text=node.nodeValue;
-if(!text.trim()) return;
-
-const frag=document.createDocumentFragment();
-const words=text.split(" ");
-
-words.forEach((word,i)=>{
-const wordSpan=document.createElement("span");
-wordSpan.className="word";
-
-for(const ch of word){
-const span=document.createElement("span");
-span.className="char";
-span.textContent=ch;
-wordSpan.appendChild(span);
-}
-
-frag.appendChild(wordSpan);
-
-if(i!==words.length-1)
-frag.appendChild(document.createTextNode(" "));
-});
-
-node.parentNode.replaceChild(frag,node);
-});
-
-el.dataset.wrapped=true;
-});
-}
-
-wrapSmartText();
 
 /* IMAGE DATA */
 
@@ -262,7 +193,7 @@ const images=[
 let activeFilter=null;
 let queue=[];
 let index=0;
-let zCounter=200;
+let zCounter=10;
 
 function shuffle(a){
 for(let i=a.length-1;i>0;i--){
@@ -273,7 +204,13 @@ return a;
 }
 
 function resetQueue(filter){
+
+if(filter==="all"){
+queue=shuffle([...images]);
+}else{
 queue=shuffle(images.filter(i=>i.color===filter));
+}
+
 index=0;
 }
 
@@ -290,21 +227,24 @@ index++;
 const img=document.createElement("img");
 img.src=item.src;
 img.className="project-img";
-img.dataset.scale="1";
 
 zCounter++;
 img.style.zIndex=zCounter;
 
-const margin=40;
-
-img.style.left=Math.random()*(window.innerWidth-margin*2)+margin+"px";
-img.style.top=Math.random()*(window.innerHeight-margin*2)+margin+"px";
-
 img.onload=()=>{
-let base=Math.min(window.innerWidth,window.innerHeight);
+
+const base=Math.min(window.innerWidth,window.innerHeight);
 let size=base*0.32;
 if(window.innerWidth<600) size=base*0.55;
+
 img.style.width=Math.min(size,420)+"px";
+
+const w=img.offsetWidth;
+const h=img.offsetHeight;
+
+img.style.left=Math.random()*(window.innerWidth-w)+"px";
+img.style.top=Math.random()*(window.innerHeight-h)+"px";
+
 };
 
 setupDrag(img);
@@ -348,6 +288,8 @@ window.addEventListener("mouseup",end);
 
 function setupZoom(img){
 
+img.dataset.scale=1;
+
 img.addEventListener("wheel",(e)=>{
 e.preventDefault();
 
@@ -366,15 +308,12 @@ img.style.transform=`scale(${scale})`;
 const projectsBtn=document.getElementById("projectsBtn");
 const filterList=document.getElementById("filterList");
 
-let open=false;
-
 projectsBtn.onclick=(e)=>{
 e.stopPropagation();
-open=!open;
-filterList.classList.toggle("show",open);
+filterList.classList.toggle("show");
 };
 
-/* FILTER CLICK */
+/* FILTER */
 
 document.querySelectorAll(".filter-item").forEach(el=>{
 
@@ -384,7 +323,6 @@ e.stopPropagation();
 
 const newFilter=el.dataset.filter;
 
-/* category change */
 if(activeFilter!==newFilter){
 
 document.querySelectorAll(".project-img").forEach(i=>i.remove());
@@ -399,6 +337,16 @@ spawnImage();
 };
 
 });
+
+/* INFO */
+
+const infoBtn=document.getElementById("infoBtn");
+const infoPanel=document.getElementById("infoPanel");
+
+infoBtn.onclick=(e)=>{
+e.stopPropagation();
+infoPanel.classList.toggle("show");
+};
 
 </script>
 
