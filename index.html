@@ -174,12 +174,14 @@ function spawnImage(){
 
 document.getElementById('projectsBtn').addEventListener('click',function(e){
   e.stopPropagation();
+  skipBodyClick=true;
   document.getElementById('filterList').classList.toggle('show');
 });
 
 document.querySelectorAll('.filter-item').forEach(function(fi){
   fi.addEventListener('click',function(e){
     e.stopPropagation();
+    skipBodyClick=true;
     var f=fi.dataset.filter;
     if(f!==activeFilter){
       document.querySelectorAll('.img-wrapper').forEach(function(w){w.remove();});
@@ -192,12 +194,15 @@ document.querySelectorAll('.filter-item').forEach(function(fi){
 var infoOpen=false;
 document.getElementById('infoBtn').addEventListener('click',function(e){
   e.stopPropagation();
+  skipBodyClick=true;
   infoOpen=!infoOpen;
   document.getElementById('infoPanel').classList.toggle('show',infoOpen);
   document.getElementById('infoBtn').textContent=infoOpen?'–':'Info';
 });
 
+var skipBodyClick=false;
 document.body.addEventListener('click',function(){
+  if(skipBodyClick){skipBodyClick=false;return;}
   document.getElementById('filterList').classList.remove('show');
   if(infoOpen){
     infoOpen=false;
