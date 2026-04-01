@@ -232,7 +232,14 @@ we investigate and develop the visual language of architecture and design.
 0049 1512 9640529
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js">
+/* EMAIL — set via JS to avoid Cloudflare scraping */
+(function(){
+const u="info";const d="gatevisuals.xyz";
+const a=document.getElementById("emailLink");
+if(a){a.href="mailto:"+u+"@"+d;a.textContent=u+"@"+d;}
+})();
+</script><script>
 
 /* IMAGE DATA
    Add an "info" field to each image with the project description.
@@ -335,50 +342,48 @@ document.body.appendChild(wrapper);
 
 }
 
-/* DRAG — operates on wrapper */
+/* DRAG — single global handler */
+
+let dragEl=null, dragOX=0, dragOY=0;
+
+window.addEventListener("mousemove",e=>{
+if(!dragEl) return;
+dragEl.style.left=(e.clientX-dragOX)+"px";
+dragEl.style.top=(e.clientY-dragOY)+"px";
+});
+
+window.addEventListener("mouseup",()=>{ dragEl=null; });
+
+window.addEventListener("touchmove",e=>{
+if(!dragEl) return;
+const t=e.touches[0];
+dragEl.style.left=(t.clientX-dragOX)+"px";
+dragEl.style.top=(t.clientY-dragOY)+"px";
+},{passive:true});
+
+window.addEventListener("touchend",()=>{ dragEl=null; });
 
 function setupDrag(el){
 
-let down=false,ox=0,oy=0;
-
-const start=(x,y)=>{
-down=true;
-ox=x-el.offsetLeft;
-oy=y-el.offsetTop;
+el.addEventListener("mousedown",e=>{
+/* only start drag on the image itself, not UI buttons */
+if(e.target.closest(".projects-btn,.info-btn,.filter-list,.label")) return;
+e.preventDefault();
+dragEl=el;
+dragOX=e.clientX-el.offsetLeft;
+dragOY=e.clientY-el.offsetTop;
 zCounter++;
 el.style.zIndex=zCounter;
-};
-
-const move=(x,y)=>{
-if(!down) return;
-el.style.left=(x-ox)+"px";
-el.style.top=(y-oy)+"px";
-};
-
-const end=()=>{down=false;}
-
-el.addEventListener("mousedown",e=>{
-e.preventDefault();
-start(e.clientX,e.clientY);
 });
-
-window.addEventListener("mousemove",e=>move(e.clientX,e.clientY));
-window.addEventListener("mouseup",end);
-
-/* MOBILE */
 
 el.addEventListener("touchstart",e=>{
 const t=e.touches[0];
-start(t.clientX,t.clientY);
-});
-
-window.addEventListener("touchmove",e=>{
-if(!down) return;
-const t=e.touches[0];
-move(t.clientX,t.clientY);
-});
-
-window.addEventListener("touchend",end);
+dragEl=el;
+dragOX=t.clientX-el.offsetLeft;
+dragOY=t.clientY-el.offsetTop;
+zCounter++;
+el.style.zIndex=zCounter;
+},{passive:true});
 
 }
 
