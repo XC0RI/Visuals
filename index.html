@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title><span style="font-size:15px;font-weight:600;">Gate Visual Studio</span> - Digital Image Making</title>
+<title>Gate Visual Studio</title>
 <style>
 html,body{margin:0;padding:0;background:#000;height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:#fff;}
 .glow{position:fixed;left:50%;top:50%;width:min(62vmin,700px);height:min(62vmin,700px);transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.75) 0%,rgba(255,255,255,0.42) 25%,rgba(255,255,255,0.18) 45%,rgba(0,0,0,0) 72%);filter:blur(5.2vmin);pointer-events:none;z-index:10;transition:.35s;}
@@ -28,7 +28,7 @@ html,body{margin:0;padding:0;background:#000;height:100%;overflow:hidden;font-fa
   #projectsBtn{left:18px;}#infoBtn{right:18px;}
   .filter-list{left:18px;}.label-left{left:18px;}.label-right{right:18px;}
   .ui,.label,.filter-item{font-size:11px;font-weight:300;}
-  .info-panel{right:18px;left:40vw;font-size:13px;width:auto;}
+  .info-panel{right:18px;left:40vw;font-size:11px;width:auto;}
 }
 </style>
 </head>
@@ -51,7 +51,6 @@ html,body{margin:0;padding:0;background:#000;height:100%;overflow:hidden;font-fa
 <div class="label label-right"><span id="emailLink"></span><br>0049 1512 9640529</div>
 
 <script>
-// Email
 (function(){
   var a=document.createElement('a');
   a.href='mailto:info@gatevisuals.xyz';
@@ -82,6 +81,8 @@ var IMAGES=[
 
 var queue=[],qIdx=0,zTop=10,activeFilter=null;
 var dragEl=null,dragOX=0,dragOY=0;
+// Track one wrapper per src — so same image never shows twice
+var activeWrappers={};
 
 function shuffle(a){
   var b=a.slice();
@@ -93,7 +94,6 @@ function resetQueue(f){
   queue=shuffle(pool);qIdx=0;
 }
 
-// Global drag
 window.addEventListener('mousemove',function(e){
   if(!dragEl)return;
   dragEl.style.left=(e.clientX-dragOX)+'px';
@@ -112,21 +112,28 @@ function spawnImage(){
   if(qIdx>=queue.length){queue=shuffle(queue);qIdx=0;}
   var item=queue[qIdx++];
 
-  // Calculate size immediately — before image loads
-  var base=Math.min(window.innerWidth,window.innerHeight);
-  var w=Math.min(base*(window.innerWidth<600?0.55:0.32),420);
-  var lx=Math.round(Math.random()*(window.innerWidth-w));
-  var ty=Math.round(Math.random()*(window.innerHeight-w*0.75));
+  // Remove previous instance of same image if still on screen
+  if(activeWrappers[item.src]){
+    activeWrappers[item.src].remove();
+    delete activeWrappers[item.src];
+  }
+
+  // Size — set before append so image is constrained immediately
+  var vw=window.innerWidth, vh=window.innerHeight;
+  var w=Math.min(Math.min(vw,vh)*(vw<600?0.55:0.32),420);
+  // Estimated height ~75% of width — keep fully inside viewport
+  var maxLeft=Math.max(0, vw-w);
+  var maxTop=Math.max(0, vh-w*0.75);
+  var lx=Math.round(Math.random()*maxLeft);
+  var ty=Math.round(Math.random()*maxTop);
 
   var wrapper=document.createElement('div');
   wrapper.className='img-wrapper';
-  wrapper.style.width=w+'px';     // set size BEFORE appending
+  wrapper.style.width=w+'px';
   wrapper.style.left=lx+'px';
   wrapper.style.top=ty+'px';
-  zTop++;
-  wrapper.style.zIndex=zTop;
+  zTop++;wrapper.style.zIndex=zTop;
 
-  // Info label
   if(item.info){
     var lbl=document.createElement('div');
     lbl.className='img-info';
@@ -134,10 +141,10 @@ function spawnImage(){
     wrapper.appendChild(lbl);
   }
 
-  // Image
   var img=document.createElement('img');
   wrapper.appendChild(img);
   document.body.appendChild(wrapper);
+  activeWrappers[item.src]=wrapper;
 
   // Drag
   wrapper.addEventListener('mousedown',function(e){
@@ -178,7 +185,7 @@ function spawnImage(){
       var s=Math.min(Math.max(1,parseFloat(wrapper.dataset.scale)*(d/pd)),3);
       wrapper.dataset.scale=s;wrapper.style.transform='scale('+s+')';pd=d;
       var lbl=wrapper.querySelector('.img-info');
-      if(lbl)lbl.style.transform='scale('+((1/s)*0.65)+')'
+      if(lbl)lbl.style.transform='scale('+((1/s)*0.65)+')';
     }
   });
   wrapper.addEventListener('touchend',function(){pd=null;});
@@ -187,39 +194,25 @@ function spawnImage(){
   img.src=item.src;
 }
 
-// Preload next N images in background
-function preloadNext(n){
-  for(var i=0;i<n;i++){
-    var idx=(qIdx+i)%queue.length;
-    if(queue[idx]){
-      var pre=new Image();
-      pre.src=queue[idx].src;
-    }
-  }
-}
-
-// Projects — toggle only on its own click, nothing else touches it
 document.getElementById('projectsBtn').addEventListener('click',function(e){
   e.stopPropagation();
   document.getElementById('filterList').classList.toggle('show');
 });
 
-// Filter items
 document.querySelectorAll('.filter-item').forEach(function(fi){
   fi.addEventListener('click',function(e){
     e.stopPropagation();
     var f=fi.dataset.filter;
     if(f!==activeFilter){
       document.querySelectorAll('.img-wrapper').forEach(function(w){w.remove();});
+      activeWrappers={};
       activeFilter=f;
       resetQueue(f);
     }
     spawnImage();
-    preloadNext(3);
   });
 });
 
-// Info
 var infoOpen=false;
 document.getElementById('infoBtn').addEventListener('click',function(e){
   e.stopPropagation();
@@ -228,7 +221,6 @@ document.getElementById('infoBtn').addEventListener('click',function(e){
   document.getElementById('infoBtn').textContent=infoOpen?'–':'Info';
 });
 
-// Body click — glow pulse only, nothing else
 document.body.addEventListener('click',function(){
   var g=document.getElementById('glow');
   g.classList.add('pulse');
