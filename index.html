@@ -187,6 +187,17 @@ function spawnImage(){
   img.src=item.src;
 }
 
+// Preload next N images in background
+function preloadNext(n){
+  for(var i=0;i<n;i++){
+    var idx=(qIdx+i)%queue.length;
+    if(queue[idx]){
+      var pre=new Image();
+      pre.src=queue[idx].src;
+    }
+  }
+}
+
 // Projects — toggle only on its own click, nothing else touches it
 document.getElementById('projectsBtn').addEventListener('click',function(e){
   e.stopPropagation();
@@ -204,6 +215,7 @@ document.querySelectorAll('.filter-item').forEach(function(fi){
       resetQueue(f);
     }
     spawnImage();
+    preloadNext(3);
   });
 });
 
