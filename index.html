@@ -2,44 +2,78 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Gate Visual Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
-html,body{margin:0;padding:0;background:#000;height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:#fff;}
+html,body{margin:0;padding:0;background:#000;height:100%;overflow:hidden;font-family:'Barlow Condensed',Arial Narrow,sans-serif;color:#fff;touch-action:none;letter-spacing:.03em;}
 .glow{position:fixed;left:50%;top:50%;width:min(62vmin,700px);height:min(62vmin,700px);transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.75) 0%,rgba(255,255,255,0.42) 25%,rgba(255,255,255,0.18) 45%,rgba(0,0,0,0) 72%);filter:blur(5.2vmin);pointer-events:none;z-index:10;transition:.35s;}
 .glow.pulse{transform:translate(-50%,-50%) scale(1.18);}
-.ui{position:fixed;top:28px;font-size:13px;font-weight:300;cursor:pointer;z-index:9999;background:none;border:none;color:#fff;padding:0;mix-blend-mode:difference;}
+
+.ui{position:fixed;top:28px;font-size:15px;font-weight:400;text-transform:uppercase;cursor:pointer;z-index:9999;background:none;border:none;color:#fff;padding:0;font-family:'Barlow Condensed',Arial Narrow,sans-serif;letter-spacing:.08em;transition:color .15s;}
+.ui:hover{color:rgba(255,255,255,0.4);}
 #projectsBtn{left:32px;}
 #infoBtn{right:32px;}
-.filter-list{position:fixed;top:70px;left:32px;display:none;z-index:9999;mix-blend-mode:difference;}
-.filter-list.show{display:block;}
-.filter-item{margin:24px 0;cursor:pointer;font-size:13px;font-weight:300;}
-.info-panel{position:fixed;top:80px;right:32px;width:min(520px,60vw);line-height:1.45;font-size:13px;font-weight:300;opacity:0;transform:translateY(-10px);pointer-events:none;transition:.25s;z-index:9999;mix-blend-mode:difference;}
+
+/* Filter row — horizontal, opens on hover over Projects area */
+.projects-area{position:fixed;top:20px;left:32px;z-index:9999;display:flex;flex-direction:row;align-items:center;mix-blend-mode:difference;}
+.projects-label{font-size:15px;font-weight:400;text-transform:uppercase;cursor:pointer;background:none;border:none;color:#fff;padding:8px 0;font-family:'Barlow Condensed',Arial Narrow,sans-serif;letter-spacing:.08em;transition:color .15s;white-space:nowrap;}
+.projects-label:hover{color:rgba(255,255,255,0.4);}
+.filter-list{display:flex;flex-direction:row;align-items:center;margin-left:28px;gap:0;}
+.filter-item{font-size:15px;font-weight:400;text-transform:uppercase;cursor:pointer;white-space:nowrap;opacity:0;transform:translateX(-6px);transition:opacity .15s ease,transform .15s ease,color .15s;pointer-events:none;padding-right:28px;letter-spacing:.08em;font-family:'Barlow Condensed',Arial Narrow,sans-serif;}
+.filter-item:hover{color:rgba(255,255,255,0.4);}
+.projects-area:hover .filter-item,
+.filter-list.show .filter-item{opacity:1;transform:translateX(0);pointer-events:auto;}
+.projects-area:hover .filter-item:nth-child(1),
+.filter-list.show .filter-item:nth-child(1){transition-delay:.03s;}
+.projects-area:hover .filter-item:nth-child(2),
+.filter-list.show .filter-item:nth-child(2){transition-delay:.08s;}
+.projects-area:hover .filter-item:nth-child(3),
+.filter-list.show .filter-item:nth-child(3){transition-delay:.13s;}
+
+.info-panel{position:fixed;top:72px;right:32px;width:min(520px,60vw);line-height:1.45;font-size:14px;font-weight:300;letter-spacing:.04em;opacity:0;transform:translateY(-10px);pointer-events:none;transition:.25s;z-index:9999;mix-blend-mode:difference;}
 .info-panel.show{opacity:1;transform:translateY(0);}
-.label{position:fixed;bottom:32px;font-size:13px;font-weight:300;z-index:9999;mix-blend-mode:difference;}
+
+.label{position:fixed;bottom:32px;font-size:14px;font-weight:400;letter-spacing:.06em;z-index:9999;mix-blend-mode:difference;text-transform:uppercase;}
 .label-left{left:36px;}
 .label-right{right:36px;text-align:right;}
-.label-right a{color:#fff;text-decoration:none;}
+.label-right a,.email-link{color:#fff;text-decoration:none;transition:color .15s;}
+.label-right a:hover,.email-link:hover{color:rgba(255,255,255,0.4);}
+
 .img-wrapper{position:fixed;cursor:grab;user-select:none;transform-origin:center center;}
 .img-wrapper:active{cursor:grabbing;}
 .img-wrapper img{display:block;width:100%;height:auto;pointer-events:none;}
-.img-info{position:absolute;bottom:6px;right:8px;color:rgba(255,255,255,0.7);font-size:9px;line-height:1.5;text-align:right;pointer-events:none;letter-spacing:.05em;text-transform:uppercase;text-shadow:0 1px 5px rgba(0,0,0,.95);transform:scale(0.65);transform-origin:bottom right;}
+.img-info{
+  position:absolute;bottom:6px;right:8px;
+  color:rgba(255,255,255,0.7);font-size:6px;line-height:1.5;
+  text-align:right;pointer-events:none;letter-spacing:.06em;
+  text-transform:uppercase;font-family:'Barlow Condensed',Arial Narrow,sans-serif;
+}
+
 @media(max-width:600px){
-  #projectsBtn{left:18px;}#infoBtn{right:18px;}
-  .filter-list{left:18px;}.label-left{left:18px;}.label-right{right:18px;}
-  .ui,.label,.filter-item{font-size:11px;font-weight:300;}
-  .info-panel{right:18px;left:40vw;font-size:11px;width:auto;}
+  .projects-area{left:18px;top:20px;}
+  #infoBtn{right:18px;}
+  .label-left{left:18px;}.label-right{right:18px;}
+  .ui,.label,.projects-label,.filter-item{font-size:13px;}
+  .info-panel{right:18px;left:40vw;font-size:12px;width:auto;}
+  .filter-list{margin-left:18px;}
+  .filter-item{padding-right:18px;}
 }
 </style>
 </head>
 <body>
 <div class="glow" id="glow"></div>
-<button class="ui" id="projectsBtn">Projects</button>
-<div class="filter-list" id="filterList">
-  <div class="filter-item" data-filter="all">Mixed</div>
-  <div class="filter-item" data-filter="mono">Monochrome</div>
-  <div class="filter-item" data-filter="color">Color</div>
+
+<!-- Projects + filter in one hover zone -->
+<div class="projects-area" id="projectsArea">
+  <span class="projects-label" id="projectsBtn">Projects</span>
+  <div class="filter-list" id="filterList">
+    <div class="filter-item" data-filter="all">Mixed</div>
+    <div class="filter-item" data-filter="mono">Monochrome</div>
+    <div class="filter-item" data-filter="color">Color</div>
+  </div>
 </div>
+
 <button class="ui" id="infoBtn">Info</button>
 <div class="info-panel" id="infoPanel">
   Our practice operates at the intersection of architecture,<br>
@@ -47,7 +81,7 @@ html,body{margin:0;padding:0;background:#000;height:100%;overflow:hidden;font-fa
   Informed by professional experience in Zurich, Munich, and Aachen,<br>
   we investigate and develop the visual language of architecture and design.
 </div>
-<div class="label label-left"><span style="font-size:15px;font-weight:600;">Gate Visual Studio</span><br>75018 Paris</div>
+<div class="label label-left"><span style="font-size:16px;font-weight:600;">Gate Visual Studio</span><br>75018 Paris</div>
 <div class="label label-right"><span id="emailLink"></span><br>0049 1512 9640529</div>
 
 <script>
@@ -55,7 +89,7 @@ html,body{margin:0;padding:0;background:#000;height:100%;overflow:hidden;font-fa
   var a=document.createElement('a');
   a.href='mailto:info@gatevisuals.xyz';
   a.textContent='info@gatevisuals.xyz';
-  a.style.color='#fff';a.style.textDecoration='none';
+  a.className='email-link';
   document.getElementById('emailLink').appendChild(a);
 })();
 
@@ -81,123 +115,60 @@ var IMAGES=[
 
 var queue=[],qIdx=0,zTop=10,activeFilter=null;
 var dragEl=null,dragOX=0,dragOY=0;
-// Track one wrapper per src — so same image never shows twice
 var activeWrappers={};
 
-function shuffle(a){
-  var b=a.slice();
-  for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t;}
-  return b;
-}
-function resetQueue(f){
-  var pool=(f==='all')?IMAGES:IMAGES.filter(function(x){return x.color===f;});
-  queue=shuffle(pool);qIdx=0;
+function shuffle(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t;}return b;}
+function resetQueue(f){var pool=(f==='all')?IMAGES:IMAGES.filter(function(x){return x.color===f;});queue=shuffle(pool);qIdx=0;}
+
+function updateLabel(wrapper,scale){
+  var lbl=wrapper.querySelector('.img-info');
+  if(!lbl)return;
+  lbl.style.transform='scale('+(1/scale)+')';
+  lbl.style.transformOrigin='bottom right';
 }
 
-window.addEventListener('mousemove',function(e){
-  if(!dragEl)return;
-  dragEl.style.left=(e.clientX-dragOX)+'px';
-  dragEl.style.top=(e.clientY-dragOY)+'px';
-});
+window.addEventListener('mousemove',function(e){if(!dragEl)return;dragEl.style.left=(e.clientX-dragOX)+'px';dragEl.style.top=(e.clientY-dragOY)+'px';});
 window.addEventListener('mouseup',function(){dragEl=null;});
-window.addEventListener('touchmove',function(e){
-  if(!dragEl)return;
-  dragEl.style.left=(e.touches[0].clientX-dragOX)+'px';
-  dragEl.style.top=(e.touches[0].clientY-dragOY)+'px';
-},{passive:true});
+window.addEventListener('touchmove',function(e){if(!dragEl)return;if(e.touches.length!==1)return;dragEl.style.left=(e.touches[0].clientX-dragOX)+'px';dragEl.style.top=(e.touches[0].clientY-dragOY)+'px';},{passive:false});
 window.addEventListener('touchend',function(){dragEl=null;});
+
+// Mobile: tap Projects to toggle filter list
+document.getElementById('projectsBtn').addEventListener('click',function(e){
+  e.stopPropagation();
+  document.getElementById('filterList').classList.toggle('show');
+});
 
 function spawnImage(){
   if(!queue.length)return;
   if(qIdx>=queue.length){queue=shuffle(queue);qIdx=0;}
   var item=queue[qIdx++];
 
-  // Remove previous instance of same image if still on screen
-  if(activeWrappers[item.src]){
-    activeWrappers[item.src].remove();
-    delete activeWrappers[item.src];
-  }
+  if(activeWrappers[item.src]){activeWrappers[item.src].remove();delete activeWrappers[item.src];}
 
-  // Size — set before append so image is constrained immediately
-  var vw=window.innerWidth, vh=window.innerHeight;
+  var vw=window.innerWidth,vh=window.innerHeight;
   var w=Math.min(Math.min(vw,vh)*(vw<600?0.55:0.32),420);
-  // Estimated height ~75% of width — keep fully inside viewport
-  var maxLeft=Math.max(0, vw-w);
-  var maxTop=Math.max(0, vh-w*0.75);
-  var lx=Math.round(Math.random()*maxLeft);
-  var ty=Math.round(Math.random()*maxTop);
+  var maxLeft=Math.max(0,vw-w);var maxTop=Math.max(0,vh-w*0.75);
+  var lx=Math.round(Math.random()*maxLeft);var ty=Math.round(Math.random()*maxTop);
 
   var wrapper=document.createElement('div');
   wrapper.className='img-wrapper';
-  wrapper.style.width=w+'px';
-  wrapper.style.left=lx+'px';
-  wrapper.style.top=ty+'px';
-  zTop++;wrapper.style.zIndex=zTop;
+  wrapper.style.width=w+'px';wrapper.style.left=lx+'px';wrapper.style.top=ty+'px';
+  zTop++;wrapper.style.zIndex=zTop;wrapper.dataset.scale='1';
 
-  if(item.info){
-    var lbl=document.createElement('div');
-    lbl.className='img-info';
-    lbl.innerHTML=item.info.replace(/\n/g,'<br>');
-    wrapper.appendChild(lbl);
-  }
+  if(item.info){var lbl=document.createElement('div');lbl.className='img-info';lbl.innerHTML=item.info.replace(/\n/g,'<br>');wrapper.appendChild(lbl);}
 
-  var img=document.createElement('img');
-  wrapper.appendChild(img);
-  document.body.appendChild(wrapper);
-  activeWrappers[item.src]=wrapper;
+  var img=document.createElement('img');wrapper.appendChild(img);document.body.appendChild(wrapper);activeWrappers[item.src]=wrapper;
 
-  // Drag
-  wrapper.addEventListener('mousedown',function(e){
-    e.preventDefault();e.stopPropagation();
-    dragEl=wrapper;
-    dragOX=e.clientX-wrapper.offsetLeft;
-    dragOY=e.clientY-wrapper.offsetTop;
-    zTop++;wrapper.style.zIndex=zTop;
-  });
-  wrapper.addEventListener('touchstart',function(e){
-    e.stopPropagation();
-    dragEl=wrapper;
-    dragOX=e.touches[0].clientX-wrapper.offsetLeft;
-    dragOY=e.touches[0].clientY-wrapper.offsetTop;
-    zTop++;wrapper.style.zIndex=zTop;
-  },{passive:true});
+  wrapper.addEventListener('mousedown',function(e){e.preventDefault();e.stopPropagation();dragEl=wrapper;dragOX=e.clientX-wrapper.offsetLeft;dragOY=e.clientY-wrapper.offsetTop;zTop++;wrapper.style.zIndex=zTop;});
 
-  // Zoom — wheel
-  wrapper.dataset.scale='1';
-  wrapper.addEventListener('wheel',function(e){
-    e.preventDefault();
-    var s=Math.min(Math.max(1,parseFloat(wrapper.dataset.scale)-e.deltaY*0.0025),3);
-    wrapper.dataset.scale=s;
-    wrapper.style.transform='scale('+s+')';
-    var lbl=wrapper.querySelector('.img-info');
-    if(lbl)lbl.style.transform='scale('+((1/s)*0.65)+')';
-  },{passive:false});
+  var pinchDist=null;
+  wrapper.addEventListener('touchstart',function(e){e.stopPropagation();zTop++;wrapper.style.zIndex=zTop;if(e.touches.length===1){dragEl=wrapper;dragOX=e.touches[0].clientX-wrapper.offsetLeft;dragOY=e.touches[0].clientY-wrapper.offsetTop;pinchDist=null;}else if(e.touches.length===2){dragEl=null;pinchDist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);}},{passive:true});
+  wrapper.addEventListener('touchmove',function(e){if(e.touches.length===2&&pinchDist!==null){e.preventDefault();var d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);var s=Math.min(Math.max(1,parseFloat(wrapper.dataset.scale)*(d/pinchDist)),4);wrapper.dataset.scale=s;wrapper.style.transform='scale('+s+')';updateLabel(wrapper,s);pinchDist=d;}},{passive:false});
+  wrapper.addEventListener('touchend',function(e){if(e.touches.length<2)pinchDist=null;if(e.touches.length===0)dragEl=null;});
+  wrapper.addEventListener('wheel',function(e){e.preventDefault();var s=Math.min(Math.max(1,parseFloat(wrapper.dataset.scale)-e.deltaY*0.0025),4);wrapper.dataset.scale=s;wrapper.style.transform='scale('+s+')';updateLabel(wrapper,s);},{passive:false});
 
-  // Zoom — pinch
-  var pd=null;
-  wrapper.addEventListener('touchstart',function(e){
-    if(e.touches.length===2)
-      pd=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
-  });
-  wrapper.addEventListener('touchmove',function(e){
-    if(e.touches.length===2&&pd){
-      var d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
-      var s=Math.min(Math.max(1,parseFloat(wrapper.dataset.scale)*(d/pd)),3);
-      wrapper.dataset.scale=s;wrapper.style.transform='scale('+s+')';pd=d;
-      var lbl=wrapper.querySelector('.img-info');
-      if(lbl)lbl.style.transform='scale('+((1/s)*0.65)+')';
-    }
-  });
-  wrapper.addEventListener('touchend',function(){pd=null;});
-
-  // Load src last
   img.src=item.src;
 }
-
-document.getElementById('projectsBtn').addEventListener('click',function(e){
-  e.stopPropagation();
-  document.getElementById('filterList').classList.toggle('show');
-});
 
 document.querySelectorAll('.filter-item').forEach(function(fi){
   fi.addEventListener('click',function(e){
@@ -205,9 +176,7 @@ document.querySelectorAll('.filter-item').forEach(function(fi){
     var f=fi.dataset.filter;
     if(f!==activeFilter){
       document.querySelectorAll('.img-wrapper').forEach(function(w){w.remove();});
-      activeWrappers={};
-      activeFilter=f;
-      resetQueue(f);
+      activeWrappers={};activeFilter=f;resetQueue(f);
     }
     spawnImage();
   });
@@ -215,16 +184,13 @@ document.querySelectorAll('.filter-item').forEach(function(fi){
 
 var infoOpen=false;
 document.getElementById('infoBtn').addEventListener('click',function(e){
-  e.stopPropagation();
-  infoOpen=!infoOpen;
+  e.stopPropagation();infoOpen=!infoOpen;
   document.getElementById('infoPanel').classList.toggle('show',infoOpen);
   document.getElementById('infoBtn').textContent=infoOpen?'–':'Info';
 });
 
 document.body.addEventListener('click',function(){
-  var g=document.getElementById('glow');
-  g.classList.add('pulse');
-  setTimeout(function(){g.classList.remove('pulse');},320);
+  var g=document.getElementById('glow');g.classList.add('pulse');setTimeout(function(){g.classList.remove('pulse');},320);
 });
 </script>
 </body>
