@@ -22,13 +22,9 @@ html,body{margin:0;padding:0;background:#000;height:100%;overflow:hidden;font-fa
 .filter-list{display:flex;flex-direction:row;align-items:center;margin-left:28px;gap:0;}
 .filter-item{font-size:15px;font-weight:400;text-transform:uppercase;cursor:pointer;white-space:nowrap;opacity:0;transform:translateX(-6px);transition:opacity .15s ease,transform .15s ease,color .15s;pointer-events:none;padding-right:28px;letter-spacing:.08em;font-family:'Barlow Condensed',Arial Narrow,sans-serif;}
 .filter-item:hover{color:rgba(255,255,255,0.4);}
-.projects-area:hover .filter-item,
 .filter-list.show .filter-item{opacity:1;transform:translateX(0);pointer-events:auto;}
-.projects-area:hover .filter-item:nth-child(1),
 .filter-list.show .filter-item:nth-child(1){transition-delay:.03s;}
-.projects-area:hover .filter-item:nth-child(2),
 .filter-list.show .filter-item:nth-child(2){transition-delay:.08s;}
-.projects-area:hover .filter-item:nth-child(3),
 .filter-list.show .filter-item:nth-child(3){transition-delay:.13s;}
 
 .info-panel{position:fixed;top:72px;right:32px;width:min(520px,60vw);line-height:1.45;font-size:14px;font-weight:300;letter-spacing:.04em;opacity:0;transform:translateY(-10px);pointer-events:none;transition:.25s;z-index:9999;mix-blend-mode:difference;}
@@ -132,10 +128,12 @@ window.addEventListener('mouseup',function(){dragEl=null;});
 window.addEventListener('touchmove',function(e){if(!dragEl)return;if(e.touches.length!==1)return;dragEl.style.left=(e.touches[0].clientX-dragOX)+'px';dragEl.style.top=(e.touches[0].clientY-dragOY)+'px';},{passive:false});
 window.addEventListener('touchend',function(){dragEl=null;});
 
-// Mobile: tap Projects to toggle filter list
+// Projects click: toggle filter list
 document.getElementById('projectsBtn').addEventListener('click',function(e){
   e.stopPropagation();
-  document.getElementById('filterList').classList.toggle('show');
+  var fl=document.getElementById('filterList');
+  var open=fl.classList.toggle('show');
+  document.getElementById('projectsBtn').style.color=open?'rgba(255,255,255,0.4)':'';
 });
 
 function spawnImage(){
