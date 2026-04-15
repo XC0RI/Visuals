@@ -9,7 +9,9 @@
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;background:#000;min-height:100%;font-family:'Barlow Condensed',Arial Narrow,sans-serif;color:#fff;letter-spacing:.03em;}
 
-/* NAV */
+.glow{position:fixed;left:50%;top:50%;width:min(62vmin,700px);height:min(62vmin,700px);transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.75) 0%,rgba(255,255,255,0.42) 25%,rgba(255,255,255,0.18) 45%,rgba(0,0,0,0) 72%);filter:blur(5.2vmin);pointer-events:none;z-index:1;transition:.35s;}
+.glow.pulse{transform:translate(-50%,-50%) scale(1.18);}
+
 nav{position:fixed;top:0;left:0;right:0;z-index:9999;display:flex;justify-content:space-between;align-items:flex-start;padding:24px 32px;pointer-events:none;}
 .nav-left,.nav-right{pointer-events:auto;}
 .projects-area{display:flex;flex-direction:row;align-items:center;}
@@ -29,75 +31,49 @@ nav{position:fixed;top:0;left:0;right:0;z-index:9999;display:flex;justify-conten
 .info-panel{position:fixed;top:56px;right:32px;width:min(480px,60vw);line-height:1.55;font-size:13px;font-weight:300;letter-spacing:.04em;opacity:0;transform:translateY(-8px);pointer-events:none;transition:.25s;z-index:9999;}
 .info-panel.show{opacity:1;transform:translateY(0);}
 
-/* GRID */
-.grid-container{padding:80px 32px 80px;min-height:100vh;}
-.grid{
-  display:grid;
-  grid-template-columns:repeat(var(--cols,4),1fr);
-  gap:3px;
-}
+.grid-container{position:relative;z-index:2;padding:72px 3px 80px;min-height:100vh;}
+.masonry{display:flex;flex-direction:row;align-items:flex-start;gap:3px;}
+.masonry-col{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;}
 
-.grid-cell{
-  position:relative;
-  overflow:hidden;
-  cursor:crosshair;
-  background:#111;
-}
-/* random aspect ratios for visual rhythm */
-.grid-cell:nth-child(3n+1){aspect-ratio:4/3;}
-.grid-cell:nth-child(3n+2){aspect-ratio:3/4;}
-.grid-cell:nth-child(3n){aspect-ratio:1/1;}
+.grid-cell{position:relative;overflow:hidden;cursor:crosshair;background:#0a0a0a;width:100%;}
+.grid-cell img{display:block;width:100%;height:auto;object-position:center top;opacity:0;transition:opacity .25s ease;}
+.grid-cell img.loaded{opacity:1;}
 
-.grid-cell img{
-  width:100%;height:100%;object-fit:cover;
-  display:block;
-  opacity:0;
-  transition:opacity .3s ease, transform .4s ease;
-  transform:scale(1.04);
-}
-.grid-cell img.loaded{opacity:1;transform:scale(1);}
+#sentinel{height:40px;width:100%;}
 
-/* hover zoom overlay */
-.zoom-overlay{
-  position:fixed;
-  pointer-events:none;
-  z-index:8000;
-  opacity:0;
-  transition:opacity .18s ease;
-  transform:translate(-50%,-50%);
-  box-shadow:0 8px 60px rgba(0,0,0,0.7);
-}
+.zoom-overlay{position:fixed;pointer-events:none;z-index:8000;opacity:0;transition:opacity .15s ease;transform:translate(-50%,-50%);box-shadow:0 8px 60px rgba(0,0,0,0.8);}
 .zoom-overlay.show{opacity:1;}
 .zoom-overlay img{display:block;width:100%;height:auto;}
-.zoom-overlay .img-info{
-  position:absolute;bottom:7px;right:9px;
-  color:rgba(255,255,255,0.65);font-size:9px;line-height:1.5;
-  text-align:right;pointer-events:none;letter-spacing:.06em;
-  text-transform:uppercase;font-family:'Barlow Condensed',Arial Narrow,sans-serif;
-}
+.zoom-overlay .img-info{position:absolute;bottom:7px;right:9px;color:rgba(255,255,255,0.65);font-size:9px;line-height:1.5;text-align:right;pointer-events:none;letter-spacing:.06em;text-transform:uppercase;font-family:'Barlow Condensed',Arial Narrow,sans-serif;}
 
-/* FOOTER */
+.lightbox{display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.93);align-items:center;justify-content:center;padding:16px;}
+.lightbox.show{display:flex;}
+.lightbox img{max-width:100%;max-height:100%;object-fit:contain;display:block;}
+.lightbox-info{position:absolute;bottom:24px;right:24px;color:rgba(255,255,255,0.6);font-size:9px;line-height:1.5;text-align:right;letter-spacing:.06em;text-transform:uppercase;font-family:'Barlow Condensed',Arial Narrow,sans-serif;}
+
 footer{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-between;padding:0 36px 28px;z-index:9999;pointer-events:none;}
 .foot{font-size:14px;font-weight:400;letter-spacing:.06em;text-transform:uppercase;pointer-events:auto;}
 .foot a{color:#fff;text-decoration:none;transition:color .15s;}
 .foot a:hover{color:rgba(255,255,255,0.4);}
 
-@media(max-width:900px){.grid{--cols:3;}}
 @media(max-width:600px){
-  .grid{--cols:2;gap:2px;}
-  .grid-container{padding:70px 12px 70px;}
+  .masonry{gap:2px;}
+  .masonry-col{gap:2px;}
+  .grid-container{padding:64px 2px 72px;}
   nav{padding:20px 18px;}
   footer{padding:0 18px 22px;}
   .info-panel{right:18px;left:40vw;font-size:12px;width:auto;}
+  .zoom-overlay{display:none!important;}
 }
-@media(max-width:380px){.grid{--cols:2;}}
 </style>
 </head>
 <body>
 
+<div class="glow" id="glow"></div>
+
 <nav>
   <div class="nav-left">
-    <div class="projects-area" id="projectsArea">
+    <div class="projects-area">
       <span class="projects-label" id="projectsBtn">Projects</span>
       <div class="filter-list" id="filterList">
         <div class="filter-item" data-filter="all">Mixed</div>
@@ -116,12 +92,22 @@ footer{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space
 </div>
 
 <div class="grid-container">
-  <div class="grid" id="grid"></div>
+  <div class="masonry" id="masonry">
+    <div class="masonry-col" id="col0"></div>
+    <div class="masonry-col" id="col1"></div>
+    <div class="masonry-col" id="col2"></div>
+  </div>
+  <div id="sentinel"></div>
 </div>
 
 <div class="zoom-overlay" id="zoomOverlay">
   <img id="zoomImg" src="" alt="">
   <div class="img-info" id="zoomInfo"></div>
+</div>
+
+<div class="lightbox" id="lightbox">
+  <img id="lightboxImg" src="" alt="">
+  <div class="lightbox-info" id="lightboxInfo"></div>
 </div>
 
 <footer>
@@ -159,59 +145,113 @@ var IMAGES=[
 
 function shuffle(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t;}return b;}
 
-var activeFilter='all';
-var grid=document.getElementById('grid');
+var activeFilter=null;
+var pool=[];
+var poolIdx=0;
+var loading=false;
+var BATCH=9;
+
+var cols=[document.getElementById('col0'),document.getElementById('col1'),document.getElementById('col2')];
 var zoomOverlay=document.getElementById('zoomOverlay');
 var zoomImg=document.getElementById('zoomImg');
 var zoomInfo=document.getElementById('zoomInfo');
-var zoomTimeout=null;
+var lightbox=document.getElementById('lightbox');
+var lightboxImg=document.getElementById('lightboxImg');
+var lightboxInfo=document.getElementById('lightboxInfo');
 
-function buildGrid(filter){
-  grid.innerHTML='';
-  var pool=(filter==='all')?IMAGES:IMAGES.filter(function(x){return x.color===filter;});
-  pool=shuffle(pool);
-  pool.forEach(function(item){
-    var cell=document.createElement('div');
-    cell.className='grid-cell';
-    var img=document.createElement('img');
-    img.src=item.src;
-    img.alt='';
-    img.onload=function(){img.classList.add('loaded');};
-    cell.appendChild(img);
-    cell.addEventListener('mouseenter',function(e){showZoom(item,e);});
-    cell.addEventListener('mousemove',function(e){positionZoom(e);});
-    cell.addEventListener('mouseleave',function(){hideZoom();});
-    grid.appendChild(cell);
-  });
+function isMobile(){return window.innerWidth<=600;}
+
+function getPool(f){return(f==='all')?IMAGES:IMAGES.filter(function(x){return x.color===f;});}
+
+function nextItem(){
+  if(poolIdx>=pool.length){pool=shuffle(pool.slice());poolIdx=0;}
+  return pool[poolIdx++];
 }
 
+function shortestCol(){
+  var h=cols.map(function(c){return c.offsetHeight;});
+  return h.indexOf(Math.min.apply(null,h));
+}
+
+function addBatch(){
+  if(loading||!activeFilter)return;
+  loading=true;
+  var remaining=BATCH;
+
+  function addOne(){
+    if(remaining<=0){loading=false;return;}
+    remaining--;
+    var item=nextItem();
+    var ci=shortestCol();
+    var cell=document.createElement('div');
+    cell.className='grid-cell';
+
+    var img=document.createElement('img');
+    img.alt='';
+    img.onload=function(){img.classList.add('loaded');setTimeout(addOne,20);};
+    img.onerror=function(){cell.remove();setTimeout(addOne,20);};
+
+    if(!isMobile()){
+      cell.addEventListener('mouseenter',function(e){showZoom(item,e);});
+      cell.addEventListener('mousemove',function(e){positionZoom(e);});
+      cell.addEventListener('mouseleave',hideZoom);
+    } else {
+      cell.addEventListener('click',function(e){e.stopPropagation();openLightbox(item);});
+    }
+
+    cell.appendChild(img);
+    cols[ci].appendChild(cell);
+    img.src=item.src;
+  }
+  addOne();
+}
+
+// ZOOM
 function showZoom(item,e){
   zoomImg.src=item.src;
   zoomInfo.innerHTML=item.info?item.info.replace(/\n/g,'<br>'):'';
-  var vw=window.innerWidth;
-  var size=Math.min(vw*0.38,480);
-  zoomOverlay.style.width=size+'px';
+  zoomOverlay.style.width=Math.min(window.innerWidth*0.36,460)+'px';
   positionZoom(e);
-  clearTimeout(zoomTimeout);
   zoomOverlay.classList.add('show');
 }
-
 function positionZoom(e){
   var vw=window.innerWidth,vh=window.innerHeight;
-  var size=parseInt(zoomOverlay.style.width)||400;
-  var x=e.clientX,y=e.clientY;
-  // keep within viewport
-  var left=x+size/2>vw-20?x-size/2:x+size/2;
-  var top=Math.max(size*0.4,Math.min(vh-size*0.4,y));
-  zoomOverlay.style.left=left+'px';
+  var w=parseInt(zoomOverlay.style.width)||400;
+  var h=zoomOverlay.offsetHeight||w*0.7;
+  var left=e.clientX+16+w>vw?e.clientX-16-w:e.clientX+16;
+  var top=Math.max(h/2+8,Math.min(vh-h/2-8,e.clientY));
+  zoomOverlay.style.left=(left+w/2)+'px';
   zoomOverlay.style.top=top+'px';
 }
+function hideZoom(){zoomOverlay.classList.remove('show');}
 
-function hideZoom(){
-  zoomOverlay.classList.remove('show');
+// LIGHTBOX
+function openLightbox(item){
+  lightboxImg.src=item.src;
+  lightboxInfo.innerHTML=item.info?item.info.replace(/\n/g,'<br>'):'';
+  lightbox.classList.add('show');
+}
+lightbox.addEventListener('click',function(){lightbox.classList.remove('show');});
+
+// INFINITE SCROLL
+var sentinel=document.getElementById('sentinel');
+var observer=new IntersectionObserver(function(entries){
+  if(entries[0].isIntersecting)addBatch();
+},{rootMargin:'300px'});
+observer.observe(sentinel);
+
+// FILTER
+function resetGrid(f){
+  cols.forEach(function(c){c.innerHTML='';});
+  pool=shuffle(getPool(f).slice());
+  poolIdx=0;
+  loading=false;
+  activeFilter=f;
+  // scroll to top
+  window.scrollTo({top:0,behavior:'instant'});
+  addBatch();
 }
 
-// filter
 var filterOpen=false;
 document.getElementById('projectsBtn').addEventListener('click',function(e){
   e.stopPropagation();
@@ -222,15 +262,14 @@ document.getElementById('projectsBtn').addEventListener('click',function(e){
 document.querySelectorAll('.filter-item').forEach(function(fi){
   fi.addEventListener('click',function(e){
     e.stopPropagation();
-    var f=fi.dataset.filter;
     document.querySelectorAll('.filter-item').forEach(function(x){x.classList.remove('active');});
     fi.classList.add('active');
-    activeFilter=f;
-    buildGrid(f);
+    hideZoom();
+    resetGrid(fi.dataset.filter);
   });
 });
 
-// info
+// INFO
 var infoOpen=false;
 document.getElementById('infoBtn').addEventListener('click',function(e){
   e.stopPropagation();
@@ -238,11 +277,18 @@ document.getElementById('infoBtn').addEventListener('click',function(e){
   document.getElementById('infoPanel').classList.toggle('show',infoOpen);
   document.getElementById('infoBtn').textContent=infoOpen?'–':'Info';
 });
-document.body.addEventListener('click',function(){
-  if(infoOpen){infoOpen=false;document.getElementById('infoPanel').classList.remove('show');document.getElementById('infoBtn').textContent='Info';}
-});
 
-buildGrid('all');
+// GLOW + close info on body click
+document.body.addEventListener('click',function(){
+  if(infoOpen){
+    infoOpen=false;
+    document.getElementById('infoPanel').classList.remove('show');
+    document.getElementById('infoBtn').textContent='Info';
+  }
+  var g=document.getElementById('glow');
+  g.classList.add('pulse');
+  setTimeout(function(){g.classList.remove('pulse');},320);
+});
 </script>
 </body>
 </html>
