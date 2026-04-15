@@ -28,6 +28,29 @@ nav{position:fixed;top:0;left:0;right:0;z-index:9999;display:flex;justify-conten
 .filter-list.show .filter-item:nth-child(2){transition-delay:.08s;}
 .filter-list.show .filter-item:nth-child(3){transition-delay:.13s;}
 
+/* COL SLIDER */
+.col-slider-wrap{
+  display:flex;align-items:center;
+  margin-left:28px;
+  opacity:0;transform:translateX(-6px);
+  transition:opacity .15s ease .18s,transform .15s ease .18s;
+  pointer-events:none;
+  gap:10px;
+  white-space:nowrap;
+}
+.filter-list.show .col-slider-wrap{opacity:1;transform:translateX(0);pointer-events:auto;}
+.col-slider-label{font-size:12px;font-weight:300;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,0.5);font-family:'Barlow Condensed',Arial Narrow,sans-serif;}
+.col-btns{display:flex;gap:6px;}
+.col-btn{
+  font-size:12px;font-weight:300;text-transform:uppercase;letter-spacing:.06em;
+  font-family:'Barlow Condensed',Arial Narrow,sans-serif;
+  background:none;border:none;color:rgba(255,255,255,0.4);
+  cursor:pointer;padding:0 4px;transition:color .15s;
+  line-height:1;
+}
+.col-btn:hover{color:rgba(255,255,255,0.8);}
+.col-btn.active{color:#fff;}
+
 #infoBtn{font-size:15px;font-weight:400;text-transform:uppercase;cursor:pointer;background:none;border:none;color:#fff;padding:8px 0;font-family:'Barlow Condensed',Arial Narrow,sans-serif;letter-spacing:.08em;transition:color .15s;}
 #infoBtn:hover{color:rgba(255,255,255,0.4);}
 
@@ -84,7 +107,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:9999;display:flex;justify-conten
 
 #sentinel{height:40px;width:100%;}
 
-/* hover info label (desktop) — replaces zoom overlay */
+/* hover info label (desktop) */
 .hover-info{
   position:fixed;
   pointer-events:none;
@@ -95,7 +118,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:9999;display:flex;justify-conten
   line-height:1.5;letter-spacing:.06em;
   text-transform:uppercase;
   font-family:'Barlow Condensed',Arial Narrow,sans-serif;
-  color:rgba(255,255,255,0.75);
+  color:#fff;
+  mix-blend-mode:difference;
   text-align:left;
   white-space:nowrap;
 }
@@ -126,6 +150,7 @@ footer{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:cente
   .zoom-overlay{display:none!important;}
   .info-overlay{padding:32px 24px;}
   .info-text{font-size:clamp(13px,4vw,18px);}
+  .col-slider-wrap{display:none!important;}
 }
 </style>
 </head>
@@ -141,6 +166,14 @@ footer{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:cente
         <div class="filter-item" data-filter="all">Mixed</div>
         <div class="filter-item" data-filter="mono">Monochrome</div>
         <div class="filter-item" data-filter="color">Color</div>
+        <div class="col-slider-wrap">
+          <span class="col-slider-label">Cols</span>
+          <div class="col-btns">
+            <button class="col-btn" data-cols="1">1</button>
+            <button class="col-btn active" data-cols="2">2</button>
+            <button class="col-btn" data-cols="3">3</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -219,12 +252,49 @@ var poolIdx=0;
 var loading=false;
 
 var masonry=document.getElementById('masonry');
-// 2 cols on mobile, 3 on desktop
+var masonryEl=document.getElementById('masonry');
+
+// col management
 var colCount=(window.innerWidth<=600)?2:3;
-if(colCount===2){var c2=document.getElementById('col2');if(c2)c2.parentNode.removeChild(c2);}
 var cols=[];
-for(var _ci=0;_ci<colCount;_ci++){cols.push(document.getElementById('col'+_ci));}
 var BATCH=colCount*3;
+
+function buildCols(n){
+  // clear existing
+  masonryEl.innerHTML='';
+  cols=[];
+  for(var i=0;i<n;i++){
+    var d=document.createElement('div');
+    d.className='masonry-col';
+    d.id='col'+i;
+    masonryEl.appendChild(d);
+    cols.push(d);
+  }
+  colCount=n;
+  BATCH=n*3;
+}
+buildCols(colCount);
+
+// col buttons — default active = colCount
+document.querySelectorAll('.col-btn').forEach(function(btn){
+  if(parseInt(btn.dataset.cols)===colCount)btn.classList.add('active');
+  else btn.classList.remove('active');
+  btn.addEventListener('click',function(e){
+    e.stopPropagation();
+    var n=parseInt(btn.dataset.cols);
+    if(n===colCount)return;
+    document.querySelectorAll('.col-btn').forEach(function(b){b.classList.remove('active');});
+    btn.classList.add('active');
+    buildCols(n);
+    // rebuild grid with current filter if active
+    if(activeFilter){
+      pool=shuffle(getPool(activeFilter).slice());
+      poolIdx=0;loading=false;
+      masonryEl.classList.remove('hidden');
+      addBatch();
+    }
+  });
+});
 
 var zoomOverlay=document.getElementById('zoomOverlay');
 var zoomImg=document.getElementById('zoomImg');
@@ -318,10 +388,9 @@ window.addEventListener('scroll',checkScroll,{passive:true});
 document.addEventListener('scroll',checkScroll,{passive:true});
 
 /* GRID show/hide */
-function showGrid(){masonry.classList.remove('hidden');}
+function showGrid(){masonryEl.classList.remove('hidden');}
 function hideGrid(){
-  masonry.classList.add('hidden');
-  // clear after fade
+  masonryEl.classList.add('hidden');
   setTimeout(function(){
     cols.forEach(function(c){c.innerHTML='';});
     pool=[];poolIdx=0;loading=false;activeFilter=null;
