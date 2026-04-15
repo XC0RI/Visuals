@@ -96,6 +96,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:9999;display:flex;justify-conten
 .lightbox img{max-width:100%;max-height:100%;object-fit:contain;display:block;}
 .lightbox-info{position:absolute;bottom:24px;right:24px;color:rgba(255,255,255,0.6);font-size:9px;line-height:1.5;text-align:right;letter-spacing:.06em;text-transform:uppercase;font-family:'Barlow Condensed',Arial Narrow,sans-serif;}
 
+.info-text a{color:inherit;text-decoration:none;transition:color .15s;}
+.info-text a:hover{color:rgba(255,255,255,0.4);}
+.info-text .tel{cursor:default;transition:color .15s;}
+.info-text .tel:hover{color:rgba(255,255,255,0.4);}
+
 /* FOOTER — mix-blend-mode difference for max contrast over any image */
 footer{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:center;padding:0 36px 28px;z-index:9999;pointer-events:none;mix-blend-mode:difference;}
 .foot{font-size:14px;font-weight:400;letter-spacing:.06em;text-transform:uppercase;pointer-events:auto;color:#fff;text-align:center;line-height:1.5;}
@@ -141,8 +146,8 @@ footer{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:cente
     Our practice operates at the intersection of architecture, Kunst am Bau, and set design. Informed by professional experience in Zurich, Munich, and Aachen, we investigate and develop the visual language of architecture and design.
     <br><br>
     <span id="emailLink"></span><br>
-    +49 1512 9640529<br>
-    14 Rue Neuve de la Chardonnière<br>75018 Paris
+    <span class="tel">+49 1512 9640529</span><br>
+    75018 Paris
   </div>
 </div>
 
@@ -290,12 +295,18 @@ function openLightbox(item){
 }
 lightbox.addEventListener('click',function(){lightbox.classList.remove('show');});
 
-/* INFINITE SCROLL */
+/* INFINITE SCROLL — dual: IntersectionObserver + scroll fallback for iOS */
 var sentinel=document.getElementById('sentinel');
+function checkScroll(){
+  var rect=sentinel.getBoundingClientRect();
+  if(rect.top<=window.innerHeight+400)addBatch();
+}
 var scrollObserver=new IntersectionObserver(function(entries){
   if(entries[0].isIntersecting)addBatch();
-},{rootMargin:'300px'});
+},{rootMargin:'400px'});
 scrollObserver.observe(sentinel);
+window.addEventListener('scroll',checkScroll,{passive:true});
+document.addEventListener('scroll',checkScroll,{passive:true});
 
 /* GRID show/hide */
 function showGrid(){masonry.classList.remove('hidden');}
