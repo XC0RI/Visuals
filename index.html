@@ -6,86 +6,134 @@
 <title>Gate Visual Studio</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
-html,body{margin:0;padding:0;background:#000;height:100%;overflow:hidden;font-family:'Barlow Condensed',Arial Narrow,sans-serif;color:#fff;touch-action:none;letter-spacing:.03em;}
-.glow{position:fixed;left:50%;top:50%;width:min(62vmin,700px);height:min(62vmin,700px);transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.75) 0%,rgba(255,255,255,0.42) 25%,rgba(255,255,255,0.18) 45%,rgba(0,0,0,0) 72%);filter:blur(5.2vmin);pointer-events:none;z-index:10;transition:.35s;}
-.glow.pulse{transform:translate(-50%,-50%) scale(1.18);}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:#000;min-height:100%;font-family:'Barlow Condensed',Arial Narrow,sans-serif;color:#fff;letter-spacing:.03em;}
 
-.ui{position:fixed;top:28px;font-size:15px;font-weight:400;text-transform:uppercase;cursor:pointer;z-index:9999;background:none;border:none;color:#fff;padding:0;font-family:'Barlow Condensed',Arial Narrow,sans-serif;letter-spacing:.08em;transition:color .15s;}
-.ui:hover{color:rgba(255,255,255,0.4);}
-#projectsBtn{left:32px;}
-#infoBtn{right:32px;}
-
-/* Filter row — horizontal, opens on hover over Projects area */
-.projects-area{position:fixed;top:20px;left:32px;z-index:9999;display:flex;flex-direction:row;align-items:center;mix-blend-mode:difference;}
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:9999;display:flex;justify-content:space-between;align-items:flex-start;padding:24px 32px;pointer-events:none;}
+.nav-left,.nav-right{pointer-events:auto;}
+.projects-area{display:flex;flex-direction:row;align-items:center;}
 .projects-label{font-size:15px;font-weight:400;text-transform:uppercase;cursor:pointer;background:none;border:none;color:#fff;padding:8px 0;font-family:'Barlow Condensed',Arial Narrow,sans-serif;letter-spacing:.08em;transition:color .15s;white-space:nowrap;}
 .projects-label:hover{color:rgba(255,255,255,0.4);}
-.filter-list{display:flex;flex-direction:row;align-items:center;margin-left:28px;gap:0;}
-.filter-item{font-size:15px;font-weight:400;text-transform:uppercase;cursor:pointer;white-space:nowrap;opacity:0;transform:translateX(-6px);transition:opacity .15s ease,transform .15s ease,color .15s;pointer-events:none;padding-right:28px;letter-spacing:.08em;font-family:'Barlow Condensed',Arial Narrow,sans-serif;}
-.filter-item:hover{color:rgba(255,255,255,0.4);}
+.filter-list{display:flex;flex-direction:row;align-items:center;margin-left:24px;gap:0;}
+.filter-item{font-size:12px;font-weight:300;text-transform:uppercase;cursor:pointer;white-space:nowrap;opacity:0;transform:translateX(-6px);transition:opacity .15s ease,transform .15s ease,color .15s;pointer-events:none;padding-right:22px;letter-spacing:.06em;font-family:'Barlow Condensed',Arial Narrow,sans-serif;color:rgba(255,255,255,0.5);}
+.filter-item:hover{color:rgba(255,255,255,0.8);}
+.filter-item.active{color:#fff;}
 .filter-list.show .filter-item{opacity:1;transform:translateX(0);pointer-events:auto;}
 .filter-list.show .filter-item:nth-child(1){transition-delay:.03s;}
 .filter-list.show .filter-item:nth-child(2){transition-delay:.08s;}
 .filter-list.show .filter-item:nth-child(3){transition-delay:.13s;}
 
-.info-panel{position:fixed;top:72px;right:32px;width:min(520px,60vw);line-height:1.45;font-size:14px;font-weight:300;letter-spacing:.04em;opacity:0;transform:translateY(-10px);pointer-events:none;transition:.25s;z-index:9999;mix-blend-mode:difference;}
+#infoBtn{font-size:15px;font-weight:400;text-transform:uppercase;cursor:pointer;background:none;border:none;color:#fff;padding:8px 0;font-family:'Barlow Condensed',Arial Narrow,sans-serif;letter-spacing:.08em;transition:color .15s;}
+#infoBtn:hover{color:rgba(255,255,255,0.4);}
+.info-panel{position:fixed;top:56px;right:32px;width:min(480px,60vw);line-height:1.55;font-size:13px;font-weight:300;letter-spacing:.04em;opacity:0;transform:translateY(-8px);pointer-events:none;transition:.25s;z-index:9999;}
 .info-panel.show{opacity:1;transform:translateY(0);}
 
-.label{position:fixed;bottom:32px;font-size:14px;font-weight:400;letter-spacing:.06em;z-index:9999;mix-blend-mode:difference;text-transform:uppercase;}
-.label-left{left:36px;}
-.label-right{right:36px;text-align:right;}
-.label-right a,.email-link{color:#fff;text-decoration:none;transition:color .15s;}
-.label-right a:hover,.email-link:hover{color:rgba(255,255,255,0.4);}
+/* GRID */
+.grid-container{padding:80px 32px 80px;min-height:100vh;}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(var(--cols,4),1fr);
+  gap:3px;
+}
 
-.img-wrapper{position:fixed;cursor:grab;user-select:none;transform-origin:center center;}
-.img-wrapper:active{cursor:grabbing;}
-.img-wrapper img{display:block;width:100%;height:auto;pointer-events:none;}
-.img-info{
-  position:absolute;bottom:6px;right:8px;
-  color:rgba(255,255,255,0.7);font-size:6px;line-height:1.5;
+.grid-cell{
+  position:relative;
+  overflow:hidden;
+  cursor:crosshair;
+  background:#111;
+}
+/* random aspect ratios for visual rhythm */
+.grid-cell:nth-child(3n+1){aspect-ratio:4/3;}
+.grid-cell:nth-child(3n+2){aspect-ratio:3/4;}
+.grid-cell:nth-child(3n){aspect-ratio:1/1;}
+
+.grid-cell img{
+  width:100%;height:100%;object-fit:cover;
+  display:block;
+  opacity:0;
+  transition:opacity .3s ease, transform .4s ease;
+  transform:scale(1.04);
+}
+.grid-cell img.loaded{opacity:1;transform:scale(1);}
+
+/* hover zoom overlay */
+.zoom-overlay{
+  position:fixed;
+  pointer-events:none;
+  z-index:8000;
+  opacity:0;
+  transition:opacity .18s ease;
+  transform:translate(-50%,-50%);
+  box-shadow:0 8px 60px rgba(0,0,0,0.7);
+}
+.zoom-overlay.show{opacity:1;}
+.zoom-overlay img{display:block;width:100%;height:auto;}
+.zoom-overlay .img-info{
+  position:absolute;bottom:7px;right:9px;
+  color:rgba(255,255,255,0.65);font-size:9px;line-height:1.5;
   text-align:right;pointer-events:none;letter-spacing:.06em;
   text-transform:uppercase;font-family:'Barlow Condensed',Arial Narrow,sans-serif;
 }
 
+/* FOOTER */
+footer{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-between;padding:0 36px 28px;z-index:9999;pointer-events:none;}
+.foot{font-size:14px;font-weight:400;letter-spacing:.06em;text-transform:uppercase;pointer-events:auto;}
+.foot a{color:#fff;text-decoration:none;transition:color .15s;}
+.foot a:hover{color:rgba(255,255,255,0.4);}
+
+@media(max-width:900px){.grid{--cols:3;}}
 @media(max-width:600px){
-  .projects-area{left:18px;top:20px;}
-  #infoBtn{right:18px;}
-  .label-left{left:18px;}.label-right{right:18px;}
-  .ui,.label,.projects-label,.filter-item{font-size:13px;}
+  .grid{--cols:2;gap:2px;}
+  .grid-container{padding:70px 12px 70px;}
+  nav{padding:20px 18px;}
+  footer{padding:0 18px 22px;}
   .info-panel{right:18px;left:40vw;font-size:12px;width:auto;}
-  .filter-list{margin-left:18px;}
-  .filter-item{padding-right:18px;}
 }
+@media(max-width:380px){.grid{--cols:2;}}
 </style>
 </head>
 <body>
-<div class="glow" id="glow"></div>
 
-<!-- Projects + filter in one hover zone -->
-<div class="projects-area" id="projectsArea">
-  <span class="projects-label" id="projectsBtn">Projects</span>
-  <div class="filter-list" id="filterList">
-    <div class="filter-item" data-filter="all">Mixed</div>
-    <div class="filter-item" data-filter="mono">Monochrome</div>
-    <div class="filter-item" data-filter="color">Color</div>
+<nav>
+  <div class="nav-left">
+    <div class="projects-area" id="projectsArea">
+      <span class="projects-label" id="projectsBtn">Projects</span>
+      <div class="filter-list" id="filterList">
+        <div class="filter-item" data-filter="all">Mixed</div>
+        <div class="filter-item" data-filter="mono">Monochrome</div>
+        <div class="filter-item" data-filter="color">Color</div>
+      </div>
+    </div>
   </div>
+  <div class="nav-right">
+    <button id="infoBtn">Info</button>
+  </div>
+</nav>
+
+<div class="info-panel" id="infoPanel">
+  Our practice operates at the intersection of architecture, Kunst am Bau, and set design. Informed by professional experience in Zurich, Munich, and Aachen, we investigate and develop the visual language of architecture and design.
 </div>
 
-<button class="ui" id="infoBtn">Info</button>
-<div class="info-panel" id="infoPanel">
-  Our practice operates at the intersection of architecture,<br>
-  Kunst am Bau, and set design.<br>
-  Informed by professional experience in Zurich, Munich, and Aachen,<br>
-  we investigate and develop the visual language of architecture and design.
+<div class="grid-container">
+  <div class="grid" id="grid"></div>
 </div>
-<div class="label label-left"><span style="font-size:16px;font-weight:600;">Gate Visual Studio</span><br>75018 Paris</div>
-<div class="label label-right"><span id="emailLink"></span><br>0049 1512 9640529</div>
+
+<div class="zoom-overlay" id="zoomOverlay">
+  <img id="zoomImg" src="" alt="">
+  <div class="img-info" id="zoomInfo"></div>
+</div>
+
+<footer>
+  <div class="foot"><span style="font-size:16px;font-weight:600;">Gate Visual Studio</span><br>Zürich / Paris</div>
+  <div class="foot" style="text-align:right;"><span id="emailLink"></span><br>+49 1512 9640529</div>
+</footer>
 
 <script>
 (function(){
   var a=document.createElement('a');
   a.href='mailto:info@gatevisuals.xyz';
   a.textContent='info@gatevisuals.xyz';
-  a.className='email-link';
   document.getElementById('emailLink').appendChild(a);
 })();
 
@@ -98,98 +146,103 @@ var IMAGES=[
   {src:"./images/06.jpeg",color:"color",info:"Rammed Earth Building\nConstruction Study, 2025"},
   {src:"./images/07.jpeg",color:"color",info:"Dr0ne\nOpen Competition, 2024"},
   {src:"./images/08.jpeg",color:"color",info:"Dr0ne\nOpen Competition, 2024"},
-  {src:"./images/09.jpeg",color:"mono", info:"Kunst am Bau Bern\nOpen Competition, 2024"},
-  {src:"./images/10.jpeg",color:"mono", info:"Kunst am Bau Bern\nOpen Competition, 2024"},
+  {src:"./images/09.jpeg",color:"mono",info:"Kunst am Bau Bern\nOpen Competition, 2024"},
+  {src:"./images/10.jpeg",color:"mono",info:"Kunst am Bau Bern\nOpen Competition, 2024"},
   {src:"./images/11.jpeg",color:"color",info:"Rammed Earth Building\nConstruction Study, 2025"},
   {src:"./images/12.jpeg",color:"color",info:"Rammed Earth Building\nConstruction Study, 2025"},
   {src:"./images/13.jpeg",color:"color",info:"Rammed Earth Building\nConstruction Study, 2025"},
-  {src:"./images/14.jpeg",color:"mono", info:"Photovoltaic Roof System\nConstruction Study, 2025"},
-  {src:"./images/15.jpeg",color:"mono", info:"Undisclosed\nScenographic Interior Study, 2025"},
-  {src:"./images/16.jpeg",color:"mono", info:"Undisclosed\nScenographic Interior Study, 2025"},
-  {src:"./images/17.jpeg",color:"mono", info:"Undisclosed\nScenographic Interior Study, 2025"}
+  {src:"./images/14.jpeg",color:"mono",info:"Photovoltaic Roof System\nConstruction Study, 2025"},
+  {src:"./images/15.jpeg",color:"mono",info:"Undisclosed\nScenographic Interior Study, 2025"},
+  {src:"./images/16.jpeg",color:"mono",info:"Undisclosed\nScenographic Interior Study, 2025"},
+  {src:"./images/17.jpeg",color:"mono",info:"Undisclosed\nScenographic Interior Study, 2025"}
 ];
 
-var queue=[],qIdx=0,zTop=10,activeFilter=null;
-var dragEl=null,dragOX=0,dragOY=0;
-var activeWrappers={};
-
 function shuffle(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t;}return b;}
-function resetQueue(f){var pool=(f==='all')?IMAGES:IMAGES.filter(function(x){return x.color===f;});queue=shuffle(pool);qIdx=0;}
 
-function updateLabel(wrapper,scale){
-  var lbl=wrapper.querySelector('.img-info');
-  if(!lbl)return;
-  lbl.style.transform='scale('+(1/scale)+')';
-  lbl.style.transformOrigin='bottom right';
+var activeFilter='all';
+var grid=document.getElementById('grid');
+var zoomOverlay=document.getElementById('zoomOverlay');
+var zoomImg=document.getElementById('zoomImg');
+var zoomInfo=document.getElementById('zoomInfo');
+var zoomTimeout=null;
+
+function buildGrid(filter){
+  grid.innerHTML='';
+  var pool=(filter==='all')?IMAGES:IMAGES.filter(function(x){return x.color===filter;});
+  pool=shuffle(pool);
+  pool.forEach(function(item){
+    var cell=document.createElement('div');
+    cell.className='grid-cell';
+    var img=document.createElement('img');
+    img.src=item.src;
+    img.alt='';
+    img.onload=function(){img.classList.add('loaded');};
+    cell.appendChild(img);
+    cell.addEventListener('mouseenter',function(e){showZoom(item,e);});
+    cell.addEventListener('mousemove',function(e){positionZoom(e);});
+    cell.addEventListener('mouseleave',function(){hideZoom();});
+    grid.appendChild(cell);
+  });
 }
 
-window.addEventListener('mousemove',function(e){if(!dragEl)return;dragEl.style.left=(e.clientX-dragOX)+'px';dragEl.style.top=(e.clientY-dragOY)+'px';});
-window.addEventListener('mouseup',function(){dragEl=null;});
-window.addEventListener('touchmove',function(e){if(!dragEl)return;if(e.touches.length!==1)return;dragEl.style.left=(e.touches[0].clientX-dragOX)+'px';dragEl.style.top=(e.touches[0].clientY-dragOY)+'px';},{passive:false});
-window.addEventListener('touchend',function(){dragEl=null;});
+function showZoom(item,e){
+  zoomImg.src=item.src;
+  zoomInfo.innerHTML=item.info?item.info.replace(/\n/g,'<br>'):'';
+  var vw=window.innerWidth;
+  var size=Math.min(vw*0.38,480);
+  zoomOverlay.style.width=size+'px';
+  positionZoom(e);
+  clearTimeout(zoomTimeout);
+  zoomOverlay.classList.add('show');
+}
 
-// Projects click: toggle filter list
+function positionZoom(e){
+  var vw=window.innerWidth,vh=window.innerHeight;
+  var size=parseInt(zoomOverlay.style.width)||400;
+  var x=e.clientX,y=e.clientY;
+  // keep within viewport
+  var left=x+size/2>vw-20?x-size/2:x+size/2;
+  var top=Math.max(size*0.4,Math.min(vh-size*0.4,y));
+  zoomOverlay.style.left=left+'px';
+  zoomOverlay.style.top=top+'px';
+}
+
+function hideZoom(){
+  zoomOverlay.classList.remove('show');
+}
+
+// filter
+var filterOpen=false;
 document.getElementById('projectsBtn').addEventListener('click',function(e){
   e.stopPropagation();
-  var fl=document.getElementById('filterList');
-  var open=fl.classList.toggle('show');
-  document.getElementById('projectsBtn').style.color=open?'rgba(255,255,255,0.4)':'';
+  filterOpen=!filterOpen;
+  document.getElementById('filterList').classList.toggle('show',filterOpen);
 });
-
-function spawnImage(){
-  if(!queue.length)return;
-  if(qIdx>=queue.length){queue=shuffle(queue);qIdx=0;}
-  var item=queue[qIdx++];
-
-  if(activeWrappers[item.src]){activeWrappers[item.src].remove();delete activeWrappers[item.src];}
-
-  var vw=window.innerWidth,vh=window.innerHeight;
-  var w=Math.min(Math.min(vw,vh)*(vw<600?0.55:0.32),420);
-  var maxLeft=Math.max(0,vw-w);var maxTop=Math.max(0,vh-w*0.75);
-  var lx=Math.round(Math.random()*maxLeft);var ty=Math.round(Math.random()*maxTop);
-
-  var wrapper=document.createElement('div');
-  wrapper.className='img-wrapper';
-  wrapper.style.width=w+'px';wrapper.style.left=lx+'px';wrapper.style.top=ty+'px';
-  zTop++;wrapper.style.zIndex=zTop;wrapper.dataset.scale='1';
-
-  if(item.info){var lbl=document.createElement('div');lbl.className='img-info';lbl.innerHTML=item.info.replace(/\n/g,'<br>');wrapper.appendChild(lbl);}
-
-  var img=document.createElement('img');wrapper.appendChild(img);document.body.appendChild(wrapper);activeWrappers[item.src]=wrapper;
-
-  wrapper.addEventListener('mousedown',function(e){e.preventDefault();e.stopPropagation();dragEl=wrapper;dragOX=e.clientX-wrapper.offsetLeft;dragOY=e.clientY-wrapper.offsetTop;zTop++;wrapper.style.zIndex=zTop;});
-
-  var pinchDist=null;
-  wrapper.addEventListener('touchstart',function(e){e.stopPropagation();zTop++;wrapper.style.zIndex=zTop;if(e.touches.length===1){dragEl=wrapper;dragOX=e.touches[0].clientX-wrapper.offsetLeft;dragOY=e.touches[0].clientY-wrapper.offsetTop;pinchDist=null;}else if(e.touches.length===2){dragEl=null;pinchDist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);}},{passive:true});
-  wrapper.addEventListener('touchmove',function(e){if(e.touches.length===2&&pinchDist!==null){e.preventDefault();var d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);var s=Math.min(Math.max(1,parseFloat(wrapper.dataset.scale)*(d/pinchDist)),4);wrapper.dataset.scale=s;wrapper.style.transform='scale('+s+')';updateLabel(wrapper,s);pinchDist=d;}},{passive:false});
-  wrapper.addEventListener('touchend',function(e){if(e.touches.length<2)pinchDist=null;if(e.touches.length===0)dragEl=null;});
-  wrapper.addEventListener('wheel',function(e){e.preventDefault();var s=Math.min(Math.max(1,parseFloat(wrapper.dataset.scale)-e.deltaY*0.0025),4);wrapper.dataset.scale=s;wrapper.style.transform='scale('+s+')';updateLabel(wrapper,s);},{passive:false});
-
-  img.src=item.src;
-}
 
 document.querySelectorAll('.filter-item').forEach(function(fi){
   fi.addEventListener('click',function(e){
     e.stopPropagation();
     var f=fi.dataset.filter;
-    if(f!==activeFilter){
-      document.querySelectorAll('.img-wrapper').forEach(function(w){w.remove();});
-      activeWrappers={};activeFilter=f;resetQueue(f);
-    }
-    spawnImage();
+    document.querySelectorAll('.filter-item').forEach(function(x){x.classList.remove('active');});
+    fi.classList.add('active');
+    activeFilter=f;
+    buildGrid(f);
   });
 });
 
+// info
 var infoOpen=false;
 document.getElementById('infoBtn').addEventListener('click',function(e){
-  e.stopPropagation();infoOpen=!infoOpen;
+  e.stopPropagation();
+  infoOpen=!infoOpen;
   document.getElementById('infoPanel').classList.toggle('show',infoOpen);
   document.getElementById('infoBtn').textContent=infoOpen?'–':'Info';
 });
-
 document.body.addEventListener('click',function(){
-  var g=document.getElementById('glow');g.classList.add('pulse');setTimeout(function(){g.classList.remove('pulse');},320);
+  if(infoOpen){infoOpen=false;document.getElementById('infoPanel').classList.remove('show');document.getElementById('infoBtn').textContent='Info';}
 });
+
+buildGrid('all');
 </script>
 </body>
 </html>
