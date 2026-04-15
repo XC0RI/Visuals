@@ -9,9 +9,11 @@
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;background:#000;min-height:100%;font-family:'Barlow Condensed',Arial Narrow,sans-serif;color:#fff;letter-spacing:.03em;}
 
+/* GLOW */
 .glow{position:fixed;left:50%;top:50%;width:min(62vmin,700px);height:min(62vmin,700px);transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.75) 0%,rgba(255,255,255,0.42) 25%,rgba(255,255,255,0.18) 45%,rgba(0,0,0,0) 72%);filter:blur(5.2vmin);pointer-events:none;z-index:1;transition:.35s;}
 .glow.pulse{transform:translate(-50%,-50%) scale(1.18);}
 
+/* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:9999;display:flex;justify-content:space-between;align-items:flex-start;padding:24px 32px;pointer-events:none;}
 .nav-left,.nav-right{pointer-events:auto;}
 .projects-area{display:flex;flex-direction:row;align-items:center;}
@@ -28,12 +30,53 @@ nav{position:fixed;top:0;left:0;right:0;z-index:9999;display:flex;justify-conten
 
 #infoBtn{font-size:15px;font-weight:400;text-transform:uppercase;cursor:pointer;background:none;border:none;color:#fff;padding:8px 0;font-family:'Barlow Condensed',Arial Narrow,sans-serif;letter-spacing:.08em;transition:color .15s;}
 #infoBtn:hover{color:rgba(255,255,255,0.4);}
-.info-panel{position:fixed;top:56px;right:32px;width:min(480px,60vw);line-height:1.55;font-size:13px;font-weight:300;letter-spacing:.04em;opacity:0;transform:translateY(-8px);pointer-events:none;transition:.25s;z-index:9999;}
-.info-panel.show{opacity:1;transform:translateY(0);}
 
+/* INFO OVERLAY — fullscreen blur + centered text */
+.info-overlay{
+  position:fixed;inset:0;
+  z-index:9998;
+  display:flex;align-items:center;justify-content:center;
+  padding:48px 32px;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .35s ease;
+  backdrop-filter:blur(0px);
+  -webkit-backdrop-filter:blur(0px);
+}
+.info-overlay.show{
+  opacity:1;
+  pointer-events:auto;
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  transition:opacity .35s ease, backdrop-filter .35s ease, -webkit-backdrop-filter .35s ease;
+}
+.info-overlay-bg{
+  position:absolute;inset:0;
+  background:rgba(0,0,0,0.45);
+  opacity:0;
+  transition:opacity .35s ease;
+}
+.info-overlay.show .info-overlay-bg{opacity:1;}
+.info-text{
+  position:relative;
+  z-index:1;
+  text-align:center;
+  font-size:clamp(16px,2.8vw,28px);
+  font-weight:300;
+  line-height:1.6;
+  letter-spacing:.04em;
+  max-width:720px;
+  opacity:0;
+  transform:translateY(10px);
+  transition:opacity .3s ease .15s, transform .3s ease .15s;
+}
+.info-overlay.show .info-text{opacity:1;transform:translateY(0);}
+
+/* GRID */
 .grid-container{position:relative;z-index:2;padding:72px 3px 80px;min-height:100vh;}
 .masonry{display:flex;flex-direction:row;align-items:flex-start;gap:3px;}
-.masonry-col{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;}
+.masonry-col{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;transition:opacity .4s ease;}
+.masonry.hidden .masonry-col{opacity:0;pointer-events:none;}
 
 .grid-cell{position:relative;overflow:hidden;cursor:crosshair;background:#0a0a0a;width:100%;}
 .grid-cell img{display:block;width:100%;height:auto;object-position:center top;opacity:0;transition:opacity .25s ease;}
@@ -41,18 +84,21 @@ nav{position:fixed;top:0;left:0;right:0;z-index:9999;display:flex;justify-conten
 
 #sentinel{height:40px;width:100%;}
 
+/* ZOOM overlay (desktop) */
 .zoom-overlay{position:fixed;pointer-events:none;z-index:8000;opacity:0;transition:opacity .15s ease;transform:translate(-50%,-50%);box-shadow:0 8px 60px rgba(0,0,0,0.8);}
 .zoom-overlay.show{opacity:1;}
 .zoom-overlay img{display:block;width:100%;height:auto;}
 .zoom-overlay .img-info{position:absolute;bottom:7px;right:9px;color:rgba(255,255,255,0.65);font-size:9px;line-height:1.5;text-align:right;pointer-events:none;letter-spacing:.06em;text-transform:uppercase;font-family:'Barlow Condensed',Arial Narrow,sans-serif;}
 
+/* LIGHTBOX (mobile tap) */
 .lightbox{display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.93);align-items:center;justify-content:center;padding:16px;}
 .lightbox.show{display:flex;}
 .lightbox img{max-width:100%;max-height:100%;object-fit:contain;display:block;}
 .lightbox-info{position:absolute;bottom:24px;right:24px;color:rgba(255,255,255,0.6);font-size:9px;line-height:1.5;text-align:right;letter-spacing:.06em;text-transform:uppercase;font-family:'Barlow Condensed',Arial Narrow,sans-serif;}
 
-footer{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-between;padding:0 36px 28px;z-index:9999;pointer-events:none;}
-.foot{font-size:14px;font-weight:400;letter-spacing:.06em;text-transform:uppercase;pointer-events:auto;}
+/* FOOTER — mix-blend-mode difference for max contrast over any image */
+footer{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-between;padding:0 36px 28px;z-index:9999;pointer-events:none;mix-blend-mode:difference;}
+.foot{font-size:14px;font-weight:400;letter-spacing:.06em;text-transform:uppercase;pointer-events:auto;color:#fff;}
 .foot a{color:#fff;text-decoration:none;transition:color .15s;}
 .foot a:hover{color:rgba(255,255,255,0.4);}
 
@@ -62,8 +108,9 @@ footer{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space
   .grid-container{padding:64px 2px 72px;}
   nav{padding:20px 18px;}
   footer{padding:0 18px 22px;}
-  .info-panel{right:18px;left:40vw;font-size:12px;width:auto;}
   .zoom-overlay{display:none!important;}
+  .info-overlay{padding:32px 24px;}
+  .info-text{font-size:clamp(15px,4.5vw,22px);}
 }
 </style>
 </head>
@@ -87,12 +134,16 @@ footer{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space
   </div>
 </nav>
 
-<div class="info-panel" id="infoPanel">
-  Our practice operates at the intersection of architecture, Kunst am Bau, and set design. Informed by professional experience in Zurich, Munich, and Aachen, we investigate and develop the visual language of architecture and design.
+<!-- Info: fullscreen blur overlay -->
+<div class="info-overlay" id="infoOverlay">
+  <div class="info-overlay-bg"></div>
+  <div class="info-text">
+    Our practice operates at the intersection of architecture, Kunst am Bau, and set design. Informed by professional experience in Zurich, Munich, and Aachen, we investigate and develop the visual language of architecture and design.
+  </div>
 </div>
 
 <div class="grid-container">
-  <div class="masonry" id="masonry">
+  <div class="masonry hidden" id="masonry">
     <div class="masonry-col" id="col0"></div>
     <div class="masonry-col" id="col1"></div>
     <div class="masonry-col" id="col2"></div>
@@ -111,7 +162,7 @@ footer{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space
 </div>
 
 <footer>
-  <div class="foot"><span style="font-size:16px;font-weight:600;">Gate Visual Studio</span><br>Zürich / Paris</div>
+  <div class="foot"><span style="font-size:16px;font-weight:600;">Gate Visual Studio</span><br>Zurich / Paris</div>
   <div class="foot" style="text-align:right;"><span id="emailLink"></span><br>+49 1512 9640529</div>
 </footer>
 
@@ -151,6 +202,7 @@ var poolIdx=0;
 var loading=false;
 var BATCH=9;
 
+var masonry=document.getElementById('masonry');
 var cols=[document.getElementById('col0'),document.getElementById('col1'),document.getElementById('col2')];
 var zoomOverlay=document.getElementById('zoomOverlay');
 var zoomImg=document.getElementById('zoomImg');
@@ -160,7 +212,6 @@ var lightboxImg=document.getElementById('lightboxImg');
 var lightboxInfo=document.getElementById('lightboxInfo');
 
 function isMobile(){return window.innerWidth<=600;}
-
 function getPool(f){return(f==='all')?IMAGES:IMAGES.filter(function(x){return x.color===f;});}
 
 function nextItem(){
@@ -177,7 +228,6 @@ function addBatch(){
   if(loading||!activeFilter)return;
   loading=true;
   var remaining=BATCH;
-
   function addOne(){
     if(remaining<=0){loading=false;return;}
     remaining--;
@@ -185,12 +235,10 @@ function addBatch(){
     var ci=shortestCol();
     var cell=document.createElement('div');
     cell.className='grid-cell';
-
     var img=document.createElement('img');
     img.alt='';
     img.onload=function(){img.classList.add('loaded');setTimeout(addOne,20);};
     img.onerror=function(){cell.remove();setTimeout(addOne,20);};
-
     if(!isMobile()){
       cell.addEventListener('mouseenter',function(e){showZoom(item,e);});
       cell.addEventListener('mousemove',function(e){positionZoom(e);});
@@ -198,7 +246,6 @@ function addBatch(){
     } else {
       cell.addEventListener('click',function(e){e.stopPropagation();openLightbox(item);});
     }
-
     cell.appendChild(img);
     cols[ci].appendChild(cell);
     img.src=item.src;
@@ -206,7 +253,7 @@ function addBatch(){
   addOne();
 }
 
-// ZOOM
+/* ZOOM */
 function showZoom(item,e){
   zoomImg.src=item.src;
   zoomInfo.innerHTML=item.info?item.info.replace(/\n/g,'<br>'):'';
@@ -225,7 +272,7 @@ function positionZoom(e){
 }
 function hideZoom(){zoomOverlay.classList.remove('show');}
 
-// LIGHTBOX
+/* LIGHTBOX */
 function openLightbox(item){
   lightboxImg.src=item.src;
   lightboxInfo.innerHTML=item.info?item.info.replace(/\n/g,'<br>'):'';
@@ -233,31 +280,47 @@ function openLightbox(item){
 }
 lightbox.addEventListener('click',function(){lightbox.classList.remove('show');});
 
-// INFINITE SCROLL
+/* INFINITE SCROLL */
 var sentinel=document.getElementById('sentinel');
-var observer=new IntersectionObserver(function(entries){
+var scrollObserver=new IntersectionObserver(function(entries){
   if(entries[0].isIntersecting)addBatch();
 },{rootMargin:'300px'});
-observer.observe(sentinel);
+scrollObserver.observe(sentinel);
 
-// FILTER
-function resetGrid(f){
-  cols.forEach(function(c){c.innerHTML='';});
-  pool=shuffle(getPool(f).slice());
-  poolIdx=0;
-  loading=false;
-  activeFilter=f;
-  // scroll to top
-  window.scrollTo({top:0,behavior:'instant'});
-  addBatch();
+/* GRID show/hide */
+function showGrid(){masonry.classList.remove('hidden');}
+function hideGrid(){
+  masonry.classList.add('hidden');
+  // clear after fade
+  setTimeout(function(){
+    cols.forEach(function(c){c.innerHTML='';});
+    pool=[];poolIdx=0;loading=false;activeFilter=null;
+    window.scrollTo({top:0,behavior:'instant'});
+  },400);
 }
 
+/* FILTER */
 var filterOpen=false;
 document.getElementById('projectsBtn').addEventListener('click',function(e){
   e.stopPropagation();
   filterOpen=!filterOpen;
   document.getElementById('filterList').classList.toggle('show',filterOpen);
+  if(!filterOpen){
+    // closing filter list → hide grid
+    document.querySelectorAll('.filter-item').forEach(function(x){x.classList.remove('active');});
+    hideGrid();
+    hideZoom();
+  }
 });
+
+function resetGrid(f){
+  cols.forEach(function(c){c.innerHTML='';});
+  pool=shuffle(getPool(f).slice());
+  poolIdx=0;loading=false;activeFilter=f;
+  window.scrollTo({top:0,behavior:'instant'});
+  showGrid();
+  addBatch();
+}
 
 document.querySelectorAll('.filter-item').forEach(function(fi){
   fi.addEventListener('click',function(e){
@@ -269,22 +332,29 @@ document.querySelectorAll('.filter-item').forEach(function(fi){
   });
 });
 
-// INFO
+/* INFO */
 var infoOpen=false;
+var infoOverlay=document.getElementById('infoOverlay');
+
+function openInfo(){
+  infoOpen=true;
+  infoOverlay.classList.add('show');
+  document.getElementById('infoBtn').textContent='–';
+}
+function closeInfo(){
+  infoOpen=false;
+  infoOverlay.classList.remove('show');
+  document.getElementById('infoBtn').textContent='Info';
+}
+
 document.getElementById('infoBtn').addEventListener('click',function(e){
   e.stopPropagation();
-  infoOpen=!infoOpen;
-  document.getElementById('infoPanel').classList.toggle('show',infoOpen);
-  document.getElementById('infoBtn').textContent=infoOpen?'–':'Info';
+  infoOpen?closeInfo():openInfo();
 });
+infoOverlay.addEventListener('click',function(){closeInfo();});
 
-// GLOW + close info on body click
+/* GLOW */
 document.body.addEventListener('click',function(){
-  if(infoOpen){
-    infoOpen=false;
-    document.getElementById('infoPanel').classList.remove('show');
-    document.getElementById('infoBtn').textContent='Info';
-  }
   var g=document.getElementById('glow');
   g.classList.add('pulse');
   setTimeout(function(){g.classList.remove('pulse');},320);
