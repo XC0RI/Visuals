@@ -61,11 +61,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:9999;display:flex;justify-conten
   position:relative;
   z-index:1;
   text-align:center;
-  font-size:clamp(16px,2.8vw,28px);
+  font-size:clamp(13px,1.8vw,18px);
   font-weight:300;
   line-height:1.6;
   letter-spacing:.04em;
-  max-width:720px;
+  max-width:600px;
   opacity:0;
   transform:translateY(10px);
   transition:opacity .3s ease .15s, transform .3s ease .15s;
@@ -104,13 +104,13 @@ footer{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:cente
 
 @media(max-width:600px){
   .masonry{gap:2px;width:100%;}
-  .masonry-col{gap:2px;flex:1;}
-  .grid-container{padding:64px 0 72px;}
+  .masonry-col{gap:2px;flex:1;min-width:0;}
+  .grid-container{padding:64px 0 72px;width:100%;}
   nav{padding:20px 18px;}
   footer{padding:0 18px 22px;}
   .zoom-overlay{display:none!important;}
   .info-overlay{padding:32px 24px;}
-  .info-text{font-size:clamp(15px,4.5vw,22px);}
+  .info-text{font-size:clamp(13px,4vw,18px);}
 }
 </style>
 </head>
@@ -205,10 +205,15 @@ var activeFilter=null;
 var pool=[];
 var poolIdx=0;
 var loading=false;
-var BATCH=9;
 
 var masonry=document.getElementById('masonry');
-var cols=[document.getElementById('col0'),document.getElementById('col1'),document.getElementById('col2')];
+// 2 cols on mobile, 3 on desktop
+var colCount=(window.innerWidth<=600)?2:3;
+if(colCount===2){var c2=document.getElementById('col2');if(c2)c2.parentNode.removeChild(c2);}
+var cols=[];
+for(var _ci=0;_ci<colCount;_ci++){cols.push(document.getElementById('col'+_ci));}
+var BATCH=colCount*3;
+
 var zoomOverlay=document.getElementById('zoomOverlay');
 var zoomImg=document.getElementById('zoomImg');
 var zoomInfo=document.getElementById('zoomInfo');
