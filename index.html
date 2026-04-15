@@ -84,11 +84,21 @@ nav{position:fixed;top:0;left:0;right:0;z-index:9999;display:flex;justify-conten
 
 #sentinel{height:40px;width:100%;}
 
-/* ZOOM overlay (desktop) */
-.zoom-overlay{position:fixed;pointer-events:none;z-index:8000;opacity:0;transition:opacity .15s ease;transform:translate(-50%,-50%);box-shadow:0 8px 60px rgba(0,0,0,0.8);}
-.zoom-overlay.show{opacity:1;}
-.zoom-overlay img{display:block;width:100%;height:auto;}
-.zoom-overlay .img-info{position:absolute;bottom:7px;right:9px;color:rgba(255,255,255,0.65);font-size:9px;line-height:1.5;text-align:right;pointer-events:none;letter-spacing:.06em;text-transform:uppercase;font-family:'Barlow Condensed',Arial Narrow,sans-serif;}
+/* hover info label (desktop) — replaces zoom overlay */
+.hover-info{
+  position:fixed;
+  pointer-events:none;
+  z-index:8000;
+  opacity:0;
+  transition:opacity .15s ease;
+  font-size:11px;font-weight:300;
+  line-height:1.5;letter-spacing:.06em;
+  text-transform:uppercase;
+  font-family:'Barlow Condensed',Arial Narrow,sans-serif;
+  color:rgba(255,255,255,0.75);
+  text-align:left;
+  white-space:nowrap;
+}
 
 /* LIGHTBOX (mobile tap) */
 .lightbox{display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.93);align-items:center;justify-content:center;padding:16px;}
@@ -160,10 +170,7 @@ footer{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:cente
   <div id="sentinel"></div>
 </div>
 
-<div class="zoom-overlay" id="zoomOverlay">
-  <img id="zoomImg" src="" alt="">
-  <div class="img-info" id="zoomInfo"></div>
-</div>
+<div class="hover-info" id="hoverInfo"></div>
 
 <div class="lightbox" id="lightbox">
   <img id="lightboxImg" src="" alt="">
@@ -268,24 +275,26 @@ function addBatch(){
   addOne();
 }
 
-/* ZOOM */
+var zoomOverlay=document.getElementById('hoverInfo');
+var zoomImg={src:''};
+var zoomInfo={};
+
+/* HOVER INFO (desktop) */
 function showZoom(item,e){
-  zoomImg.src=item.src;
-  zoomInfo.innerHTML=item.info?item.info.replace(/\n/g,'<br>'):'';
-  zoomOverlay.style.width=Math.min(window.innerWidth*0.36,460)+'px';
+  if(!item.info){hideZoom();return;}
+  zoomOverlay.innerHTML=item.info.replace(/\n/g,'<br>');
   positionZoom(e);
-  zoomOverlay.classList.add('show');
+  zoomOverlay.style.opacity='1';
 }
 function positionZoom(e){
   var vw=window.innerWidth,vh=window.innerHeight;
-  var w=parseInt(zoomOverlay.style.width)||400;
-  var h=zoomOverlay.offsetHeight||w*0.7;
-  var left=e.clientX+16+w>vw?e.clientX-16-w:e.clientX+16;
-  var top=Math.max(h/2+8,Math.min(vh-h/2-8,e.clientY));
-  zoomOverlay.style.left=(left+w/2)+'px';
-  zoomOverlay.style.top=top+'px';
+  var x=e.clientX+14,y=e.clientY-4;
+  if(x+160>vw)x=e.clientX-14-160;
+  if(y+40>vh)y=vh-40;
+  zoomOverlay.style.left=x+'px';
+  zoomOverlay.style.top=y+'px';
 }
-function hideZoom(){zoomOverlay.classList.remove('show');}
+function hideZoom(){zoomOverlay.style.opacity='0';}
 
 /* LIGHTBOX */
 function openLightbox(item){
