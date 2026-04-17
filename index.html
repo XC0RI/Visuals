@@ -203,6 +203,7 @@ footer{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:cente
     <br><br>
     <span id="emailLink"></span><br>
     <span class="tel">+49 1512 9640529</span><br>
+    <a href="https://instagram.com/gatevisuals" target="_blank" rel="noopener" class="ig-link">Instagram: @gatevisuals</a><br>
     75018 Paris
   </div>
 </div>
@@ -232,8 +233,6 @@ footer{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:cente
   var a=document.createElement('a');
   a.href='mailto:info@gatevisuals.xyz';
   a.textContent='info@gatevisuals.xyz';
-  a.style.color='inherit';
-  a.style.textDecoration='none';
   document.getElementById('emailLink').appendChild(a);
 })();
 
@@ -296,6 +295,7 @@ document.getElementById('colRange').addEventListener('input',function(){
   if(activeFilter){
     pool=shuffle(getPool(activeFilter).slice());
     poolIdx=0;loading=false;
+    BATCH=Math.max(pool.length, n*3);
     masonryEl.classList.remove('hidden');
     addBatch();
   }
@@ -311,8 +311,22 @@ var lightboxInfo=document.getElementById('lightboxInfo');
 function isMobile(){return window.innerWidth<=600;}
 function getPool(f){return(f==='all')?IMAGES:IMAGES.filter(function(x){return x.color===f;});}
 
+// Track how many images are currently rendered to detect when a full cycle has completed
+var renderedCount=0;
 function nextItem(){
-  if(poolIdx>=pool.length){pool=shuffle(pool.slice());poolIdx=0;}
+  // Only reshuffle at the exact end of a full cycle, never mid-pool
+  if(poolIdx>=pool.length){
+    // Re-shuffle but ensure first item of new cycle != last item of previous cycle
+    var last=pool[pool.length-1];
+    var newPool=shuffle(pool.slice());
+    // swap if collision
+    if(newPool.length>1&&newPool[0]===last){
+      var swapIdx=1+Math.floor(Math.random()*(newPool.length-1));
+      var tmp=newPool[0];newPool[0]=newPool[swapIdx];newPool[swapIdx]=tmp;
+    }
+    pool=newPool;
+    poolIdx=0;
+  }
   return pool[poolIdx++];
 }
 
@@ -421,6 +435,7 @@ function resetGrid(f){
   cols.forEach(function(c){c.innerHTML='';});
   pool=shuffle(getPool(f).slice());
   poolIdx=0;loading=false;activeFilter=f;
+  BATCH=Math.max(pool.length, colCount*3);
   window.scrollTo({top:0,behavior:'instant'});
   showGrid();
   addBatch();
