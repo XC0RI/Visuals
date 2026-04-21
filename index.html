@@ -3,7 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Gate Visual Studio</title>
+<title>Gate Visual Studio – Architectural Visualization | Zürich & Paris</title>
+<meta name="description" content="Gate Visual Studio is an architectural visualization practice based in Zürich and Paris, working across architecture, Kunst am Bau, and set design.">
+<meta name="keywords" content="architectural visualization, archviz, Kunst am Bau, set design, architecture rendering, Zürich, Paris, architectural photography, competition visualization">
+<meta property="og:title" content="Gate Visual Studio – Architectural Visualization">
+<meta property="og:description" content="Gate Visual Studio is an architectural visualization practice based in Zürich and Paris, working across architecture, Kunst am Bau, and set design.">
+<meta property="og:url" content="https://gatevisuals.xyz">
+<meta property="og:type" content="website">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://gatevisuals.xyz/">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;}
@@ -208,6 +216,25 @@ footer{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:cente
   </div>
 </div>
 
+<!-- SEO content block: visible to search engines, hidden visually -->
+<div style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;" aria-hidden="true">
+  <h1>Gate Visual Studio</h1>
+  <p>Gate Visual Studio is an architectural visualization practice based in Zürich and Paris. We operate at the intersection of architecture, Kunst am Bau, and set design, developing the visual language of architecture and design informed by professional experience in Zürich, Munich, and Aachen.</p>
+  <h2>Projects</h2>
+  <ul>
+    <li>Studio Corso – Selective Competition, 2025</li>
+    <li>Office Bau Bau – Interior Studies, 2025</li>
+    <li>Scenographic Study, 2024</li>
+    <li>Rammed Earth Building – Construction Study, 2025</li>
+    <li>Dr0ne – Open Competition, 2024</li>
+    <li>Kunst am Bau Bern – Open Competition, 2024</li>
+    <li>Photovoltaic Roof System – Construction Study, 2025</li>
+    <li>Undisclosed – Scenographic Interior Study, 2025</li>
+  </ul>
+  <h2>Contact</h2>
+  <p>Email: info@gatevisuals.xyz | Instagram: @gatevisuals | Paris 75018</p>
+</div>
+
 <div class="grid-container">
   <div class="masonry hidden" id="masonry">
     <div class="masonry-col" id="col0"></div>
@@ -347,7 +374,7 @@ function addBatch(){
     var cell=document.createElement('div');
     cell.className='grid-cell';
     var img=document.createElement('img');
-    img.alt='';
+    img.alt = item.info ? item.info.replace(/\n/g, ' – ') : 'Gate Visual Studio – Architectural Visualization';
     img.onload=function(){img.classList.add('loaded');setTimeout(addOne,20);};
     img.onerror=function(){cell.remove();setTimeout(addOne,20);};
     if(!isMobile()){
