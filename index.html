@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Gate Visual Studio – Architectural Visualization | Zürich & Paris</title>
+<title>Gate Visual Studio – Architectural Visualization | Zurich & Paris</title>
 <meta name="description" content="Gate Visual Studio is an architectural visualization practice based in Zürich and Paris, working across rendering, image-making, web design, and design consulting.">
 <meta property="og:title" content="Gate Visual Studio – Architectural Visualization">
 <meta property="og:url" content="https://gatevisuals.xyz">
@@ -23,7 +23,7 @@ nav{
   display:flex;justify-content:space-between;align-items:center;
   padding:0 40px;height:52px;
   background:#f2f2f2;
-  transition:background .3s;
+  transition:none;
 }
 body.view-projects nav{
   background:#111;
@@ -156,6 +156,12 @@ body.edit-mode .index-row:hover{opacity:1;}
 .about-legal{font-size:11px;color:#aeaeb2;line-height:1.7;}
 
 .seo-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;}
+#page-fade{
+  position:fixed;inset:0;z-index:99998;
+  pointer-events:none;opacity:0;
+  background:#f2f2f2;
+}
+body.view-projects #page-fade{background:#111;}
 
 @media(max-width:768px){
   /* nav: hide desktop tabs, center logo */
@@ -174,7 +180,7 @@ body.edit-mode .index-row:hover{opacity:1;}
     display:flex;
     position:fixed;bottom:0;left:0;right:0;z-index:9999;
     background:rgba(242,242,242,0.95);
-    transition:background .3s;
+    transition:none;
     backdrop-filter:saturate(180%) blur(20px);
     -webkit-backdrop-filter:saturate(180%) blur(20px);
     border-top:0.5px solid rgba(0,0,0,0.1);
@@ -361,6 +367,7 @@ body.edit-mode .index-row:hover{opacity:1;}
   <button class="nav-tab" data-view="about">About</button>
 </div>
 
+<div id="page-fade"></div>
 <div class="seo-only" aria-hidden="true">
   <h1>Gate Visual Studio</h1>
   <p>Gate Visual Studio is an architectural visualization practice based in Zürich and Paris.</p>
@@ -552,12 +559,28 @@ function collectEdits(){
 editBadge.addEventListener('click',function(){if(editMode)exitEditMode();});
 
 function switchView(name){
-  document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active');});
-  document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active');});
-  document.getElementById('view-'+name).classList.add('active');
-  document.querySelectorAll('[data-view="'+name+'"]').forEach(function(t){t.classList.add('active');});
-  document.body.className=document.body.className.replace(/\bview-\w+/g,'').trim();
-  document.body.classList.add('view-'+name);
+  var fade=document.getElementById('page-fade');
+  var destColor=name==='projects'?'#111':'#f2f2f2';
+  // 1. snap overlay to destination color, fully opaque — instant, no transition
+  fade.style.transition='none';
+  fade.style.background=destColor;
+  fade.style.opacity='1';
+  // 2. swap everything underneath while hidden
+  requestAnimationFrame(function(){
+    requestAnimationFrame(function(){
+      document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active');});
+      document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active');});
+      document.getElementById('view-'+name).classList.add('active');
+      document.querySelectorAll('[data-view="'+name+'"]').forEach(function(t){t.classList.add('active');});
+      document.body.className=document.body.className.replace(/\bview-\w+/g,'').trim();
+      document.body.classList.add('view-'+name);
+      // 3. fade out the overlay gently
+      requestAnimationFrame(function(){
+        fade.style.transition='opacity .35s ease';
+        fade.style.opacity='0';
+      });
+    });
+  });
 }
 document.querySelectorAll('.nav-tab').forEach(function(tab){
   tab.addEventListener('click',function(){switchView(tab.dataset.view);});
