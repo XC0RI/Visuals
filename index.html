@@ -97,8 +97,13 @@ body.view-projects .nav-tab.active{background:rgba(255,255,255,0.18);color:#fff;
 .viewer{width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:40px 80px 80px;}
 #view-projects:has(#filter-bar.show) .viewer{padding-top:80px;}
 .img-wrap{position:relative;max-width:900px;width:100%;cursor:pointer;user-select:none;}
-.img-wrap img{display:block;width:100%;height:auto;max-height:calc(100vh - 132px);object-fit:contain;transition:opacity .28s;}
-.img-wrap.fading img{opacity:0;}
+.img-wrap img{display:block;width:100%;height:auto;max-height:calc(100vh - 132px);object-fit:contain;}
+.img-wrap{overflow:hidden;}
+@keyframes slideInRight{from{transform:translateX(60px);opacity:0;}to{transform:translateX(0);opacity:1;}}
+@keyframes slideInLeft{from{transform:translateX(-60px);opacity:0;}to{transform:translateX(0);opacity:1;}}
+.img-wrap.slide-in-right img{animation:slideInRight .22s cubic-bezier(.25,.46,.45,.94) both;}
+.img-wrap.slide-in-left img{animation:slideInLeft .22s cubic-bezier(.25,.46,.45,.94) both;}
+
 .img-info-overlay{position:absolute;inset:0;background:rgba(17,17,17,0.92);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;}
 .img-info-overlay.show{opacity:1;pointer-events:auto;}
 .img-info-inner{text-align:center;}
@@ -429,14 +434,15 @@ function buildLines(item){
   else if(item.type)html+='<br>'+item.type;
   linesEl.innerHTML=html;
 }
-function show(item){
+function show(item,dir){
   infoOpen=false;overlay.classList.remove('show');
-  imgWrap.classList.add('fading');
-  setTimeout(function(){
-    mainImg.src=item.src;mainImg.alt=item.project;
-    titleEl.textContent=item.project;buildLines(item);
-    imgWrap.classList.remove('fading');
-  },200);
+  var cl=dir>0?'slide-in-right':'slide-in-left';
+  imgWrap.classList.remove('slide-in-right','slide-in-left');
+  // force reflow so animation restarts
+  void imgWrap.offsetWidth;
+  mainImg.src=item.src;mainImg.alt=item.project;
+  titleEl.textContent=item.project;buildLines(item);
+  imgWrap.classList.add(cl);
 }
 function goTo(d){
   idx=((idx+d)%pool.length+pool.length)%pool.length;
@@ -445,7 +451,7 @@ function goTo(d){
     pool=shuffleSpread(IMAGES.filter(function(x){return!activeFilter||x.project===activeFilter;}));
     if(pool.length>1&&pool[0]===last){var t=pool[0];pool[0]=pool[1];pool[1]=t;}
   }
-  show(pool[idx]);
+  show(pool[idx],d);
 }
 document.getElementById('arrow-next').addEventListener('click',function(){goTo(1);});
 document.getElementById('arrow-prev').addEventListener('click',function(){goTo(-1);});
@@ -463,12 +469,12 @@ function applyProjectFilter(projectName){
   pool=IMAGES.filter(function(x){return x.project===projectName;});
   idx=0;filterLabel.textContent=projectName;filterBar.classList.add('show');
   infoOpen=false;overlay.classList.remove('show');document.body.classList.add('view-projects');
-show(pool[0]);switchView('projects');
+mainImg.src=pool[0].src;mainImg.alt=pool[0].project;titleEl.textContent=pool[0].project;buildLines(pool[0]);switchView('projects');
 }
 document.getElementById('filter-clear').addEventListener('click',function(){
   activeFilter=null;pool=shuffleSpread(IMAGES.slice());idx=0;
   filterBar.classList.remove('show');infoOpen=false;overlay.classList.remove('show');document.body.classList.add('view-projects');
-show(pool[0]);
+mainImg.src=pool[0].src;mainImg.alt=pool[0].project;titleEl.textContent=pool[0].project;buildLines(pool[0]);
 });
 
 var indexRows=document.getElementById('indexRows');
@@ -530,7 +536,7 @@ function exitEditMode(){
   indexRows.querySelectorAll('.ir-title,.ir-year,.ir-office').forEach(function(el){el.contentEditable='false';});
   indexRows.querySelectorAll('.index-row').forEach(function(row){row.style.cursor='';});
   saveImages();pool=shuffleSpread(IMAGES.slice());idx=0;document.body.classList.add('view-projects');
-show(pool[0]);
+mainImg.src=pool[0].src;mainImg.alt=pool[0].project;titleEl.textContent=pool[0].project;buildLines(pool[0]);
 }
 function collectEdits(){
   indexRows.querySelectorAll('.index-row').forEach(function(row){
@@ -566,7 +572,7 @@ document.querySelectorAll('.nav-tab').forEach(function(tab){
 })();
 
 document.body.classList.add('view-projects');
-show(pool[0]);
+mainImg.src=pool[0].src;mainImg.alt=pool[0].project;titleEl.textContent=pool[0].project;buildLines(pool[0]);
 </script>
 </body>
 </html>
