@@ -108,13 +108,13 @@ nav{
 #view-index.active{display:flex;}
 .index-table{width:100%;padding:0 40px 60px;}
 .index-table-head{
-  display:grid;grid-template-columns:80px 1fr 100px 180px;gap:0 32px;
+  display:grid;grid-template-columns:80px 1fr 120px 100px 180px;gap:0 32px;
   padding:10px 0;border-bottom:0.5px solid rgba(0,0,0,0.15);
   position:sticky;top:0;background:rgba(242,242,242,0.95);backdrop-filter:blur(8px);z-index:10;
 }
 .index-table-head span{font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#aeaeb2;}
 .index-row{
-  display:grid;grid-template-columns:80px 1fr 100px 180px;gap:0 32px;
+  display:grid;grid-template-columns:80px 1fr 120px 100px 180px;gap:0 32px;
   padding:10px 0;border-bottom:0.5px solid rgba(0,0,0,0.06);
   cursor:pointer;align-items:center;transition:opacity .14s;
 }
@@ -123,9 +123,11 @@ nav{
 .index-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
 .ir-title{font-size:12px;font-weight:400;color:#1d1d1f;line-height:1.4;}
 .ir-year{font-size:12px;color:#6e6e73;}
+.ir-type{font-size:12px;color:#6e6e73;}
 .ir-office{font-size:12px;color:#6e6e73;}
 body.edit-mode .ir-title[contenteditable],
 body.edit-mode .ir-year[contenteditable],
+body.edit-mode .ir-type[contenteditable],
 body.edit-mode .ir-office[contenteditable]{outline:none;border-bottom:1px dashed rgba(0,0,0,0.25);cursor:text;min-width:40px;display:inline-block;}
 body.edit-mode .index-row{cursor:default;}
 body.edit-mode .index-row:hover{opacity:1;}
@@ -293,7 +295,7 @@ body.edit-mode .index-row:hover{opacity:1;}
 <div id="view-index" class="view">
   <div class="index-table" id="indexTable">
     <div class="index-table-head">
-      <span></span><span>Project</span><span>Year</span><span>Office</span>
+      <span></span><span>Project</span><span>Type</span><span>Year</span><span>Office</span>
     </div>
     <div id="indexRows"></div>
   </div>
@@ -466,10 +468,11 @@ function buildIndexRows(){
     var tImg=document.createElement('img');tImg.src=im.src;tImg.alt='';tImg.loading='lazy';
     thumbDiv.appendChild(tImg);
     var tDiv=document.createElement('div');tDiv.className='ir-title';tDiv.textContent=im.project;
+    var typeDiv=document.createElement('div');typeDiv.className='ir-type';typeDiv.textContent=im.type||'—';
     var yDiv=document.createElement('div');yDiv.className='ir-year';yDiv.textContent=im.year;
     var oDiv=document.createElement('div');oDiv.className='ir-office';
-    oDiv.textContent=im.office||(im.type||'—');
-    row.appendChild(thumbDiv);row.appendChild(tDiv);row.appendChild(yDiv);row.appendChild(oDiv);
+    oDiv.textContent=im.office||'—';
+    row.appendChild(thumbDiv);row.appendChild(tDiv);row.appendChild(typeDiv);row.appendChild(yDiv);row.appendChild(oDiv);
     row.addEventListener('click',function(e){
       if(document.body.classList.contains('edit-mode'))return;
       applyProjectFilter(im.project);
@@ -504,14 +507,14 @@ function checkPassword(){
 }
 function enterEditMode(){
   editMode=true;document.body.classList.add('edit-mode');editBadge.classList.add('show');
-  indexRows.querySelectorAll('.ir-title,.ir-year,.ir-office').forEach(function(el){
+  indexRows.querySelectorAll('.ir-title,.ir-type,.ir-year,.ir-office').forEach(function(el){
     el.contentEditable='true';el.addEventListener('blur',collectEdits);
   });
   indexRows.querySelectorAll('.index-row').forEach(function(row){row.style.cursor='default';});
 }
 function exitEditMode(){
   editMode=false;document.body.classList.remove('edit-mode');editBadge.classList.remove('show');
-  indexRows.querySelectorAll('.ir-title,.ir-year,.ir-office').forEach(function(el){el.contentEditable='false';});
+  indexRows.querySelectorAll('.ir-title,.ir-type,.ir-year,.ir-office').forEach(function(el){el.contentEditable='false';});
   indexRows.querySelectorAll('.index-row').forEach(function(row){row.style.cursor='';});
   saveImages();pool=shuffleSpread(IMAGES.slice());idx=0;show(pool[0]);
 }
@@ -519,9 +522,11 @@ function collectEdits(){
   indexRows.querySelectorAll('.index-row').forEach(function(row){
     var i=parseInt(row.dataset.idx);if(isNaN(i))return;
     var t=row.querySelector('.ir-title');
+    var tp=row.querySelector('.ir-type');
     var y=row.querySelector('.ir-year');
     var o=row.querySelector('.ir-office');
     if(t)IMAGES[i].project=t.textContent.trim();
+    if(tp){var tv=tp.textContent.trim();IMAGES[i].type=(tv==='—'||tv==='')?null:tv;}
     if(y)IMAGES[i].year=y.textContent.trim();
     if(o){var ov=o.textContent.trim();IMAGES[i].office=(ov==='—'||ov==='')?null:ov;}
   });
