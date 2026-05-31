@@ -18,6 +18,7 @@ html,body{
   color:#1d1d1f;-webkit-font-smoothing:antialiased;
 }
 
+/* NAV */
 nav{
   position:fixed;top:0;left:0;right:0;z-index:9999;
   display:flex;justify-content:space-between;align-items:center;
@@ -26,7 +27,7 @@ nav{
   backdrop-filter:saturate(180%) blur(20px);
   -webkit-backdrop-filter:saturate(180%) blur(20px);
 }
-.nav-logo{font-size:17px;font-weight:700;letter-spacing:-.02em;color:#1d1d1f;}
+.nav-logo{font-size:17px;font-weight:700;letter-spacing:-.02em;color:#1d1d1f;cursor:default;user-select:none;}
 .nav-tabs{display:flex;background:#e0e0e5;border-radius:100px;padding:2px;}
 .nav-tab{
   font-size:12px;font-weight:400;color:#6e6e73;cursor:pointer;
@@ -35,17 +36,46 @@ nav{
   transition:background .15s,color .15s,box-shadow .15s;white-space:nowrap;
 }
 .nav-tab:hover{color:#1d1d1f;}
-.nav-tab.active{
-  background:#fff;color:#1d1d1f;font-weight:500;
-  box-shadow:0 1px 4px rgba(0,0,0,0.15),0 0 0 0.5px rgba(0,0,0,0.04);
+.nav-tab.active{background:#fff;color:#1d1d1f;font-weight:500;box-shadow:0 1px 4px rgba(0,0,0,0.15),0 0 0 0.5px rgba(0,0,0,0.04);}
+
+/* edit mode indicator */
+#edit-badge{
+  display:none;position:fixed;bottom:20px;right:20px;z-index:9999;
+  background:#1d1d1f;color:#fff;font-size:10px;font-weight:500;
+  letter-spacing:.06em;text-transform:uppercase;
+  border-radius:100px;padding:6px 14px;cursor:pointer;
+  box-shadow:0 2px 8px rgba(0,0,0,0.15);
 }
+#edit-badge.show{display:block;}
+
+/* login overlay */
+#login-overlay{
+  display:none;position:fixed;inset:0;z-index:99999;
+  background:rgba(255,255,255,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  align-items:center;justify-content:center;flex-direction:column;gap:16px;
+}
+#login-overlay.show{display:flex;}
+#login-overlay input{
+  font-family:inherit;font-size:14px;font-weight:400;
+  border:0.5px solid rgba(0,0,0,0.2);border-radius:8px;
+  padding:10px 16px;outline:none;width:220px;text-align:center;
+  background:#fff;color:#1d1d1f;
+}
+#login-overlay input:focus{border-color:rgba(0,0,0,0.4);}
+#login-submit{
+  font-family:inherit;font-size:12px;font-weight:500;
+  background:#1d1d1f;color:#fff;border:none;cursor:pointer;
+  border-radius:100px;padding:8px 24px;
+  transition:opacity .15s;
+}
+#login-submit:hover{opacity:.75;}
+#login-error{font-size:11px;color:#c00;display:none;}
 
 .view{display:none;position:fixed;top:52px;left:0;right:0;bottom:0;overflow:hidden;}
 .view.active{display:flex;}
 
 /* ── PROJECTS ── */
 #view-projects{align-items:center;justify-content:center;}
-
 #filter-bar{
   position:absolute;top:16px;left:50%;transform:translateX(-50%);
   z-index:300;display:none;align-items:center;gap:8px;
@@ -55,84 +85,90 @@ nav{
 }
 #filter-bar.show{display:flex;}
 #filter-label{font-size:12px;font-weight:500;color:#1d1d1f;}
-#filter-clear{
-  background:#e8e8ed;border:none;cursor:pointer;font-family:inherit;
-  font-size:11px;font-weight:500;color:#6e6e73;
-  border-radius:100px;padding:3px 10px;transition:background .14s,color .14s;
-}
+#filter-clear{background:#e8e8ed;border:none;cursor:pointer;font-family:inherit;font-size:11px;font-weight:500;color:#6e6e73;border-radius:100px;padding:3px 10px;transition:background .14s,color .14s;}
 #filter-clear:hover{background:#d1d1d6;color:#1d1d1f;}
 
 .viewer{width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:40px 80px;}
 .img-wrap{position:relative;max-width:900px;width:100%;cursor:pointer;user-select:none;}
 .img-wrap img{display:block;width:100%;height:auto;max-height:calc(100vh - 132px);object-fit:contain;transition:opacity .28s;}
 .img-wrap.fading img{opacity:0;}
-.img-info-overlay{
-  position:absolute;inset:0;background:rgba(255,255,255,0.94);
-  display:flex;align-items:center;justify-content:center;
-  opacity:0;pointer-events:none;transition:opacity .2s;
-}
+.img-info-overlay{position:absolute;inset:0;background:rgba(255,255,255,0.94);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;}
 .img-info-overlay.show{opacity:1;pointer-events:auto;}
 .img-info-inner{text-align:center;}
 .img-info-title{font-size:15px;font-weight:600;letter-spacing:-.02em;color:#1d1d1f;margin-bottom:6px;}
 .img-info-line{font-size:13px;color:#6e6e73;line-height:1.7;}
 
-.arrow{
-  position:fixed;top:50%;transform:translateY(-50%);
-  background:none;border:none;cursor:pointer;
-  color:#1d1d1f;opacity:0;padding:12px;
-  transition:opacity .2s,transform .12s;z-index:200;
-}
+.arrow{position:fixed;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#1d1d1f;opacity:0;padding:12px;transition:opacity .2s,transform .12s;z-index:200;}
 #view-projects:hover .arrow{opacity:.3;}
 .arrow:hover{opacity:1 !important;}
 .arrow:active{transform:translateY(-50%) scale(0.88);}
 #arrow-prev{left:8px;}
 #arrow-next{right:8px;}
 
-/* ── INDEX — small thumbnails, lots of space, info below ── */
-#view-index{overflow-y:auto;display:none;padding:32px 48px 60px;}
-#view-index.active{display:block;}
+/* ── INDEX — horizontal image list ── */
+#view-index{overflow-y:auto;display:none;flex-direction:column;padding:0;}
+#view-index.active{display:flex;}
 
-.thumb-grid{
+.index-table{width:100%;padding:0 40px 60px;border-collapse:collapse;}
+.index-table-head{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(110px,1fr));
-  gap:40px 32px;
+  grid-template-columns:80px 1fr 100px 180px;
+  gap:0 32px;
+  padding:10px 0;
+  border-bottom:0.5px solid rgba(0,0,0,0.15);
+  position:sticky;top:0;
+  background:rgba(255,255,255,0.95);
+  backdrop-filter:blur(8px);
+  z-index:10;
 }
-.thumb-cell{cursor:pointer;}
-.thumb-cell:hover .thumb-img img{opacity:.55;}
-.thumb-img{
-  background:#f5f5f7;margin-bottom:9px;
-  overflow:hidden;
+.index-table-head span{font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#aeaeb2;}
+
+.index-row{
+  display:grid;
+  grid-template-columns:80px 1fr 100px 180px;
+  gap:0 32px;
+  padding:10px 0;
+  border-bottom:0.5px solid rgba(0,0,0,0.06);
+  cursor:pointer;align-items:center;
+  transition:opacity .14s;
 }
-.thumb-img img{
-  display:block;width:100%;height:auto;
-  transition:opacity .18s;
+.index-row:hover{opacity:.45;}
+
+.index-thumb{
+  width:80px;height:52px;overflow:hidden;background:#f5f5f7;flex-shrink:0;
 }
-.thumb-caption{
-  font-size:10.5px;font-weight:400;color:#1d1d1f;
-  line-height:1.45;
+.index-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+
+.ir-title{font-size:12px;font-weight:400;color:#1d1d1f;line-height:1.4;}
+.ir-year{font-size:12px;color:#6e6e73;}
+.ir-office{font-size:12px;color:#6e6e73;}
+
+/* edit mode: editable fields */
+body.edit-mode .ir-title[contenteditable],
+body.edit-mode .ir-year[contenteditable],
+body.edit-mode .ir-office[contenteditable]{
+  outline:none;
+  border-bottom:1px dashed rgba(0,0,0,0.25);
+  cursor:text;
+  min-width:40px;
+  display:inline-block;
 }
-.thumb-caption-sub{
-  font-size:9.5px;color:#aeaeb2;margin-top:2px;line-height:1.4;
-}
+body.edit-mode .index-row{cursor:default;}
+body.edit-mode .index-row:hover{opacity:1;}
 
 /* ── ABOUT ── */
 #view-about{overflow-y:auto;display:none;padding:48px 40px 80px;align-content:start;}
 #view-about.active{display:grid;}
 .about-grid{display:grid;grid-template-columns:200px 1fr;gap:0 48px;max-width:860px;width:100%;margin:0 auto;}
-.about-label{
-  font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#aeaeb2;
-  padding:32px 0 0;border-top:0.5px solid rgba(0,0,0,0.1);align-self:start;
-}
+.about-label{font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#aeaeb2;padding:32px 0 0;border-top:0.5px solid rgba(0,0,0,0.1);align-self:start;}
 .about-label.first{border-top:none;padding-top:0;}
-.about-content{
-  font-size:13px;font-weight:400;line-height:1.8;color:#1d1d1f;
-  padding:32px 0;border-top:0.5px solid rgba(0,0,0,0.1);
-}
+.about-content{font-size:13px;font-weight:400;line-height:1.8;color:#1d1d1f;padding:32px 0;border-top:0.5px solid rgba(0,0,0,0.1);}
 .about-content.first{border-top:none;padding-top:0;}
 .about-content p+p{margin-top:14px;}
 .about-content a{color:#1d1d1f;text-decoration:none;border-bottom:0.5px solid #bbb;transition:border-color .15s;}
 .about-content a:hover{border-color:#1d1d1f;}
 .about-de{color:#6e6e73;margin-top:14px;}
+.about-legal{font-size:11px;color:#aeaeb2;line-height:1.7;}
 
 .seo-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;}
 
@@ -142,8 +178,12 @@ nav{
   .nav-tab{font-size:11px;padding:4px 12px;}
   .viewer{padding:20px 40px;}
   #arrow-prev{left:0;}#arrow-next{right:0;}
-  #view-index{padding:24px 20px 60px;}
-  .thumb-grid{grid-template-columns:repeat(3,1fr);gap:28px 16px;}
+  .index-table{padding:0 16px 60px;}
+  .index-table-head{grid-template-columns:56px 1fr 64px;gap:0 16px;}
+  .index-table-head span:last-child{display:none;}
+  .index-row{grid-template-columns:56px 1fr 64px;gap:0 16px;}
+  .ir-office{display:none;}
+  .index-thumb{width:56px;height:38px;}
   .about-grid{grid-template-columns:1fr;}
   .about-label,.about-content{border-top:none;padding-top:0;}
   #view-about{padding:24px 20px 60px;}
@@ -153,13 +193,23 @@ nav{
 <body>
 
 <nav>
-  <span class="nav-logo">Gate Visual Studio</span>
+  <span class="nav-logo" id="logoBtn">Gate Visual Studio</span>
   <div class="nav-tabs">
     <button class="nav-tab active" data-view="projects">Projects</button>
     <button class="nav-tab" data-view="index">Index</button>
     <button class="nav-tab" data-view="about">About</button>
   </div>
 </nav>
+
+<!-- LOGIN OVERLAY -->
+<div id="login-overlay">
+  <input type="password" id="login-input" placeholder="Password" autocomplete="current-password">
+  <button id="login-submit">Enter</button>
+  <span id="login-error">Incorrect password</span>
+</div>
+
+<!-- EDIT BADGE -->
+<div id="edit-badge">✎ Edit mode — click Save to finish</div>
 
 <!-- PROJECTS -->
 <div id="view-projects" class="view active">
@@ -188,7 +238,15 @@ nav{
 
 <!-- INDEX -->
 <div id="view-index" class="view">
-  <div class="thumb-grid" id="thumbGrid"></div>
+  <div class="index-table" id="indexTable">
+    <div class="index-table-head">
+      <span></span>
+      <span>Project</span>
+      <span>Year</span>
+      <span>Office</span>
+    </div>
+    <div id="indexRows"></div>
+  </div>
 </div>
 
 <!-- ABOUT -->
@@ -196,13 +254,12 @@ nav{
   <div class="about-grid">
     <div class="about-label first">About</div>
     <div class="about-content first">
-      <p>We are an architectural visualization practice operating at the intersection of rendering and image-making, Kunst am Bau, web design, and design consulting. Informed by professional experience in Zürich, Munich, and Aachen, we develop the visual language of architecture and space.</p>
-      <p class="about-de">Wir sind ein Büro für architektonische Visualisierung an der Schnittstelle von Rendering und Image-Making, Kunst am Bau, Webdesign und Design Consulting. Geprägt durch Berufserfahrung in Zürich, München und Aachen entwickeln wir die visuelle Sprache von Architektur und Raum.</p>
+      <p>We are an architectural visualization practice operating at the intersection of rendering and image-making, web design, and design consulting. Informed by professional experience in Zürich, Munich, and Aachen, we develop the visual language of architecture and space.</p>
+      <p class="about-de">Wir sind ein Büro für architektonische Visualisierung an der Schnittstelle von Rendering und Image-Making, Webdesign und Design Consulting. Geprägt durch Berufserfahrung in Zürich, München und Aachen entwickeln wir die visuelle Sprache von Architektur und Raum.</p>
     </div>
     <div class="about-label">Services</div>
     <div class="about-content">
       <p>Architectural Visualization &amp; Image-Making<br>
-      Kunst am Bau<br>
       Web Design &amp; Digital Presence<br>
       Design Consulting</p>
     </div>
@@ -215,6 +272,18 @@ nav{
         Paris 75018 / Zürich
       </p>
     </div>
+    <div class="about-label">Copyright</div>
+    <div class="about-content">
+      <p class="about-legal">
+        &copy; <span id="copy-year"></span> Gate Visual Studio. All rights reserved.<br><br>
+        All images, renderings, and visual content displayed on this website are the exclusive property of Gate Visual Studio or their respective clients and collaborating offices. Reproduction, distribution, or use of any content without prior written permission is strictly prohibited.<br><br>
+        Gate Visual Studio is a registered trade name. VAT not applicable under §19 UStG (Kleinunternehmerregelung).<br><br>
+        <strong>Responsible for content:</strong> Gate Visual Studio, Paris 75018 / Zürich<br>
+        <a href="mailto:info@gatevisuals.xyz">info@gatevisuals.xyz</a><br><br>
+        <strong>Disclaimer:</strong> Despite careful editorial control, we assume no liability for the content of external links. The operators of linked pages are solely responsible for their content.<br><br>
+        <strong>Privacy:</strong> This website does not use cookies, tracking scripts, or analytics tools. No personal data is collected or stored.
+      </p>
+    </div>
   </div>
 </div>
 
@@ -224,34 +293,73 @@ nav{
 </div>
 
 <script>
+document.getElementById('copy-year').textContent = new Date().getFullYear();
+
 // ─────────────────────────────────────────────────────────────────
-// IMAGES — edit project / year / office directly here
-// office: null  →  omitted
-// type: "Study" →  shown instead of office
+// EDIT PASSWORD — change this to whatever you want
 // ─────────────────────────────────────────────────────────────────
-var IMAGES=[
+var EDIT_PASSWORD = 'gate2025';
+
+// ─────────────────────────────────────────────────────────────────
+// IMAGES — fallback data (overridden by localStorage if saved)
+// Edit: project / year / office (null = omit, type:"Study" = show)
+// ─────────────────────────────────────────────────────────────────
+var IMAGES_DEFAULT=[
   {src:"./images/01.jpeg",project:"Competition Wohnen auf der Quartiersinsel Bremen",year:"2025",office:"Studio Corso München"},
   {src:"./images/02.jpeg",project:"Interior Studies Housing Refurbishment Bodensee",year:"2025",office:"Bau Bau GmbH Zürich"},
   {src:"./images/03.jpeg",project:"Interior Studies Housing Refurbishment Bodensee",year:"2025",office:"Bau Bau GmbH Zürich"},
   {src:"./images/04.jpeg",project:"Interior Studies Housing Refurbishment Bodensee",year:"2025",office:"Bau Bau GmbH Zürich"},
   {src:"./images/05.jpeg",project:"Scenographic Study",year:"2024",office:null},
-  {src:"./images/06.jpeg",project:"Rammed Earth Building",year:"2025",office:null},
+  {src:"./images/06.jpeg",project:"Rammed Earth Construction Study",year:"2025",office:null},
   {src:"./images/07.jpeg",project:"Competition Schulerweiterung und Neubau Sporthalle Seefeld",year:"2024",office:"Dr0ne"},
   {src:"./images/08.jpeg",project:"Competition Schulerweiterung und Neubau Sporthalle Seefeld",year:"2024",office:"Dr0ne"},
   {src:"./images/09.jpeg",project:"Kunst am Bau Bern",year:"2024",office:"Dr0ne"},
   {src:"./images/10.jpeg",project:"Kunst am Bau Bern",year:"2024",office:"Dr0ne"},
-  {src:"./images/11.jpeg",project:"Rammed Earth Building",year:"2025",office:null},
-  {src:"./images/12.jpeg",project:"Rammed Earth Building",year:"2025",office:null},
-  {src:"./images/13.jpeg",project:"Rammed Earth Building",year:"2025",office:null},
+  {src:"./images/11.jpeg",project:"Rammed Earth Construction Study",year:"2025",office:null},
+  {src:"./images/12.jpeg",project:"Rammed Earth Construction Study",year:"2025",office:null},
+  {src:"./images/13.jpeg",project:"Rammed Earth Construction Study",year:"2025",office:null},
   {src:"./images/14.jpeg",project:"Photovoltaic Roof System",year:"2025",office:null,type:"Study"},
   {src:"./images/15.jpeg",project:"Undisclosed Interior Study",year:"2025",office:null},
   {src:"./images/16.jpeg",project:"Undisclosed Interior Study",year:"2025",office:null},
   {src:"./images/17.jpeg",project:"Undisclosed Interior Study",year:"2025",office:null}
 ];
 
-function shuffle(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t;}return b;}
+// load saved overrides from localStorage
+function loadImages(){
+  try{
+    var saved=localStorage.getItem('gvs_images');
+    if(saved) return JSON.parse(saved);
+  }catch(e){}
+  return IMAGES_DEFAULT.map(function(im){return Object.assign({},im);});
+}
+function saveImages(){
+  try{ localStorage.setItem('gvs_images',JSON.stringify(IMAGES)); }catch(e){}
+}
 
-var pool=shuffle(IMAGES.slice()),idx=0,activeFilter=null,infoOpen=false;
+var IMAGES=loadImages();
+
+function shuffle(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t;}return b;}
+function shuffleSpread(a){
+  var b=shuffle(a);
+  var maxPasses=20;
+  for(var pass=0;pass<maxPasses;pass++){
+    var fixed=true;
+    for(var i=1;i<b.length;i++){
+      if(b[i].project===b[i-1].project){
+        fixed=false;
+        for(var j=i+1;j<b.length;j++){
+          if(b[j].project!==b[i-1].project){
+            var t=b[i];b[i]=b[j];b[j]=t;break;
+          }
+        }
+      }
+    }
+    if(fixed) break;
+  }
+  return b;
+}
+
+var pool=shuffleSpread(IMAGES.slice()),idx=0,activeFilter=null,infoOpen=false;
 var mainImg=document.getElementById('mainImg');
 var imgWrap=document.getElementById('imgWrap');
 var overlay=document.getElementById('imgInfoOverlay');
@@ -266,7 +374,6 @@ function buildLines(item){
   else if(item.type) html+='<br>'+item.type;
   linesEl.innerHTML=html;
 }
-
 function show(item){
   infoOpen=false;overlay.classList.remove('show');
   imgWrap.classList.add('fading');
@@ -276,20 +383,17 @@ function show(item){
     imgWrap.classList.remove('fading');
   },200);
 }
-
 function goTo(d){
   idx=((idx+d)%pool.length+pool.length)%pool.length;
   if(idx===0&&d>0){
     var last=pool[pool.length-1];
-    pool=shuffle(IMAGES.filter(function(x){return!activeFilter||x.project===activeFilter;}));
+    pool=shuffleSpread(IMAGES.filter(function(x){return!activeFilter||x.project===activeFilter;}));
     if(pool.length>1&&pool[0]===last){var t=pool[0];pool[0]=pool[1];pool[1]=t;}
   }
   show(pool[idx]);
 }
-
 document.getElementById('arrow-next').addEventListener('click',function(){goTo(1);});
 document.getElementById('arrow-prev').addEventListener('click',function(){goTo(-1);});
-
 document.addEventListener('keydown',function(e){
   if(document.querySelector('#view-projects.active')){
     if(e.key==='ArrowRight')goTo(1);
@@ -297,52 +401,144 @@ document.addEventListener('keydown',function(e){
     if(e.key==='Escape'&&infoOpen){infoOpen=false;overlay.classList.remove('show');}
   }
 });
-
 imgWrap.addEventListener('click',function(){
   infoOpen=!infoOpen;overlay.classList.toggle('show',infoOpen);
 });
-
 function applyProjectFilter(projectName){
   activeFilter=projectName;
   pool=IMAGES.filter(function(x){return x.project===projectName;});
-  idx=0;
-  filterLabel.textContent=projectName;
-  filterBar.classList.add('show');
-  infoOpen=false;overlay.classList.remove('show');
-  show(pool[0]);
-  switchView('projects');
+  idx=0;filterLabel.textContent=projectName;filterBar.classList.add('show');
+  infoOpen=false;overlay.classList.remove('show');show(pool[0]);switchView('projects');
+}
+document.getElementById('filter-clear').addEventListener('click',function(){
+  activeFilter=null;pool=shuffleSpread(IMAGES.slice());idx=0;
+  filterBar.classList.remove('show');infoOpen=false;overlay.classList.remove('show');show(pool[0]);
+});
+
+// ── INDEX TABLE ──
+var indexRows=document.getElementById('indexRows');
+
+function buildIndexRows(){
+  indexRows.innerHTML='';
+  IMAGES.forEach(function(im,i){
+    var row=document.createElement('div');row.className='index-row';
+    row.dataset.idx=i;
+
+    // thumb
+    var thumbDiv=document.createElement('div');thumbDiv.className='index-thumb';
+    var tImg=document.createElement('img');tImg.src=im.src;tImg.alt='';tImg.loading='lazy';
+    thumbDiv.appendChild(tImg);
+
+    // title
+    var tDiv=document.createElement('div');tDiv.className='ir-title';tDiv.textContent=im.project;
+
+    // year
+    var yDiv=document.createElement('div');yDiv.className='ir-year';yDiv.textContent=im.year;
+
+    // office
+    var oDiv=document.createElement('div');oDiv.className='ir-office';
+    oDiv.textContent=im.office||(im.type||'—');
+
+    row.appendChild(thumbDiv);row.appendChild(tDiv);row.appendChild(yDiv);row.appendChild(oDiv);
+
+    // click behaviour depends on edit mode
+    row.addEventListener('click',function(e){
+      if(document.body.classList.contains('edit-mode')) return;
+      applyProjectFilter(im.project);
+    });
+
+    indexRows.appendChild(row);
+  });
+}
+buildIndexRows();
+
+// ── LOGIN & EDIT MODE ──
+var editMode=false;
+var loginOverlay=document.getElementById('login-overlay');
+var editBadge=document.getElementById('edit-badge');
+var loginInput=document.getElementById('login-input');
+var loginError=document.getElementById('login-error');
+
+// triple-click logo to open login
+var logoClickCount=0,logoTimer=null;
+document.getElementById('logoBtn').addEventListener('click',function(){
+  logoClickCount++;
+  clearTimeout(logoTimer);
+  logoTimer=setTimeout(function(){logoClickCount=0;},600);
+  if(logoClickCount>=3){
+    logoClickCount=0;
+    if(!editMode) openLogin();
+    else exitEditMode();
+  }
+});
+
+function openLogin(){
+  loginOverlay.classList.add('show');
+  loginInput.value='';loginError.style.display='none';
+  setTimeout(function(){loginInput.focus();},100);
+}
+function closeLogin(){loginOverlay.classList.remove('show');}
+
+document.getElementById('login-submit').addEventListener('click',checkPassword);
+loginInput.addEventListener('keydown',function(e){if(e.key==='Enter')checkPassword();});
+loginOverlay.addEventListener('click',function(e){if(e.target===loginOverlay)closeLogin();});
+
+function checkPassword(){
+  if(loginInput.value===EDIT_PASSWORD){
+    closeLogin();enterEditMode();
+  } else {
+    loginError.style.display='block';loginInput.value='';loginInput.focus();
+  }
 }
 
-document.getElementById('filter-clear').addEventListener('click',function(){
-  activeFilter=null;pool=shuffle(IMAGES.slice());idx=0;
-  filterBar.classList.remove('show');infoOpen=false;overlay.classList.remove('show');
-  show(pool[0]);
-});
-
-/* ── THUMB GRID — all images, click sets project filter ── */
-var thumbGrid=document.getElementById('thumbGrid');
-IMAGES.forEach(function(im){
-  var cell=document.createElement('div');cell.className='thumb-cell';
-
-  var imgBox=document.createElement('div');imgBox.className='thumb-img';
-  var img=document.createElement('img');
-  img.src=im.src;img.alt=im.project;img.loading='lazy';
-  imgBox.appendChild(img);
-
-  var cap=document.createElement('div');cap.className='thumb-caption';cap.textContent=im.project;
-  var sub=document.createElement('div');sub.className='thumb-caption-sub';
-  sub.textContent=im.year+(im.office?' — '+im.office:'');
-
-  cell.appendChild(imgBox);cell.appendChild(cap);cell.appendChild(sub);
-
-  /* click → filter by this image's project */
-  cell.addEventListener('click',function(){
-    applyProjectFilter(im.project);
+function enterEditMode(){
+  editMode=true;
+  document.body.classList.add('edit-mode');
+  editBadge.classList.add('show');
+  editBadge.textContent='✎ Edit mode — click here to save';
+  // make text fields editable
+  indexRows.querySelectorAll('.ir-title,.ir-year,.ir-office').forEach(function(el){
+    el.contentEditable='true';
+    el.addEventListener('blur',collectEdits);
   });
-
-  thumbGrid.appendChild(cell);
+  indexRows.querySelectorAll('.index-row').forEach(function(row){
+    row.style.cursor='default';
+  });
+}
+function exitEditMode(){
+  editMode=false;
+  document.body.classList.remove('edit-mode');
+  editBadge.classList.remove('show');
+  indexRows.querySelectorAll('.ir-title,.ir-year,.ir-office').forEach(function(el){
+    el.contentEditable='false';
+  });
+  indexRows.querySelectorAll('.index-row').forEach(function(row){
+    row.style.cursor='';
+  });
+  saveImages();
+  // rebuild projects pool with updated data
+  pool=shuffleSpread(IMAGES.slice());idx=0;show(pool[0]);
+}
+function collectEdits(){
+  indexRows.querySelectorAll('.index-row').forEach(function(row){
+    var i=parseInt(row.dataset.idx);
+    if(isNaN(i)) return;
+    var t=row.querySelector('.ir-title');
+    var y=row.querySelector('.ir-year');
+    var o=row.querySelector('.ir-office');
+    if(t) IMAGES[i].project=t.textContent.trim();
+    if(y) IMAGES[i].year=y.textContent.trim();
+    if(o){
+      var ov=o.textContent.trim();
+      IMAGES[i].office=(ov==='—'||ov==='')?null:ov;
+    }
+  });
+}
+editBadge.addEventListener('click',function(){
+  if(editMode) exitEditMode();
 });
 
+// ── VIEW SWITCHING ──
 function switchView(name){
   document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active');});
   document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active');});
