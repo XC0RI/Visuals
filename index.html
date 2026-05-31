@@ -163,19 +163,22 @@ body.edit-mode .index-row:hover{opacity:1;}
 <body>
 
 <nav>
-  <!-- Logo: SVG with misregister motion blur (Option C) -->
-  <svg id="logo-svg" id="logoBtn" viewBox="0 0 280 24" xmlns="http://www.w3.org/2000/svg" overflow="visible">
+  <!-- Logo: SVG comet tail to the right (Option D) -->
+  <svg id="logo-svg" viewBox="0 0 340 30" xmlns="http://www.w3.org/2000/svg" overflow="visible" style="display:block;height:30px;width:auto;">
     <defs>
-      <filter id="logo-blur" x="-30%" y="-50%" width="160%" height="200%">
-        <feGaussianBlur stdDeviation="7 0"/>
+      <filter id="logo-comet" x="0%" y="-50%" width="350%" height="200%">
+        <feGaussianBlur stdDeviation="20 0"/>
       </filter>
+      <clipPath id="logo-clip">
+        <rect x="0" y="0" width="340" height="30"/>
+      </clipPath>
     </defs>
-    <!-- ghost layer far back -->
-    <text x="14" y="19" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif" font-size="17" font-weight="700" letter-spacing="-0.3" fill="rgba(29,29,31,0.13)" filter="url(#logo-blur)">Gate Visual Studio</text>
-    <!-- ghost layer mid -->
-    <text x="7" y="19" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif" font-size="17" font-weight="700" letter-spacing="-0.3" fill="rgba(29,29,31,0.22)">Gate Visual Studio</text>
+    <!-- comet tail — blurred, clipped so it doesn't bleed left -->
+    <g clip-path="url(#logo-clip)">
+      <text x="0" y="23" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif" font-size="20" font-weight="700" letter-spacing="-0.4" fill="rgba(29,29,31,0.45)" filter="url(#logo-comet)">Gate Visual Studio</text>
+    </g>
     <!-- sharp base -->
-    <text x="0" y="19" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif" font-size="17" font-weight="700" letter-spacing="-0.3" fill="#1d1d1f">Gate Visual Studio</text>
+    <text x="0" y="23" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif" font-size="20" font-weight="700" letter-spacing="-0.4" fill="#1d1d1f">Gate Visual Studio</text>
   </svg>
 
   <div class="nav-tabs">
