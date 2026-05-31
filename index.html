@@ -28,7 +28,7 @@ nav{
 }
 
 /* logo: inline SVG for motion blur effect */
-#logo-svg{display:block;height:24px;width:auto;overflow:visible;cursor:default;}
+#logo-svg{display:block;height:24px;width:auto;overflow:visible;cursor:default;margin-left:-24px;}
 
 .nav-tabs{display:flex;background:#e0e0e5;border-radius:100px;padding:2px;}
 .nav-tab{
@@ -147,8 +147,9 @@ body.edit-mode .index-row:hover{opacity:1;}
 @media(max-width:768px){
   /* nav */
   nav{
-    padding:0 20px;height:48px;
+    padding:0;height:48px;
     justify-content:center;
+    align-items:center;
   }
   #logo-svg{height:22px;margin-left:0 !important;display:block;}
 
@@ -238,7 +239,7 @@ body.edit-mode .index-row:hover{opacity:1;}
 
 <nav>
   <!-- Logo: Option A — sharp core + wide bilateral ghost trail -->
-  <svg id="logo-svg" viewBox="0 0 300 30" xmlns="http://www.w3.org/2000/svg" overflow="visible" style="display:block;height:30px;width:auto;margin-left:-24px;">
+  <svg id="logo-svg" viewBox="0 0 300 30" xmlns="http://www.w3.org/2000/svg" overflow="visible" style="display:block;height:30px;width:auto;">
     <defs>
       <filter id="logo-trail" x="-60%" y="-50%" width="220%" height="200%">
         <feGaussianBlur stdDeviation="13 0"/>
