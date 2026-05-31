@@ -22,13 +22,17 @@ nav{
   position:fixed;top:0;left:0;right:0;z-index:9999;
   display:flex;justify-content:space-between;align-items:center;
   padding:0 40px;height:52px;
-  background:rgba(242,242,242,0.9);
-  backdrop-filter:saturate(180%) blur(20px);
-  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  background:#f2f2f2;
+  transition:background .3s;
+}
+body.view-projects nav{
+  background:#111;
 }
 
 /* logo: inline SVG for motion blur effect */
-#logo-svg{display:block;height:30px;width:auto;overflow:visible;cursor:default;}
+body.view-projects #logo-svg text{fill:#fff !important;}
+body.view-projects #logo-svg text:first-of-type{fill:rgba(255,255,255,0.3) !important;}
+#logo-svg{display:block;height:30px;width:auto;overflow:visible;cursor:default;transition:filter .3s;}
 
 .nav-tabs{display:flex;background:#e0e0e5;border-radius:100px;padding:2px;}
 .nav-tab{
@@ -38,6 +42,10 @@ nav{
   transition:background .15s,color .15s,box-shadow .15s;white-space:nowrap;
 }
 .nav-tab:hover{color:#1d1d1f;}
+body.view-projects .nav-tab{color:rgba(255,255,255,0.45);}
+body.view-projects .nav-tab:hover{color:#fff;}
+body.view-projects .nav-tabs{background:rgba(255,255,255,0.12);}
+body.view-projects .nav-tab.active{background:rgba(255,255,255,0.18);color:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.3);}
 .nav-tab.active{background:#fff;color:#1d1d1f;font-weight:500;box-shadow:0 1px 4px rgba(0,0,0,0.15),0 0 0 0.5px rgba(0,0,0,0.04);}
 
 #edit-badge{
@@ -51,7 +59,7 @@ nav{
 
 #login-overlay{
   display:none;position:fixed;inset:0;z-index:99999;
-  background:rgba(242,242,242,0.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  background:#f2f2f2;
   align-items:center;justify-content:center;flex-direction:column;gap:16px;
 }
 #login-overlay.show{display:flex;}
@@ -161,6 +169,7 @@ body.edit-mode .index-row:hover{opacity:1;}
     display:flex;
     position:fixed;bottom:0;left:0;right:0;z-index:9999;
     background:rgba(242,242,242,0.95);
+    transition:background .3s;
     backdrop-filter:saturate(180%) blur(20px);
     -webkit-backdrop-filter:saturate(180%) blur(20px);
     border-top:0.5px solid rgba(0,0,0,0.1);
@@ -178,6 +187,11 @@ body.edit-mode .index-row:hover{opacity:1;}
   #mobile-tabs .nav-tab.active{
     background:rgba(0,0,0,0.08);color:#1d1d1f;font-weight:500;
   }
+  body.view-projects #mobile-tabs{
+    background:#111;border-top-color:rgba(255,255,255,0.1);
+  }
+  body.view-projects #mobile-tabs .nav-tab{color:rgba(255,255,255,0.45);}
+  body.view-projects #mobile-tabs .nav-tab.active{background:rgba(255,255,255,0.12);color:#fff;}
 
   /* views offset — leave room for bottom tabs */
   .view{top:48px;bottom:60px;}
@@ -448,11 +462,13 @@ function applyProjectFilter(projectName){
   activeFilter=projectName;
   pool=IMAGES.filter(function(x){return x.project===projectName;});
   idx=0;filterLabel.textContent=projectName;filterBar.classList.add('show');
-  infoOpen=false;overlay.classList.remove('show');show(pool[0]);switchView('projects');
+  infoOpen=false;overlay.classList.remove('show');document.body.classList.add('view-projects');
+show(pool[0]);switchView('projects');
 }
 document.getElementById('filter-clear').addEventListener('click',function(){
   activeFilter=null;pool=shuffleSpread(IMAGES.slice());idx=0;
-  filterBar.classList.remove('show');infoOpen=false;overlay.classList.remove('show');show(pool[0]);
+  filterBar.classList.remove('show');infoOpen=false;overlay.classList.remove('show');document.body.classList.add('view-projects');
+show(pool[0]);
 });
 
 var indexRows=document.getElementById('indexRows');
@@ -513,7 +529,8 @@ function exitEditMode(){
   editMode=false;document.body.classList.remove('edit-mode');editBadge.classList.remove('show');
   indexRows.querySelectorAll('.ir-title,.ir-year,.ir-office').forEach(function(el){el.contentEditable='false';});
   indexRows.querySelectorAll('.index-row').forEach(function(row){row.style.cursor='';});
-  saveImages();pool=shuffleSpread(IMAGES.slice());idx=0;show(pool[0]);
+  saveImages();pool=shuffleSpread(IMAGES.slice());idx=0;document.body.classList.add('view-projects');
+show(pool[0]);
 }
 function collectEdits(){
   indexRows.querySelectorAll('.index-row').forEach(function(row){
@@ -533,6 +550,8 @@ function switchView(name){
   document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active');});
   document.getElementById('view-'+name).classList.add('active');
   document.querySelectorAll('[data-view="'+name+'"]').forEach(function(t){t.classList.add('active');});
+  document.body.className=document.body.className.replace(/\bview-\w+/g,'').trim();
+  document.body.classList.add('view-'+name);
 }
 document.querySelectorAll('.nav-tab').forEach(function(tab){
   tab.addEventListener('click',function(){switchView(tab.dataset.view);});
@@ -546,6 +565,7 @@ document.querySelectorAll('.nav-tab').forEach(function(tab){
   window.addEventListener('resize',checkMobile);
 })();
 
+document.body.classList.add('view-projects');
 show(pool[0]);
 </script>
 </body>
