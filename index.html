@@ -73,31 +73,31 @@ nav{
 .view{display:none;position:fixed;top:52px;left:0;right:0;bottom:0;overflow:hidden;}
 .view.active{display:flex;}
 
-#view-projects{align-items:center;justify-content:center;}
+#view-projects{align-items:center;justify-content:center;background:#111;}
 #filter-bar{
   position:absolute;top:14px;left:50%;transform:translateX(-50%);
   z-index:300;display:none;align-items:center;gap:8px;
-  background:rgba(242,242,242,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border:0.5px solid rgba(0,0,0,0.14);box-shadow:0 2px 8px rgba(0,0,0,0.08);
+  background:rgba(30,30,30,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:0.5px solid rgba(255,255,255,0.15);box-shadow:0 2px 8px rgba(0,0,0,0.4);
   border-radius:100px;padding:6px 8px 6px 14px;white-space:nowrap;
 }
 #filter-bar.show{display:flex;}
-#filter-label{font-size:12px;font-weight:500;color:#1d1d1f;}
-#filter-clear{background:#e8e8ed;border:none;cursor:pointer;font-family:inherit;font-size:11px;font-weight:500;color:#6e6e73;border-radius:100px;padding:3px 10px;transition:background .14s,color .14s;}
-#filter-clear:hover{background:#d1d1d6;color:#1d1d1f;}
+#filter-label{font-size:12px;font-weight:500;color:#fff;}
+#filter-clear{background:rgba(255,255,255,0.15);border:none;cursor:pointer;font-family:inherit;font-size:11px;font-weight:500;color:rgba(255,255,255,0.7);border-radius:100px;padding:3px 10px;transition:background .14s,color .14s;}
+#filter-clear:hover{background:rgba(255,255,255,0.25);color:#fff;}
 
 .viewer{width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:40px 80px 80px;}
 #view-projects:has(#filter-bar.show) .viewer{padding-top:80px;}
 .img-wrap{position:relative;max-width:900px;width:100%;cursor:pointer;user-select:none;}
 .img-wrap img{display:block;width:100%;height:auto;max-height:calc(100vh - 132px);object-fit:contain;transition:opacity .28s;}
 .img-wrap.fading img{opacity:0;}
-.img-info-overlay{position:absolute;inset:0;background:rgba(242,242,242,0.94);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;}
+.img-info-overlay{position:absolute;inset:0;background:rgba(17,17,17,0.92);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;}
 .img-info-overlay.show{opacity:1;pointer-events:auto;}
 .img-info-inner{text-align:center;}
-.img-info-title{font-size:15px;font-weight:600;letter-spacing:-.02em;color:#1d1d1f;margin-bottom:6px;}
-.img-info-line{font-size:13px;color:#6e6e73;line-height:1.7;}
+.img-info-title{font-size:15px;font-weight:600;letter-spacing:-.02em;color:#fff;margin-bottom:6px;}
+.img-info-line{font-size:13px;color:rgba(255,255,255,0.55);line-height:1.7;}
 
-.arrow{position:fixed;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#1d1d1f;opacity:0;padding:12px;transition:opacity .2s,transform .12s;z-index:200;}
+.arrow{position:fixed;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#fff;opacity:0;padding:12px;transition:opacity .2s,transform .12s;z-index:200;}
 #view-projects:hover .arrow{opacity:.3;}
 .arrow:hover{opacity:1 !important;}
 .arrow:active{transform:translateY(-50%) scale(0.88);}
@@ -108,13 +108,13 @@ nav{
 #view-index.active{display:flex;}
 .index-table{width:100%;padding:0 40px 60px;}
 .index-table-head{
-  display:grid;grid-template-columns:80px 1fr 120px 100px 180px;gap:0 32px;
+  display:grid;grid-template-columns:80px 1fr 100px 180px;gap:0 32px;
   padding:10px 0;border-bottom:0.5px solid rgba(0,0,0,0.15);
   position:sticky;top:0;background:rgba(242,242,242,0.95);backdrop-filter:blur(8px);z-index:10;
 }
 .index-table-head span{font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#aeaeb2;}
 .index-row{
-  display:grid;grid-template-columns:80px 1fr 120px 100px 180px;gap:0 32px;
+  display:grid;grid-template-columns:80px 1fr 100px 180px;gap:0 32px;
   padding:10px 0;border-bottom:0.5px solid rgba(0,0,0,0.06);
   cursor:pointer;align-items:center;transition:opacity .14s;
 }
@@ -123,11 +123,9 @@ nav{
 .index-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
 .ir-title{font-size:12px;font-weight:400;color:#1d1d1f;line-height:1.4;}
 .ir-year{font-size:12px;color:#6e6e73;}
-.ir-type{font-size:12px;color:#6e6e73;}
 .ir-office{font-size:12px;color:#6e6e73;}
 body.edit-mode .ir-title[contenteditable],
 body.edit-mode .ir-year[contenteditable],
-body.edit-mode .ir-type[contenteditable],
 body.edit-mode .ir-office[contenteditable]{outline:none;border-bottom:1px dashed rgba(0,0,0,0.25);cursor:text;min-width:40px;display:inline-block;}
 body.edit-mode .index-row{cursor:default;}
 body.edit-mode .index-row:hover{opacity:1;}
@@ -295,7 +293,7 @@ body.edit-mode .index-row:hover{opacity:1;}
 <div id="view-index" class="view">
   <div class="index-table" id="indexTable">
     <div class="index-table-head">
-      <span></span><span>Project</span><span>Type</span><span>Year</span><span>Office</span>
+      <span></span><span>Project</span><span>Year</span><span>Office</span>
     </div>
     <div id="indexRows"></div>
   </div>
@@ -356,22 +354,22 @@ var EDIT_PASSWORD = 'gate2025';
 
 var IMAGES_DEFAULT=[
   {src:"./images/01.jpeg",project:"Wohnen auf der Quartiersinsel Bremen",year:"2025",office:"Studio Corso Architekten, München",type:"Competition"},
-  {src:"./images/02.jpeg",project:"Interior Studies, Housing Refurbishment, Bodensee DE",year:"2025",office:"Office Bau Bau , Zürich",type:"Refurbishment"},
-  {src:"./images/03.jpeg",project:"Interior Studies, Housing Refurbishment, Bodensee DE",year:"2025",office:"Office Bau Bau, Zürich",type:"Refurbishment"},
-  {src:"./images/04.jpeg",project:"Interior Studies, Housing Refurbishment, Bodensee DE",year:"2025",office:"Office Bau Bau, Zürich",type:"Refurbishment"},
+  {src:"./images/02.jpeg",project:"Interior Studies, Housing Refurbishment, Bodensee",year:"2025",office:"Office Bau Bau, Zürich",type:"Refurbishment"},
+  {src:"./images/03.jpeg",project:"Interior Studies, Housing Refurbishment, Bodensee",year:"2025",office:"Office Bau Bau, Zürich",type:"Refurbishment"},
+  {src:"./images/04.jpeg",project:"Interior Studies, Housing Refurbishment, Bodensee",year:"2025",office:"Office Bau Bau, Zürich",type:"Refurbishment"},
   {src:"./images/05.jpeg",project:"Scenographic Interior Design",year:"2024",office:null,type:"Study"},
   {src:"./images/06.jpeg",project:"Rammed Earth Construction",year:"2025",office:null,type:"Study"},
   {src:"./images/07.jpeg",project:"Schulerweiterung und Neubau Sporthalle Seefeld",year:"2024",office:"Dr0ne",type:"Competition"},
   {src:"./images/08.jpeg",project:"Schulerweiterung und Neubau Sporthalle Seefeld",year:"2024",office:"Dr0ne",type:"Competition"},
   {src:"./images/09.jpeg",project:"Kunst am Bau Restaurant Zent, Bern",year:"2024",office:"Dr0ne",type:"Competition"},
   {src:"./images/10.jpeg",project:"Kunst am Bau Restaurant Zent, Bern",year:"2024",office:"Dr0ne",type:"Competition"},
-  {src:"./images/11.jpeg",project:"Rammed Earth Construction",year:"2025",office:null,type:"Private Project"},
-  {src:"./images/12.jpeg",project:"Rammed Earth Construction",year:"2025",office:null,type:"Private Project"},
-  {src:"./images/13.jpeg",project:"Rammed Earth Construction",year:"2025",office:null,type:"Private Project"},
-  {src:"./images/14.jpeg",project:"Photovoltaic Roof System",year:"2025",office:null,type:"Private Project"},
-  {src:"./images/15.jpeg",project:"Scenographic Interior Design",year:"2025",office:null,type:"Private Project"},
-  {src:"./images/16.jpeg",project:"Scenographic Interior Design",year:"2025",office:null,type:"Private Project"},
-  {src:"./images/17.jpeg",project:"Scenographic Interior Design",year:"2025",office:null,type:"Private Project"}
+  {src:"./images/11.jpeg",project:"Rammed Earth Construction",year:"2025",office:null,type:"Study"},
+  {src:"./images/12.jpeg",project:"Rammed Earth Construction",year:"2025",office:null,type:"Study"},
+  {src:"./images/13.jpeg",project:"Rammed Earth Construction",year:"2025",office:null,type:"Study"},
+  {src:"./images/14.jpeg",project:"Photovoltaic Roof System",year:"2025",office:null,type:"Study"},
+  {src:"./images/15.jpeg",project:"Scenographic Interior Design",year:"2025",office:null,type:"Study"},
+  {src:"./images/16.jpeg",project:"Scenographic Interior Design",year:"2025",office:null,type:"Study"},
+  {src:"./images/17.jpeg",project:"Scenographic Interior Design",year:"2025",office:null,type:"Study"}
 ];
 
 function loadImages(){
@@ -468,11 +466,10 @@ function buildIndexRows(){
     var tImg=document.createElement('img');tImg.src=im.src;tImg.alt='';tImg.loading='lazy';
     thumbDiv.appendChild(tImg);
     var tDiv=document.createElement('div');tDiv.className='ir-title';tDiv.textContent=im.project;
-    var typeDiv=document.createElement('div');typeDiv.className='ir-type';typeDiv.textContent=im.type||'—';
     var yDiv=document.createElement('div');yDiv.className='ir-year';yDiv.textContent=im.year;
     var oDiv=document.createElement('div');oDiv.className='ir-office';
-    oDiv.textContent=im.office||'—';
-    row.appendChild(thumbDiv);row.appendChild(tDiv);row.appendChild(typeDiv);row.appendChild(yDiv);row.appendChild(oDiv);
+    oDiv.textContent=im.office||(im.type||'—');
+    row.appendChild(thumbDiv);row.appendChild(tDiv);row.appendChild(yDiv);row.appendChild(oDiv);
     row.addEventListener('click',function(e){
       if(document.body.classList.contains('edit-mode'))return;
       applyProjectFilter(im.project);
@@ -507,14 +504,14 @@ function checkPassword(){
 }
 function enterEditMode(){
   editMode=true;document.body.classList.add('edit-mode');editBadge.classList.add('show');
-  indexRows.querySelectorAll('.ir-title,.ir-type,.ir-year,.ir-office').forEach(function(el){
+  indexRows.querySelectorAll('.ir-title,.ir-year,.ir-office').forEach(function(el){
     el.contentEditable='true';el.addEventListener('blur',collectEdits);
   });
   indexRows.querySelectorAll('.index-row').forEach(function(row){row.style.cursor='default';});
 }
 function exitEditMode(){
   editMode=false;document.body.classList.remove('edit-mode');editBadge.classList.remove('show');
-  indexRows.querySelectorAll('.ir-title,.ir-type,.ir-year,.ir-office').forEach(function(el){el.contentEditable='false';});
+  indexRows.querySelectorAll('.ir-title,.ir-year,.ir-office').forEach(function(el){el.contentEditable='false';});
   indexRows.querySelectorAll('.index-row').forEach(function(row){row.style.cursor='';});
   saveImages();pool=shuffleSpread(IMAGES.slice());idx=0;show(pool[0]);
 }
@@ -522,11 +519,9 @@ function collectEdits(){
   indexRows.querySelectorAll('.index-row').forEach(function(row){
     var i=parseInt(row.dataset.idx);if(isNaN(i))return;
     var t=row.querySelector('.ir-title');
-    var tp=row.querySelector('.ir-type');
     var y=row.querySelector('.ir-year');
     var o=row.querySelector('.ir-office');
     if(t)IMAGES[i].project=t.textContent.trim();
-    if(tp){var tv=tp.textContent.trim();IMAGES[i].type=(tv==='—'||tv==='')?null:tv;}
     if(y)IMAGES[i].year=y.textContent.trim();
     if(o){var ov=o.textContent.trim();IMAGES[i].office=(ov==='—'||ov==='')?null:ov;}
   });
