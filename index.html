@@ -31,7 +31,7 @@ body.view-projects nav{
 
 /* logo: inline SVG for motion blur effect */
 body.view-projects #logo-svg text{fill:#fff !important;}
-body.view-projects #logo-svg text:first-of-type{fill:rgba(255,255,255,0.3) !important;}
+body.view-projects #logo-svg text:first-of-type{fill:rgba(255,255,255,0.45) !important;}
 #logo-svg{display:block;height:30px;width:auto;overflow:visible;cursor:default;transition:filter .3s;}
 
 .nav-tabs{display:flex;background:#e0e0e5;border-radius:100px;padding:2px;align-self:flex-end;margin-bottom:10px;}
@@ -270,11 +270,11 @@ body.view-projects #page-fade{background:#111;}
   <svg id="logo-svg" viewBox="0 0 300 30" xmlns="http://www.w3.org/2000/svg" overflow="visible" style="display:block;height:30px;width:auto;">
     <defs>
       <filter id="logo-trail" x="-60%" y="-50%" width="220%" height="200%">
-        <feGaussianBlur stdDeviation="13 0"/>
+        <feGaussianBlur stdDeviation="20 0"/>
       </filter>
     </defs>
     <!-- wide blurred ghost -->
-    <text x="0" y="23" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif" font-size="20" font-weight="700" letter-spacing="-0.4" fill="rgba(29,29,31,0.32)" filter="url(#logo-trail)">Gate Visual Studio</text>
+    <text x="0" y="23" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif" font-size="20" font-weight="700" letter-spacing="-0.4" fill="rgba(29,29,31,0.45)" filter="url(#logo-trail)">Gate Visual Studio</text>
     <!-- sharp core on top -->
     <text x="0" y="23" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif" font-size="20" font-weight="700" letter-spacing="-0.4" fill="#1d1d1f">Gate Visual Studio</text>
   </svg>
@@ -352,10 +352,11 @@ body.view-projects #page-fade{background:#111;}
       <p class="about-legal">
         &copy; <span id="copy-year"></span> Gate Visual Studio. All rights reserved.<br><br>
         All images, renderings, and visual content displayed on this website are the exclusive property of Gate Visual Studio or their respective clients and collaborating offices. Reproduction, distribution, or use of any content without prior written permission is strictly prohibited.<br><br>
+        Gate Visual Studio is a registered trade name. VAT not applicable under §19 UStG (Kleinunternehmerregelung).<br><br>
         <strong>Responsible for content:</strong> Gate Visual Studio, Paris 75018 / Zürich<br>
         <a href="mailto:info@gatevisuals.xyz">info@gatevisuals.xyz</a><br><br>
         <strong>Disclaimer:</strong> Despite careful editorial control, we assume no liability for the content of external links. The operators of linked pages are solely responsible for their content.<br><br>
-        <strong>Privacy:</strong> This website does not use cookies, tracking scripts, or analytics tools. No personal data is collected or stored.<br><br>Website coded by Gate Visual Studio.
+        <strong>Privacy:</strong> This website does not use cookies, tracking scripts, or analytics tools. No personal data is collected or stored.<br><br>Website by Gate Visual Studio.
       </p>
     </div>
   </div>
@@ -395,8 +396,7 @@ var IMAGES_DEFAULT=[
   {src:"./images/14.jpeg",project:"Photovoltaic Roof System",year:"2025",office:null,type:"Study"},
   {src:"./images/15.jpeg",project:"Scenographic Interior Design",year:"2025",office:null,type:"Study"},
   {src:"./images/16.jpeg",project:"Scenographic Interior Design",year:"2025",office:null,type:"Study"},
-  {src:"./images/17.jpeg",project:"Scenographic Interior Design",year:"2025",office:null,type:"Study"},
-  {src:"./images/18.jpeg",project:"Rammed Earth Construction",year:"2025",office:null,type:"Study"}
+  {src:"./images/17.jpeg",project:"Scenographic Interior Design",year:"2025",office:null,type:"Study"}
 ];
 
 function loadImages(){
