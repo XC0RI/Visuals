@@ -26,7 +26,7 @@ nav{
   backdrop-filter:saturate(180%) blur(20px);
   -webkit-backdrop-filter:saturate(180%) blur(20px);
 }
-.nav-logo{font-size:13px;font-weight:700;letter-spacing:-.01em;color:#1d1d1f;}
+.nav-logo{font-size:17px;font-weight:700;letter-spacing:-.02em;color:#1d1d1f;}
 .nav-tabs{display:flex;background:#e0e0e5;border-radius:100px;padding:2px;gap:0;}
 .nav-tab{
   font-size:12px;font-weight:400;color:#6e6e73;cursor:pointer;
@@ -44,43 +44,15 @@ nav{
 .view.active{display:flex;}
 
 /* ── PROJECTS ── */
-#view-projects{align-items:center;justify-content:center;}
-.viewer{width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:40px 100px;}
-.img-wrap{position:relative;max-width:900px;width:100%;cursor:pointer;user-select:none;}
-.img-wrap img{display:block;width:100%;height:auto;max-height:calc(100vh - 132px);object-fit:contain;transition:opacity .28s;}
-.img-wrap.fading img{opacity:0;}
-.img-info-overlay{
-  position:absolute;inset:0;background:rgba(255,255,255,0.94);
-  display:flex;align-items:center;justify-content:center;
-  opacity:0;pointer-events:none;transition:opacity .2s;
-}
-.img-info-overlay.show{opacity:1;pointer-events:auto;}
-.img-info-inner{text-align:center;}
-.img-info-title{font-size:15px;font-weight:600;letter-spacing:-.02em;color:#1d1d1f;margin-bottom:6px;}
-.img-info-line{font-size:13px;color:#6e6e73;line-height:1.7;}
+#view-projects{align-items:center;justify-content:center;flex-direction:column;}
 
-.arrow{
-  position:fixed;top:50%;transform:translateY(-50%);
-  width:36px;height:36px;border-radius:50%;
-  background:rgba(255,255,255,0.9);border:none;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  color:#1d1d1f;opacity:0;
-  transition:opacity .2s,transform .15s;z-index:200;
-  box-shadow:0 1px 4px rgba(0,0,0,0.14),0 0 0 0.5px rgba(0,0,0,0.06);
-  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-}
-#view-projects:hover .arrow{opacity:1;}
-.arrow:hover{background:rgba(245,245,247,0.98);}
-.arrow:active{transform:translateY(-50%) scale(0.93);}
-#arrow-prev{left:20px;}
-#arrow-next{right:20px;}
-
+/* filter badge */
 #filter-bar{
-  position:fixed;bottom:28px;left:50%;transform:translateX(-50%);
-  z-index:9000;display:none;align-items:center;gap:8px;
+  position:absolute;top:16px;left:50%;transform:translateX(-50%);
+  z-index:300;display:none;align-items:center;gap:8px;
   background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border:0.5px solid rgba(0,0,0,0.14);box-shadow:0 2px 8px rgba(0,0,0,0.1);
-  border-radius:100px;padding:7px 8px 7px 14px;white-space:nowrap;
+  border:0.5px solid rgba(0,0,0,0.14);box-shadow:0 2px 8px rgba(0,0,0,0.08);
+  border-radius:100px;padding:6px 8px 6px 14px;white-space:nowrap;
 }
 #filter-bar.show{display:flex;}
 #filter-label{font-size:12px;font-weight:500;color:#1d1d1f;}
@@ -91,53 +63,92 @@ nav{
 }
 #filter-clear:hover{background:#d1d1d6;color:#1d1d1f;}
 
-/* ── INDEX — uncropped, larger, more spacing ── */
-#view-index{overflow-y:auto;display:none;padding:28px 36px 48px;align-content:start;}
-#view-index.active{display:block;}
-.thumb-grid{
-  columns:4;column-gap:28px;
-}
-.thumb-cell{
-  break-inside:avoid;cursor:pointer;
-  margin-bottom:28px;display:block;
-}
-.thumb-img{overflow:hidden;background:#f5f5f7;margin-bottom:7px;}
-.thumb-img img{
-  display:block;width:100%;height:auto;
-  transition:opacity .18s;
-}
-.thumb-cell:hover .thumb-img img{opacity:.65;}
-.thumb-caption{font-size:11px;color:#1d1d1f;font-weight:400;line-height:1.4;}
-.thumb-caption-sub{font-size:10px;color:#aeaeb2;margin-top:1px;}
+.viewer{width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:40px 80px;}
+.img-wrap{position:relative;max-width:900px;width:100%;cursor:pointer;user-select:none;}
+.img-wrap img{display:block;width:100%;height:auto;max-height:calc(100vh - 132px);object-fit:contain;transition:opacity .28s;}
+.img-wrap.fading img{opacity:0;}
 
-/* ── INFO ── */
-#view-info{align-items:center;justify-content:center;padding:48px 40px;}
-.info-block{max-width:420px;text-align:center;font-size:14px;font-weight:400;line-height:1.9;color:#1d1d1f;}
-.info-block a{color:#0066cc;text-decoration:none;}
-.info-block a:hover{text-decoration:underline;}
-.info-de{display:block;color:#6e6e73;font-size:13px;line-height:1.9;margin-top:22px;}
+.img-info-overlay{
+  position:absolute;inset:0;background:rgba(255,255,255,0.94);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.img-info-overlay.show{opacity:1;pointer-events:auto;}
+.img-info-inner{text-align:center;}
+.img-info-title{font-size:15px;font-weight:600;letter-spacing:-.02em;color:#1d1d1f;margin-bottom:6px;}
+.img-info-line{font-size:13px;color:#6e6e73;line-height:1.7;}
 
-/* ── CONTACT ── */
-#view-contact{align-items:center;justify-content:center;padding:48px 40px;}
-.contact-block{text-align:center;font-size:14px;font-weight:400;line-height:2.1;color:#1d1d1f;}
-.contact-block a{color:#0066cc;text-decoration:none;}
-.contact-block a:hover{text-decoration:underline;}
+/* arrows — bare chevrons, no circle */
+.arrow{
+  position:fixed;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;
+  color:#1d1d1f;opacity:0;padding:12px;
+  transition:opacity .2s,transform .12s;z-index:200;
+}
+#view-projects:hover .arrow{opacity:.35;}
+.arrow:hover{opacity:1 !important;}
+.arrow:active{transform:translateY(-50%) scale(0.88);}
+#arrow-prev{left:8px;}
+#arrow-next{right:8px;}
+
+/* ── INDEX — one row per project ── */
+#view-index{overflow-y:auto;display:none;flex-direction:column;padding:0;}
+#view-index.active{display:flex;}
+.index-list{width:100%;padding:20px 40px 60px;}
+.index-header-row{
+  display:grid;grid-template-columns:1fr 120px 220px;gap:24px;
+  padding:8px 0;border-bottom:0.5px solid rgba(0,0,0,0.12);
+}
+.index-header-row span{font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#aeaeb2;}
+.index-row{
+  display:grid;grid-template-columns:1fr 120px 220px;gap:24px;
+  padding:11px 0;border-bottom:0.5px solid rgba(0,0,0,0.07);
+  cursor:pointer;align-items:baseline;
+  transition:opacity .14s;
+}
+.index-row:hover{opacity:.45;}
+.ir-title{font-size:13px;font-weight:400;color:#1d1d1f;}
+.ir-year{font-size:12px;color:#6e6e73;}
+.ir-office{font-size:12px;color:#6e6e73;}
+
+#hover-preview{
+  position:fixed;pointer-events:none;z-index:8000;width:200px;opacity:0;transition:opacity .15s;
+}
+#hover-preview img{display:block;width:100%;height:auto;box-shadow:0 4px 20px rgba(0,0,0,0.12);}
+
+/* ── ABOUT ── */
+#view-about{overflow-y:auto;display:none;padding:48px 40px 80px;align-content:start;}
+#view-about.active{display:grid;}
+.about-grid{display:grid;grid-template-columns:200px 1fr;gap:0 48px;max-width:860px;width:100%;margin:0 auto;}
+.about-label{
+  font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#aeaeb2;
+  padding:32px 0 0;border-top:0.5px solid rgba(0,0,0,0.1);align-self:start;
+}
+.about-label.first{border-top:none;padding-top:0;}
+.about-content{
+  font-size:13px;font-weight:400;line-height:1.8;color:#1d1d1f;
+  padding:32px 0;border-top:0.5px solid rgba(0,0,0,0.1);
+}
+.about-content.first{border-top:none;padding-top:0;}
+.about-content p+p{margin-top:14px;}
+.about-content a{color:#1d1d1f;text-decoration:none;border-bottom:0.5px solid #bbb;transition:border-color .15s;}
+.about-content a:hover{border-color:#1d1d1f;}
+.about-de{color:#6e6e73;margin-top:14px;}
 
 .seo-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;}
 
-@media(max-width:900px){
-  .thumb-grid{columns:3;}
-}
 @media(max-width:640px){
   nav{padding:0 16px;}
+  .nav-logo{font-size:14px;}
   .nav-tab{font-size:11px;padding:4px 12px;}
-  .viewer{padding:20px 52px;}
-  .arrow{width:32px;height:32px;}
-  #arrow-prev{left:8px;}#arrow-next{right:8px;}
-  #view-projects:hover .arrow,.arrow{opacity:1;}
-  #view-index{padding:16px 16px 40px;}
-  .thumb-grid{columns:2;column-gap:14px;}
-  .thumb-cell{margin-bottom:14px;}
+  .viewer{padding:20px 40px;}
+  #arrow-prev{left:0;}#arrow-next{right:0;}
+  .index-list{padding:16px 16px 60px;}
+  .index-header-row,.index-row{grid-template-columns:1fr 80px;}
+  .index-header-row span:last-child,.ir-office{display:none;}
+  .about-grid{grid-template-columns:1fr;}
+  .about-label,.about-content{border-top:none;padding-top:0;}
+  #view-about{padding:24px 20px 60px;}
 }
 </style>
 </head>
@@ -148,13 +159,16 @@ nav{
   <div class="nav-tabs">
     <button class="nav-tab active" data-view="projects">Projects</button>
     <button class="nav-tab" data-view="index">Index</button>
-    <button class="nav-tab" data-view="contact">Contact</button>
-    <button class="nav-tab" data-view="info">Info</button>
+    <button class="nav-tab" data-view="about">About</button>
   </div>
 </nav>
 
 <!-- PROJECTS -->
 <div id="view-projects" class="view active">
+  <div id="filter-bar">
+    <span id="filter-label"></span>
+    <button id="filter-clear">× Clear</button>
+  </div>
   <div class="viewer">
     <div class="img-wrap" id="imgWrap">
       <img id="mainImg" src="" alt="">
@@ -167,37 +181,50 @@ nav{
     </div>
   </div>
   <button class="arrow" id="arrow-prev" aria-label="Previous">
-    <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M12 4L6 10L12 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </button>
   <button class="arrow" id="arrow-next" aria-label="Next">
-    <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M8 4L14 10L8 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7 4L13 10L7 16" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </button>
-  <div id="filter-bar">
-    <span id="filter-label"></span>
-    <button id="filter-clear">× Clear</button>
-  </div>
 </div>
 
 <!-- INDEX -->
 <div id="view-index" class="view">
-  <div class="thumb-grid" id="thumbGrid"></div>
-</div>
-
-<!-- CONTACT -->
-<div id="view-contact" class="view">
-  <div class="contact-block">
-    <a href="mailto:info@gatevisuals.xyz">info@gatevisuals.xyz</a><br>
-    <a href="https://instagram.com/gatevisuals" target="_blank" rel="noopener">@gatevisuals</a><br>
-    +49 1512 9640529<br>
-    Paris 75018 / Zürich
+  <div class="index-list">
+    <div class="index-header-row">
+      <span>Project</span>
+      <span>Year</span>
+      <span>Office</span>
+    </div>
+    <div id="indexList"></div>
   </div>
 </div>
+<div id="hover-preview"><img id="hoverImg" src="" alt=""></div>
 
-<!-- INFO -->
-<div id="view-info" class="view">
-  <div class="info-block">
-    We are an architectural visualization practice operating at the intersection of rendering and image-making, Kunst am Bau, web design, and design consulting. Informed by professional experience in Zürich, Munich, and Aachen, we develop the visual language of architecture and space.
-    <span class="info-de">Wir sind ein Büro für architektonische Visualisierung an der Schnittstelle von Rendering und Image-Making, Kunst am Bau, Webdesign und Design Consulting. Geprägt durch Berufserfahrung in Zürich, München und Aachen entwickeln wir die visuelle Sprache von Architektur und Raum.</span>
+<!-- ABOUT -->
+<div id="view-about" class="view">
+  <div class="about-grid">
+    <div class="about-label first">About</div>
+    <div class="about-content first">
+      <p>We are an architectural visualization practice operating at the intersection of rendering and image-making, Kunst am Bau, web design, and design consulting. Informed by professional experience in Zürich, Munich, and Aachen, we develop the visual language of architecture and space.</p>
+      <p class="about-de">Wir sind ein Büro für architektonische Visualisierung an der Schnittstelle von Rendering und Image-Making, Kunst am Bau, Webdesign und Design Consulting. Geprägt durch Berufserfahrung in Zürich, München und Aachen entwickeln wir die visuelle Sprache von Architektur und Raum.</p>
+    </div>
+    <div class="about-label">Services</div>
+    <div class="about-content">
+      <p>Architectural Visualization &amp; Image-Making<br>
+      Kunst am Bau<br>
+      Web Design &amp; Digital Presence<br>
+      Design Consulting</p>
+    </div>
+    <div class="about-label">Contact</div>
+    <div class="about-content">
+      <p>
+        <a href="mailto:info@gatevisuals.xyz">info@gatevisuals.xyz</a><br>
+        <a href="https://instagram.com/gatevisuals" target="_blank" rel="noopener">@gatevisuals</a><br>
+        +49 1512 9640529<br>
+        Paris 75018 / Zürich
+      </p>
+    </div>
   </div>
 </div>
 
@@ -207,7 +234,11 @@ nav{
 </div>
 
 <script>
-// project: title, year, office (null = omit)
+// ─────────────────────────────────────────────────────────────────
+// IMAGES — edit project / year / office directly here
+// office: null  →  line omitted
+// type: "Study" →  shown instead of office
+// ─────────────────────────────────────────────────────────────────
 var IMAGES=[
   {src:"./images/01.jpeg",project:"Competition Wohnen auf der Quartiersinsel Bremen",year:"2025",office:"Studio Corso München"},
   {src:"./images/02.jpeg",project:"Interior Studies Housing Refurbishment Bodensee",year:"2025",office:"Bau Bau GmbH Zürich"},
@@ -228,6 +259,22 @@ var IMAGES=[
   {src:"./images/17.jpeg",project:"Undisclosed Interior Study",year:"2025",office:null}
 ];
 
+// ── derive unique projects (preserving first-appearance order) ──
+var PROJECTS=[];
+var seenP={};
+IMAGES.forEach(function(im){
+  if(!seenP[im.project]){
+    seenP[im.project]=true;
+    PROJECTS.push({
+      project:im.project,
+      year:im.year,
+      office:im.office,
+      type:im.type||null,
+      thumb:im.src  // first image of this project as hover thumb
+    });
+  }
+});
+
 function shuffle(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t;}return b;}
 
 var pool=shuffle(IMAGES.slice()),idx=0,activeFilter=null,infoOpen=false;
@@ -240,10 +287,9 @@ var filterBar=document.getElementById('filter-bar');
 var filterLabel=document.getElementById('filter-label');
 
 function buildLines(item){
-  var html='';
-  html+=item.year+'<br>';
-  if(item.office) html+=item.office;
-  else if(item.type) html+=item.type;
+  var html=item.year;
+  if(item.office) html+='<br>'+item.office;
+  else if(item.type) html+='<br>'+item.type;
   linesEl.innerHTML=html;
 }
 
@@ -252,8 +298,7 @@ function show(item){
   imgWrap.classList.add('fading');
   setTimeout(function(){
     mainImg.src=item.src;mainImg.alt=item.project;
-    titleEl.textContent=item.project;
-    buildLines(item);
+    titleEl.textContent=item.project;buildLines(item);
     imgWrap.classList.remove('fading');
   },200);
 }
@@ -283,35 +328,63 @@ imgWrap.addEventListener('click',function(){
   infoOpen=!infoOpen;overlay.classList.toggle('show',infoOpen);
 });
 
-document.getElementById('filter-clear').addEventListener('click',function(){
+function clearFilter(){
   activeFilter=null;pool=shuffle(IMAGES.slice());idx=0;
   filterBar.classList.remove('show');infoOpen=false;overlay.classList.remove('show');
   show(pool[0]);
-});
+}
+document.getElementById('filter-clear').addEventListener('click',clearFilter);
 
-/* thumb grid — masonry-like columns, uncropped images */
-var thumbGrid=document.getElementById('thumbGrid');
-IMAGES.forEach(function(im){
-  var cell=document.createElement('div');cell.className='thumb-cell';
-  var imgBox=document.createElement('div');imgBox.className='thumb-img';
-  var img=document.createElement('img');img.src=im.src;img.alt=im.project;img.loading='lazy';
-  imgBox.appendChild(img);
-  var cap=document.createElement('div');cap.className='thumb-caption';cap.textContent=im.project;
-  var sub=document.createElement('div');sub.className='thumb-caption-sub';
-  sub.textContent=im.year+(im.office?' — '+im.office:'');
-  cell.appendChild(imgBox);cell.appendChild(cap);cell.appendChild(sub);
-  cell.addEventListener('click',function(){
-    activeFilter=null;pool=IMAGES.slice();idx=IMAGES.indexOf(im);
-    filterBar.classList.remove('show');show(pool[idx]);switchView('projects');
+function applyProjectFilter(projectName){
+  activeFilter=projectName;
+  pool=IMAGES.filter(function(x){return x.project===projectName;});
+  idx=0;
+  filterLabel.textContent=projectName;
+  filterBar.classList.add('show');
+  infoOpen=false;overlay.classList.remove('show');
+  show(pool[0]);
+  switchView('projects');
+}
+
+// ── INDEX LIST — one row per unique project ──
+var indexList=document.getElementById('indexList');
+var hoverPreview=document.getElementById('hover-preview');
+var hoverImg=document.getElementById('hoverImg');
+
+PROJECTS.forEach(function(p){
+  var row=document.createElement('div');row.className='index-row';
+
+  var tDiv=document.createElement('div');tDiv.className='ir-title';tDiv.textContent=p.project;
+  var yDiv=document.createElement('div');yDiv.className='ir-year';yDiv.textContent=p.year;
+  var oDiv=document.createElement('div');oDiv.className='ir-office';
+  oDiv.textContent=p.office||(p.type||'—');
+
+  row.appendChild(tDiv);row.appendChild(yDiv);row.appendChild(oDiv);
+
+  row.addEventListener('mouseenter',function(e){
+    hoverImg.src=p.thumb;hoverPreview.style.opacity='1';positionPreview(e);
   });
-  thumbGrid.appendChild(cell);
+  row.addEventListener('mousemove',positionPreview);
+  row.addEventListener('mouseleave',function(){hoverPreview.style.opacity='0';});
+  row.addEventListener('click',function(){applyProjectFilter(p.project);});
+
+  indexList.appendChild(row);
 });
 
+function positionPreview(e){
+  var x=e.clientX+24,y=e.clientY-60;
+  if(x+200>window.innerWidth) x=e.clientX-220;
+  if(y+150>window.innerHeight) y=window.innerHeight-160;
+  hoverPreview.style.left=x+'px';hoverPreview.style.top=y+'px';
+}
+
+// ── VIEW SWITCHING ──
 function switchView(name){
   document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active');});
   document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active');});
   document.getElementById('view-'+name).classList.add('active');
   document.querySelector('[data-view="'+name+'"]').classList.add('active');
+  hoverPreview.style.opacity='0';
 }
 document.querySelectorAll('.nav-tab').forEach(function(tab){
   tab.addEventListener('click',function(){switchView(tab.dataset.view);});
