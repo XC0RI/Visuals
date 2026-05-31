@@ -27,7 +27,7 @@ nav{
   -webkit-backdrop-filter:saturate(180%) blur(20px);
 }
 .nav-logo{font-size:17px;font-weight:700;letter-spacing:-.02em;color:#1d1d1f;}
-.nav-tabs{display:flex;background:#e0e0e5;border-radius:100px;padding:2px;gap:0;}
+.nav-tabs{display:flex;background:#e0e0e5;border-radius:100px;padding:2px;}
 .nav-tab{
   font-size:12px;font-weight:400;color:#6e6e73;cursor:pointer;
   background:transparent;border:none;font-family:inherit;
@@ -44,9 +44,8 @@ nav{
 .view.active{display:flex;}
 
 /* ── PROJECTS ── */
-#view-projects{align-items:center;justify-content:center;flex-direction:column;}
+#view-projects{align-items:center;justify-content:center;}
 
-/* filter badge */
 #filter-bar{
   position:absolute;top:16px;left:50%;transform:translateX(-50%);
   z-index:300;display:none;align-items:center;gap:8px;
@@ -67,7 +66,6 @@ nav{
 .img-wrap{position:relative;max-width:900px;width:100%;cursor:pointer;user-select:none;}
 .img-wrap img{display:block;width:100%;height:auto;max-height:calc(100vh - 132px);object-fit:contain;transition:opacity .28s;}
 .img-wrap.fading img{opacity:0;}
-
 .img-info-overlay{
   position:absolute;inset:0;background:rgba(255,255,255,0.94);
   display:flex;align-items:center;justify-content:center;
@@ -78,43 +76,44 @@ nav{
 .img-info-title{font-size:15px;font-weight:600;letter-spacing:-.02em;color:#1d1d1f;margin-bottom:6px;}
 .img-info-line{font-size:13px;color:#6e6e73;line-height:1.7;}
 
-/* arrows — bare chevrons, no circle */
 .arrow{
   position:fixed;top:50%;transform:translateY(-50%);
   background:none;border:none;cursor:pointer;
   color:#1d1d1f;opacity:0;padding:12px;
   transition:opacity .2s,transform .12s;z-index:200;
 }
-#view-projects:hover .arrow{opacity:.35;}
+#view-projects:hover .arrow{opacity:.3;}
 .arrow:hover{opacity:1 !important;}
 .arrow:active{transform:translateY(-50%) scale(0.88);}
 #arrow-prev{left:8px;}
 #arrow-next{right:8px;}
 
-/* ── INDEX — one row per project ── */
-#view-index{overflow-y:auto;display:none;flex-direction:column;padding:0;}
-#view-index.active{display:flex;}
-.index-list{width:100%;padding:20px 40px 60px;}
-.index-header-row{
-  display:grid;grid-template-columns:1fr 120px 220px;gap:24px;
-  padding:8px 0;border-bottom:0.5px solid rgba(0,0,0,0.12);
-}
-.index-header-row span{font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#aeaeb2;}
-.index-row{
-  display:grid;grid-template-columns:1fr 120px 220px;gap:24px;
-  padding:11px 0;border-bottom:0.5px solid rgba(0,0,0,0.07);
-  cursor:pointer;align-items:baseline;
-  transition:opacity .14s;
-}
-.index-row:hover{opacity:.45;}
-.ir-title{font-size:13px;font-weight:400;color:#1d1d1f;}
-.ir-year{font-size:12px;color:#6e6e73;}
-.ir-office{font-size:12px;color:#6e6e73;}
+/* ── INDEX — small thumbnails, lots of space, info below ── */
+#view-index{overflow-y:auto;display:none;padding:32px 48px 60px;}
+#view-index.active{display:block;}
 
-#hover-preview{
-  position:fixed;pointer-events:none;z-index:8000;width:200px;opacity:0;transition:opacity .15s;
+.thumb-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(110px,1fr));
+  gap:40px 32px;
 }
-#hover-preview img{display:block;width:100%;height:auto;box-shadow:0 4px 20px rgba(0,0,0,0.12);}
+.thumb-cell{cursor:pointer;}
+.thumb-cell:hover .thumb-img img{opacity:.55;}
+.thumb-img{
+  background:#f5f5f7;margin-bottom:9px;
+  overflow:hidden;
+}
+.thumb-img img{
+  display:block;width:100%;height:auto;
+  transition:opacity .18s;
+}
+.thumb-caption{
+  font-size:10.5px;font-weight:400;color:#1d1d1f;
+  line-height:1.45;
+}
+.thumb-caption-sub{
+  font-size:9.5px;color:#aeaeb2;margin-top:2px;line-height:1.4;
+}
 
 /* ── ABOUT ── */
 #view-about{overflow-y:auto;display:none;padding:48px 40px 80px;align-content:start;}
@@ -143,9 +142,8 @@ nav{
   .nav-tab{font-size:11px;padding:4px 12px;}
   .viewer{padding:20px 40px;}
   #arrow-prev{left:0;}#arrow-next{right:0;}
-  .index-list{padding:16px 16px 60px;}
-  .index-header-row,.index-row{grid-template-columns:1fr 80px;}
-  .index-header-row span:last-child,.ir-office{display:none;}
+  #view-index{padding:24px 20px 60px;}
+  .thumb-grid{grid-template-columns:repeat(3,1fr);gap:28px 16px;}
   .about-grid{grid-template-columns:1fr;}
   .about-label,.about-content{border-top:none;padding-top:0;}
   #view-about{padding:24px 20px 60px;}
@@ -190,16 +188,8 @@ nav{
 
 <!-- INDEX -->
 <div id="view-index" class="view">
-  <div class="index-list">
-    <div class="index-header-row">
-      <span>Project</span>
-      <span>Year</span>
-      <span>Office</span>
-    </div>
-    <div id="indexList"></div>
-  </div>
+  <div class="thumb-grid" id="thumbGrid"></div>
 </div>
-<div id="hover-preview"><img id="hoverImg" src="" alt=""></div>
 
 <!-- ABOUT -->
 <div id="view-about" class="view">
@@ -236,7 +226,7 @@ nav{
 <script>
 // ─────────────────────────────────────────────────────────────────
 // IMAGES — edit project / year / office directly here
-// office: null  →  line omitted
+// office: null  →  omitted
 // type: "Study" →  shown instead of office
 // ─────────────────────────────────────────────────────────────────
 var IMAGES=[
@@ -258,22 +248,6 @@ var IMAGES=[
   {src:"./images/16.jpeg",project:"Undisclosed Interior Study",year:"2025",office:null},
   {src:"./images/17.jpeg",project:"Undisclosed Interior Study",year:"2025",office:null}
 ];
-
-// ── derive unique projects (preserving first-appearance order) ──
-var PROJECTS=[];
-var seenP={};
-IMAGES.forEach(function(im){
-  if(!seenP[im.project]){
-    seenP[im.project]=true;
-    PROJECTS.push({
-      project:im.project,
-      year:im.year,
-      office:im.office,
-      type:im.type||null,
-      thumb:im.src  // first image of this project as hover thumb
-    });
-  }
-});
 
 function shuffle(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t;}return b;}
 
@@ -328,13 +302,6 @@ imgWrap.addEventListener('click',function(){
   infoOpen=!infoOpen;overlay.classList.toggle('show',infoOpen);
 });
 
-function clearFilter(){
-  activeFilter=null;pool=shuffle(IMAGES.slice());idx=0;
-  filterBar.classList.remove('show');infoOpen=false;overlay.classList.remove('show');
-  show(pool[0]);
-}
-document.getElementById('filter-clear').addEventListener('click',clearFilter);
-
 function applyProjectFilter(projectName){
   activeFilter=projectName;
   pool=IMAGES.filter(function(x){return x.project===projectName;});
@@ -346,45 +313,41 @@ function applyProjectFilter(projectName){
   switchView('projects');
 }
 
-// ── INDEX LIST — one row per unique project ──
-var indexList=document.getElementById('indexList');
-var hoverPreview=document.getElementById('hover-preview');
-var hoverImg=document.getElementById('hoverImg');
-
-PROJECTS.forEach(function(p){
-  var row=document.createElement('div');row.className='index-row';
-
-  var tDiv=document.createElement('div');tDiv.className='ir-title';tDiv.textContent=p.project;
-  var yDiv=document.createElement('div');yDiv.className='ir-year';yDiv.textContent=p.year;
-  var oDiv=document.createElement('div');oDiv.className='ir-office';
-  oDiv.textContent=p.office||(p.type||'—');
-
-  row.appendChild(tDiv);row.appendChild(yDiv);row.appendChild(oDiv);
-
-  row.addEventListener('mouseenter',function(e){
-    hoverImg.src=p.thumb;hoverPreview.style.opacity='1';positionPreview(e);
-  });
-  row.addEventListener('mousemove',positionPreview);
-  row.addEventListener('mouseleave',function(){hoverPreview.style.opacity='0';});
-  row.addEventListener('click',function(){applyProjectFilter(p.project);});
-
-  indexList.appendChild(row);
+document.getElementById('filter-clear').addEventListener('click',function(){
+  activeFilter=null;pool=shuffle(IMAGES.slice());idx=0;
+  filterBar.classList.remove('show');infoOpen=false;overlay.classList.remove('show');
+  show(pool[0]);
 });
 
-function positionPreview(e){
-  var x=e.clientX+24,y=e.clientY-60;
-  if(x+200>window.innerWidth) x=e.clientX-220;
-  if(y+150>window.innerHeight) y=window.innerHeight-160;
-  hoverPreview.style.left=x+'px';hoverPreview.style.top=y+'px';
-}
+/* ── THUMB GRID — all images, click sets project filter ── */
+var thumbGrid=document.getElementById('thumbGrid');
+IMAGES.forEach(function(im){
+  var cell=document.createElement('div');cell.className='thumb-cell';
 
-// ── VIEW SWITCHING ──
+  var imgBox=document.createElement('div');imgBox.className='thumb-img';
+  var img=document.createElement('img');
+  img.src=im.src;img.alt=im.project;img.loading='lazy';
+  imgBox.appendChild(img);
+
+  var cap=document.createElement('div');cap.className='thumb-caption';cap.textContent=im.project;
+  var sub=document.createElement('div');sub.className='thumb-caption-sub';
+  sub.textContent=im.year+(im.office?' — '+im.office:'');
+
+  cell.appendChild(imgBox);cell.appendChild(cap);cell.appendChild(sub);
+
+  /* click → filter by this image's project */
+  cell.addEventListener('click',function(){
+    applyProjectFilter(im.project);
+  });
+
+  thumbGrid.appendChild(cell);
+});
+
 function switchView(name){
   document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active');});
   document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active');});
   document.getElementById('view-'+name).classList.add('active');
   document.querySelector('[data-view="'+name+'"]').classList.add('active');
-  hoverPreview.style.opacity='0';
 }
 document.querySelectorAll('.nav-tab').forEach(function(tab){
   tab.addEventListener('click',function(){switchView(tab.dataset.view);});
