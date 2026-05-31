@@ -18,7 +18,6 @@ html,body{
   color:#1d1d1f;-webkit-font-smoothing:antialiased;
 }
 
-/* NAV */
 nav{
   position:fixed;top:0;left:0;right:0;z-index:9999;
   display:flex;justify-content:space-between;align-items:center;
@@ -27,7 +26,10 @@ nav{
   backdrop-filter:saturate(180%) blur(20px);
   -webkit-backdrop-filter:saturate(180%) blur(20px);
 }
-.nav-logo{font-size:17px;font-weight:700;letter-spacing:-.02em;color:#1d1d1f;cursor:default;user-select:none;}
+
+/* logo: inline SVG for motion blur effect */
+#logo-svg{display:block;height:24px;width:auto;overflow:visible;cursor:default;}
+
 .nav-tabs{display:flex;background:#e0e0e5;border-radius:100px;padding:2px;}
 .nav-tab{
   font-size:12px;font-weight:400;color:#6e6e73;cursor:pointer;
@@ -38,7 +40,6 @@ nav{
 .nav-tab:hover{color:#1d1d1f;}
 .nav-tab.active{background:#fff;color:#1d1d1f;font-weight:500;box-shadow:0 1px 4px rgba(0,0,0,0.15),0 0 0 0.5px rgba(0,0,0,0.04);}
 
-/* edit mode indicator */
 #edit-badge{
   display:none;position:fixed;bottom:20px;right:20px;z-index:9999;
   background:#1d1d1f;color:#fff;font-size:10px;font-weight:500;
@@ -48,7 +49,6 @@ nav{
 }
 #edit-badge.show{display:block;}
 
-/* login overlay */
 #login-overlay{
   display:none;position:fixed;inset:0;z-index:99999;
   background:rgba(242,242,242,0.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
@@ -65,8 +65,7 @@ nav{
 #login-submit{
   font-family:inherit;font-size:12px;font-weight:500;
   background:#1d1d1f;color:#fff;border:none;cursor:pointer;
-  border-radius:100px;padding:8px 24px;
-  transition:opacity .15s;
+  border-radius:100px;padding:8px 24px;transition:opacity .15s;
 }
 #login-submit:hover{opacity:.75;}
 #login-error{font-size:11px;color:#c00;display:none;}
@@ -74,7 +73,6 @@ nav{
 .view{display:none;position:fixed;top:52px;left:0;right:0;bottom:0;overflow:hidden;}
 .view.active{display:flex;}
 
-/* ── PROJECTS ── */
 #view-projects{align-items:center;justify-content:center;}
 #filter-bar{
   position:fixed;top:60px;left:50%;transform:translateX(-50%);
@@ -105,58 +103,32 @@ nav{
 #arrow-prev{left:8px;}
 #arrow-next{right:8px;}
 
-/* ── INDEX — horizontal image list ── */
 #view-index{overflow-y:auto;display:none;flex-direction:column;padding:0;}
 #view-index.active{display:flex;}
-
-.index-table{width:100%;padding:0 40px 60px;border-collapse:collapse;}
+.index-table{width:100%;padding:0 40px 60px;}
 .index-table-head{
-  display:grid;
-  grid-template-columns:80px 1fr 100px 180px;
-  gap:0 32px;
-  padding:10px 0;
-  border-bottom:0.5px solid rgba(0,0,0,0.15);
-  position:sticky;top:0;
-  background:rgba(242,242,242,0.95);
-  backdrop-filter:blur(8px);
-  z-index:10;
+  display:grid;grid-template-columns:80px 1fr 100px 180px;gap:0 32px;
+  padding:10px 0;border-bottom:0.5px solid rgba(0,0,0,0.15);
+  position:sticky;top:0;background:rgba(242,242,242,0.95);backdrop-filter:blur(8px);z-index:10;
 }
 .index-table-head span{font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#aeaeb2;}
-
 .index-row{
-  display:grid;
-  grid-template-columns:80px 1fr 100px 180px;
-  gap:0 32px;
-  padding:10px 0;
-  border-bottom:0.5px solid rgba(0,0,0,0.06);
-  cursor:pointer;align-items:center;
-  transition:opacity .14s;
+  display:grid;grid-template-columns:80px 1fr 100px 180px;gap:0 32px;
+  padding:10px 0;border-bottom:0.5px solid rgba(0,0,0,0.06);
+  cursor:pointer;align-items:center;transition:opacity .14s;
 }
 .index-row:hover{opacity:.45;}
-
-.index-thumb{
-  width:80px;height:52px;overflow:hidden;background:#f5f5f7;flex-shrink:0;
-}
+.index-thumb{width:80px;height:52px;overflow:hidden;background:#f5f5f7;flex-shrink:0;}
 .index-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
-
 .ir-title{font-size:12px;font-weight:400;color:#1d1d1f;line-height:1.4;}
 .ir-year{font-size:12px;color:#6e6e73;}
 .ir-office{font-size:12px;color:#6e6e73;}
-
-/* edit mode: editable fields */
 body.edit-mode .ir-title[contenteditable],
 body.edit-mode .ir-year[contenteditable],
-body.edit-mode .ir-office[contenteditable]{
-  outline:none;
-  border-bottom:1px dashed rgba(0,0,0,0.25);
-  cursor:text;
-  min-width:40px;
-  display:inline-block;
-}
+body.edit-mode .ir-office[contenteditable]{outline:none;border-bottom:1px dashed rgba(0,0,0,0.25);cursor:text;min-width:40px;display:inline-block;}
 body.edit-mode .index-row{cursor:default;}
 body.edit-mode .index-row:hover{opacity:1;}
 
-/* ── ABOUT ── */
 #view-about{overflow-y:auto;display:none;padding:48px 40px 80px;align-content:start;}
 #view-about.active{display:grid;}
 .about-grid{display:grid;grid-template-columns:200px 1fr;gap:0 48px;max-width:860px;width:100%;margin:0 auto;}
@@ -167,14 +139,12 @@ body.edit-mode .index-row:hover{opacity:1;}
 .about-content p+p{margin-top:14px;}
 .about-content a{color:#1d1d1f;text-decoration:none;border-bottom:0.5px solid #bbb;transition:border-color .15s;}
 .about-content a:hover{border-color:#1d1d1f;}
-.about-de{color:#6e6e73;margin-top:14px;}
 .about-legal{font-size:11px;color:#aeaeb2;line-height:1.7;}
 
 .seo-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;}
 
 @media(max-width:640px){
   nav{padding:0 16px;}
-  .nav-logo{font-size:14px;}
   .nav-tab{font-size:11px;padding:4px 12px;}
   .viewer{padding:20px 40px;}
   #arrow-prev{left:0;}#arrow-next{right:0;}
@@ -193,7 +163,21 @@ body.edit-mode .index-row:hover{opacity:1;}
 <body>
 
 <nav>
-  <span class="nav-logo" id="logoBtn">Gate Visual Studio</span>
+  <!-- Logo: SVG with misregister motion blur (Option C) -->
+  <svg id="logo-svg" id="logoBtn" viewBox="0 0 280 24" xmlns="http://www.w3.org/2000/svg" overflow="visible">
+    <defs>
+      <filter id="logo-blur" x="-30%" y="-50%" width="160%" height="200%">
+        <feGaussianBlur stdDeviation="7 0"/>
+      </filter>
+    </defs>
+    <!-- ghost layer far back -->
+    <text x="14" y="19" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif" font-size="17" font-weight="700" letter-spacing="-0.3" fill="rgba(29,29,31,0.13)" filter="url(#logo-blur)">Gate Visual Studio</text>
+    <!-- ghost layer mid -->
+    <text x="7" y="19" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif" font-size="17" font-weight="700" letter-spacing="-0.3" fill="rgba(29,29,31,0.22)">Gate Visual Studio</text>
+    <!-- sharp base -->
+    <text x="0" y="19" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif" font-size="17" font-weight="700" letter-spacing="-0.3" fill="#1d1d1f">Gate Visual Studio</text>
+  </svg>
+
   <div class="nav-tabs">
     <button class="nav-tab active" data-view="projects">Projects</button>
     <button class="nav-tab" data-view="index">Index</button>
@@ -201,17 +185,14 @@ body.edit-mode .index-row:hover{opacity:1;}
   </div>
 </nav>
 
-<!-- LOGIN OVERLAY -->
 <div id="login-overlay">
   <input type="password" id="login-input" placeholder="Password" autocomplete="current-password">
   <button id="login-submit">Enter</button>
   <span id="login-error">Incorrect password</span>
 </div>
 
-<!-- EDIT BADGE -->
-<div id="edit-badge">✎ Edit mode — click Save to finish</div>
+<div id="edit-badge">✎ Edit mode — click here to save</div>
 
-<!-- PROJECTS -->
 <div id="view-projects" class="view active">
   <div id="filter-bar">
     <span id="filter-label"></span>
@@ -236,26 +217,20 @@ body.edit-mode .index-row:hover{opacity:1;}
   </button>
 </div>
 
-<!-- INDEX -->
 <div id="view-index" class="view">
   <div class="index-table" id="indexTable">
     <div class="index-table-head">
-      <span></span>
-      <span>Project</span>
-      <span>Year</span>
-      <span>Office</span>
+      <span></span><span>Project</span><span>Year</span><span>Office</span>
     </div>
     <div id="indexRows"></div>
   </div>
 </div>
 
-<!-- ABOUT -->
 <div id="view-about" class="view">
   <div class="about-grid">
     <div class="about-label first">About</div>
     <div class="about-content first">
       <p>We are an architectural visualization practice operating at the intersection of rendering and image-making, web design, and design consulting. Informed by professional experience in Zürich, Munich, and Aachen, we develop the visual language of architecture and space.</p>
-      <p class="about-de">Wir sind ein Büro für architektonische Visualisierung an der Schnittstelle von Rendering und Image-Making, Webdesign und Design Consulting. Geprägt durch Berufserfahrung in Zürich, München und Aachen entwickeln wir die visuelle Sprache von Architektur und Raum.</p>
     </div>
     <div class="about-label">Services</div>
     <div class="about-content">
@@ -295,15 +270,8 @@ body.edit-mode .index-row:hover{opacity:1;}
 <script>
 document.getElementById('copy-year').textContent = new Date().getFullYear();
 
-// ─────────────────────────────────────────────────────────────────
-// EDIT PASSWORD — change this to whatever you want
-// ─────────────────────────────────────────────────────────────────
 var EDIT_PASSWORD = 'gate2025';
 
-// ─────────────────────────────────────────────────────────────────
-// IMAGES — fallback data (overridden by localStorage if saved)
-// Edit: project / year / office (null = omit, type:"Study" = show)
-// ─────────────────────────────────────────────────────────────────
 var IMAGES_DEFAULT=[
   {src:"./images/01.jpeg",project:"Competition, Wohnen auf der Quartiersinsel Bremen",year:"2025",office:"Studio Corso, München"},
   {src:"./images/02.jpeg",project:"Interior Studies, Housing Refurbishment Bodensee",year:"2025",office:"Bau Bau GmbH, Zürich"},
@@ -324,16 +292,12 @@ var IMAGES_DEFAULT=[
   {src:"./images/17.jpeg",project:"Undisclosed Interior Study",year:"2025",office:null}
 ];
 
-// load saved overrides from localStorage
 function loadImages(){
-  try{
-    var saved=localStorage.getItem('gvs_images');
-    if(saved) return JSON.parse(saved);
-  }catch(e){}
+  try{var saved=localStorage.getItem('gvs_images');if(saved)return JSON.parse(saved);}catch(e){}
   return IMAGES_DEFAULT.map(function(im){return Object.assign({},im);});
 }
 function saveImages(){
-  try{ localStorage.setItem('gvs_images',JSON.stringify(IMAGES)); }catch(e){}
+  try{localStorage.setItem('gvs_images',JSON.stringify(IMAGES));}catch(e){}
 }
 
 var IMAGES=loadImages();
@@ -341,20 +305,17 @@ var IMAGES=loadImages();
 function shuffle(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t;}return b;}
 function shuffleSpread(a){
   var b=shuffle(a);
-  var maxPasses=20;
-  for(var pass=0;pass<maxPasses;pass++){
+  for(var pass=0;pass<20;pass++){
     var fixed=true;
     for(var i=1;i<b.length;i++){
       if(b[i].project===b[i-1].project){
         fixed=false;
         for(var j=i+1;j<b.length;j++){
-          if(b[j].project!==b[i-1].project){
-            var t=b[i];b[i]=b[j];b[j]=t;break;
-          }
+          if(b[j].project!==b[i-1].project){var t=b[i];b[i]=b[j];b[j]=t;break;}
         }
       }
     }
-    if(fixed) break;
+    if(fixed)break;
   }
   return b;
 }
@@ -370,8 +331,8 @@ var filterLabel=document.getElementById('filter-label');
 
 function buildLines(item){
   var html=item.year;
-  if(item.office) html+='<br>'+item.office;
-  else if(item.type) html+='<br>'+item.type;
+  if(item.office)html+='<br>'+item.office;
+  else if(item.type)html+='<br>'+item.type;
   linesEl.innerHTML=html;
 }
 function show(item){
@@ -401,9 +362,8 @@ document.addEventListener('keydown',function(e){
     if(e.key==='Escape'&&infoOpen){infoOpen=false;overlay.classList.remove('show');}
   }
 });
-imgWrap.addEventListener('click',function(){
-  infoOpen=!infoOpen;overlay.classList.toggle('show',infoOpen);
-});
+imgWrap.addEventListener('click',function(){infoOpen=!infoOpen;overlay.classList.toggle('show',infoOpen);});
+
 function applyProjectFilter(projectName){
   activeFilter=projectName;
   pool=IMAGES.filter(function(x){return x.project===projectName;});
@@ -415,131 +375,79 @@ document.getElementById('filter-clear').addEventListener('click',function(){
   filterBar.classList.remove('show');infoOpen=false;overlay.classList.remove('show');show(pool[0]);
 });
 
-// ── INDEX TABLE ──
 var indexRows=document.getElementById('indexRows');
-
 function buildIndexRows(){
   indexRows.innerHTML='';
   var displayOrder=shuffleSpread(IMAGES.slice());
-  displayOrder.forEach(function(im,i){
+  displayOrder.forEach(function(im){
     var row=document.createElement('div');row.className='index-row';
     row.dataset.idx=IMAGES.indexOf(im);
-
-    // thumb
     var thumbDiv=document.createElement('div');thumbDiv.className='index-thumb';
     var tImg=document.createElement('img');tImg.src=im.src;tImg.alt='';tImg.loading='lazy';
     thumbDiv.appendChild(tImg);
-
-    // title
     var tDiv=document.createElement('div');tDiv.className='ir-title';tDiv.textContent=im.project;
-
-    // year
     var yDiv=document.createElement('div');yDiv.className='ir-year';yDiv.textContent=im.year;
-
-    // office
     var oDiv=document.createElement('div');oDiv.className='ir-office';
     oDiv.textContent=im.office||(im.type||'—');
-
     row.appendChild(thumbDiv);row.appendChild(tDiv);row.appendChild(yDiv);row.appendChild(oDiv);
-
-    // click behaviour depends on edit mode
     row.addEventListener('click',function(e){
-      if(document.body.classList.contains('edit-mode')) return;
+      if(document.body.classList.contains('edit-mode'))return;
       applyProjectFilter(im.project);
     });
-
     indexRows.appendChild(row);
   });
 }
 buildIndexRows();
 
-// ── LOGIN & EDIT MODE ──
 var editMode=false;
 var loginOverlay=document.getElementById('login-overlay');
 var editBadge=document.getElementById('edit-badge');
 var loginInput=document.getElementById('login-input');
 var loginError=document.getElementById('login-error');
 
-// triple-click logo to open login
 var logoClickCount=0,logoTimer=null;
-document.getElementById('logoBtn').addEventListener('click',function(){
+document.getElementById('logo-svg').addEventListener('click',function(){
   logoClickCount++;
   clearTimeout(logoTimer);
   logoTimer=setTimeout(function(){logoClickCount=0;},600);
-  if(logoClickCount>=3){
-    logoClickCount=0;
-    if(!editMode) openLogin();
-    else exitEditMode();
-  }
+  if(logoClickCount>=3){logoClickCount=0;if(!editMode)openLogin();else exitEditMode();}
 });
 
-function openLogin(){
-  loginOverlay.classList.add('show');
-  loginInput.value='';loginError.style.display='none';
-  setTimeout(function(){loginInput.focus();},100);
-}
+function openLogin(){loginOverlay.classList.add('show');loginInput.value='';loginError.style.display='none';setTimeout(function(){loginInput.focus();},100);}
 function closeLogin(){loginOverlay.classList.remove('show');}
-
 document.getElementById('login-submit').addEventListener('click',checkPassword);
 loginInput.addEventListener('keydown',function(e){if(e.key==='Enter')checkPassword();});
 loginOverlay.addEventListener('click',function(e){if(e.target===loginOverlay)closeLogin();});
-
 function checkPassword(){
-  if(loginInput.value===EDIT_PASSWORD){
-    closeLogin();enterEditMode();
-  } else {
-    loginError.style.display='block';loginInput.value='';loginInput.focus();
-  }
+  if(loginInput.value===EDIT_PASSWORD){closeLogin();enterEditMode();}
+  else{loginError.style.display='block';loginInput.value='';loginInput.focus();}
 }
-
 function enterEditMode(){
-  editMode=true;
-  document.body.classList.add('edit-mode');
-  editBadge.classList.add('show');
-  editBadge.textContent='✎ Edit mode — click here to save';
-  // make text fields editable
+  editMode=true;document.body.classList.add('edit-mode');editBadge.classList.add('show');
   indexRows.querySelectorAll('.ir-title,.ir-year,.ir-office').forEach(function(el){
-    el.contentEditable='true';
-    el.addEventListener('blur',collectEdits);
+    el.contentEditable='true';el.addEventListener('blur',collectEdits);
   });
-  indexRows.querySelectorAll('.index-row').forEach(function(row){
-    row.style.cursor='default';
-  });
+  indexRows.querySelectorAll('.index-row').forEach(function(row){row.style.cursor='default';});
 }
 function exitEditMode(){
-  editMode=false;
-  document.body.classList.remove('edit-mode');
-  editBadge.classList.remove('show');
-  indexRows.querySelectorAll('.ir-title,.ir-year,.ir-office').forEach(function(el){
-    el.contentEditable='false';
-  });
-  indexRows.querySelectorAll('.index-row').forEach(function(row){
-    row.style.cursor='';
-  });
-  saveImages();
-  // rebuild projects pool with updated data
-  pool=shuffleSpread(IMAGES.slice());idx=0;show(pool[0]);
+  editMode=false;document.body.classList.remove('edit-mode');editBadge.classList.remove('show');
+  indexRows.querySelectorAll('.ir-title,.ir-year,.ir-office').forEach(function(el){el.contentEditable='false';});
+  indexRows.querySelectorAll('.index-row').forEach(function(row){row.style.cursor='';});
+  saveImages();pool=shuffleSpread(IMAGES.slice());idx=0;show(pool[0]);
 }
 function collectEdits(){
   indexRows.querySelectorAll('.index-row').forEach(function(row){
-    var i=parseInt(row.dataset.idx);
-    if(isNaN(i)) return;
+    var i=parseInt(row.dataset.idx);if(isNaN(i))return;
     var t=row.querySelector('.ir-title');
     var y=row.querySelector('.ir-year');
     var o=row.querySelector('.ir-office');
-    if(t) IMAGES[i].project=t.textContent.trim();
-    if(y) IMAGES[i].year=y.textContent.trim();
-    if(o){
-      var ov=o.textContent.trim();
-      IMAGES[i].office=(ov==='—'||ov==='')?null:ov;
-    }
+    if(t)IMAGES[i].project=t.textContent.trim();
+    if(y)IMAGES[i].year=y.textContent.trim();
+    if(o){var ov=o.textContent.trim();IMAGES[i].office=(ov==='—'||ov==='')?null:ov;}
   });
 }
-editBadge.addEventListener('click',function(){
-  if(editMode) exitEditMode();
-});
+editBadge.addEventListener('click',function(){if(editMode)exitEditMode();});
 
-// ── VIEW SWITCHING ──
 function switchView(name){
   document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active');});
   document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active');});
