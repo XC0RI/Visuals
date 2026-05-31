@@ -143,41 +143,82 @@ body.edit-mode .index-row:hover{opacity:1;}
 
 .seo-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;}
 
-@media(max-width:640px){
-  nav{padding:0 16px;}
-  .nav-tab{font-size:11px;padding:4px 12px;}
-  .viewer{padding:20px 40px;}
-  #arrow-prev{left:0;}#arrow-next{right:0;}
+@media(max-width:768px){
+  /* nav */
+  nav{padding:0 16px;height:48px;}
+  #logo-svg{height:22px;}
+  .nav-tabs{padding:2px;}
+  .nav-tab{font-size:11px;padding:4px 10px;}
+
+  /* views offset */
+  .view{top:48px;}
+
+  /* projects */
+  .viewer{padding:20px 48px 60px;}
+  #arrow-prev{left:2px;}
+  #arrow-next{right:2px;}
+  .arrow{padding:8px;}
+  .img-wrap img{max-height:calc(100vh - 108px);}
+  #filter-bar{top:56px;font-size:11px;padding:5px 8px 5px 12px;}
+
+  /* info overlay */
+  .img-info-title{font-size:13px;}
+  .img-info-line{font-size:12px;}
+
+  /* index */
+  #view-index{top:48px;}
   .index-table{padding:0 16px 60px;}
-  .index-table-head{grid-template-columns:56px 1fr 64px;gap:0 16px;}
+  .index-table-head{
+    grid-template-columns:56px 1fr 64px;
+    gap:0 12px;
+  }
   .index-table-head span:last-child{display:none;}
-  .index-row{grid-template-columns:56px 1fr 64px;gap:0 16px;}
+  .index-row{
+    grid-template-columns:56px 1fr 64px;
+    gap:0 12px;
+    padding:8px 0;
+  }
   .ir-office{display:none;}
   .index-thumb{width:56px;height:38px;}
-  .about-grid{grid-template-columns:1fr;}
-  .about-label,.about-content{border-top:none;padding-top:0;}
-  #view-about{padding:24px 20px 60px;}
+  .ir-title{font-size:11px;}
+  .ir-year{font-size:11px;}
+
+  /* about */
+  #view-about{padding:24px 20px 60px;top:48px;}
+  .about-grid{grid-template-columns:1fr;gap:0;}
+  .about-label{
+    font-size:10px;padding:20px 0 4px;
+    border-top:0.5px solid rgba(0,0,0,0.1);
+  }
+  .about-label.first{border-top:none;padding-top:0;}
+  .about-content{padding:0 0 20px;border-top:none;font-size:12px;}
+  .about-content.first{padding-top:0;}
+
+  /* edit badge */
+  #edit-badge{bottom:12px;right:12px;font-size:9px;padding:5px 12px;}
+}
+
+@media(max-width:400px){
+  .nav-tab{font-size:10px;padding:3px 8px;}
+  #logo-svg{height:18px;}
+  .viewer{padding:16px 40px 50px;}
+  .index-table{padding:0 12px 50px;}
 }
 </style>
 </head>
 <body>
 
 <nav>
-  <!-- Logo: SVG comet tail to the right (Option D) -->
-  <svg id="logo-svg" viewBox="0 0 340 30" xmlns="http://www.w3.org/2000/svg" overflow="visible" style="display:block;height:30px;width:auto;">
+  <!-- Logo: Option A — sharp core + wide bilateral ghost trail -->
+  <svg id="logo-svg" viewBox="-40 0 380 30" xmlns="http://www.w3.org/2000/svg" overflow="visible" style="display:block;height:30px;width:auto;">
     <defs>
-      <filter id="logo-comet" x="0%" y="-50%" width="350%" height="200%">
-        <feGaussianBlur stdDeviation="20 0"/>
+      <filter id="logo-trail" x="-60%" y="-50%" width="220%" height="200%">
+        <feGaussianBlur stdDeviation="13 0"/>
       </filter>
-      <clipPath id="logo-clip">
-        <rect x="0" y="0" width="340" height="30"/>
-      </clipPath>
     </defs>
-    <!-- comet tail — blurred, clipped so it doesn't bleed left -->
-    <g clip-path="url(#logo-clip)">
-      <text x="0" y="23" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif" font-size="20" font-weight="700" letter-spacing="-0.4" fill="rgba(29,29,31,0.45)" filter="url(#logo-comet)">Gate Visual Studio</text>
-    </g>
-    <!-- sharp base -->
+    <!-- wide blurred ghost -->
+    <text x="0" y="23" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif" font-size="20" font-weight="700" letter-spacing="-0.4" fill="rgba(29,29,31,0.32)" filter="url(#logo-trail)">Gate Visual Studio</text>
+    <!-- sharp core on top -->
     <text x="0" y="23" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif" font-size="20" font-weight="700" letter-spacing="-0.4" fill="#1d1d1f">Gate Visual Studio</text>
   </svg>
 
