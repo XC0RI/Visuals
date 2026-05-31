@@ -99,10 +99,10 @@ body.view-projects .nav-tab.active{background:rgba(255,255,255,0.18);color:#fff;
 .img-wrap{position:relative;max-width:900px;width:100%;cursor:pointer;user-select:none;}
 .img-wrap img{display:block;width:100%;height:auto;max-height:calc(100vh - 132px);object-fit:contain;}
 .img-wrap{overflow:hidden;}
-@keyframes slideInRight{from{transform:translateX(60px);opacity:0;}to{transform:translateX(0);opacity:1;}}
-@keyframes slideInLeft{from{transform:translateX(-60px);opacity:0;}to{transform:translateX(0);opacity:1;}}
-.img-wrap.slide-in-right img{animation:slideInRight .22s cubic-bezier(.25,.46,.45,.94) both;}
-.img-wrap.slide-in-left img{animation:slideInLeft .22s cubic-bezier(.25,.46,.45,.94) both;}
+@keyframes slideInRight{from{transform:translateX(120px);opacity:0;}to{transform:translateX(0);opacity:1;}}
+@keyframes slideInLeft{from{transform:translateX(-120px);opacity:0;}to{transform:translateX(0);opacity:1;}}
+.img-wrap.slide-in-right img{animation:slideInRight .45s cubic-bezier(.25,.46,.45,.94) both;}
+.img-wrap.slide-in-left img{animation:slideInLeft .45s cubic-bezier(.25,.46,.45,.94) both;}
 
 .img-info-overlay{position:absolute;inset:0;background:rgba(17,17,17,0.92);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;}
 .img-info-overlay.show{opacity:1;pointer-events:auto;}
