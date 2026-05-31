@@ -75,7 +75,7 @@ nav{
 
 #view-projects{align-items:center;justify-content:center;}
 #filter-bar{
-  position:fixed;top:60px;left:50%;transform:translateX(-50%);
+  position:absolute;top:14px;left:50%;transform:translateX(-50%);
   z-index:300;display:none;align-items:center;gap:8px;
   background:rgba(242,242,242,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
   border:0.5px solid rgba(0,0,0,0.14);box-shadow:0 2px 8px rgba(0,0,0,0.08);
@@ -87,6 +87,7 @@ nav{
 #filter-clear:hover{background:#d1d1d6;color:#1d1d1f;}
 
 .viewer{width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:40px 80px 80px;}
+#view-projects:has(#filter-bar.show) .viewer{padding-top:80px;}
 .img-wrap{position:relative;max-width:900px;width:100%;cursor:pointer;user-select:none;}
 .img-wrap img{display:block;width:100%;height:auto;max-height:calc(100vh - 132px);object-fit:contain;transition:opacity .28s;}
 .img-wrap.fading img{opacity:0;}
@@ -145,13 +146,40 @@ body.edit-mode .index-row:hover{opacity:1;}
 
 @media(max-width:768px){
   /* nav */
-  nav{padding:0 16px;height:48px;}
-  #logo-svg{height:22px;}
-  .nav-tabs{padding:2px;}
-  .nav-tab{font-size:11px;padding:4px 10px;}
+  nav{
+    padding:0 20px;height:48px;
+    justify-content:center;
+  }
+  #logo-svg{height:22px;margin-left:0 !important;}
 
-  /* views offset */
-  .view{top:48px;}
+  /* tabs: fixed bottom bar on mobile */
+  .nav-tabs{
+    display:none;
+  }
+  #mobile-tabs{
+    display:flex;
+    position:fixed;bottom:0;left:0;right:0;z-index:9999;
+    background:rgba(242,242,242,0.95);
+    backdrop-filter:saturate(180%) blur(20px);
+    -webkit-backdrop-filter:saturate(180%) blur(20px);
+    border-top:0.5px solid rgba(0,0,0,0.1);
+    justify-content:center;
+    gap:0;
+    padding:8px 16px calc(8px + env(safe-area-inset-bottom));
+  }
+  #mobile-tabs .nav-tab{
+    font-size:11px;padding:6px 20px;border-radius:100px;
+    background:transparent;border:none;font-family:inherit;
+    color:#6e6e73;cursor:pointer;
+    transition:background .15s,color .15s;
+    white-space:nowrap;
+  }
+  #mobile-tabs .nav-tab.active{
+    background:rgba(0,0,0,0.08);color:#1d1d1f;font-weight:500;
+  }
+
+  /* views offset — leave room for bottom tabs */
+  .view{top:48px;bottom:60px;}
 
   /* projects */
   .viewer{padding:20px 48px 60px;}
@@ -159,7 +187,7 @@ body.edit-mode .index-row:hover{opacity:1;}
   #arrow-next{right:2px;}
   .arrow{padding:8px;}
   .img-wrap img{max-height:calc(100vh - 108px);}
-  #filter-bar{top:56px;font-size:11px;padding:5px 8px 5px 12px;}
+  #filter-bar{top:12px;font-size:11px;padding:5px 8px 5px 12px;}
 
   /* info overlay */
   .img-info-title{font-size:13px;}
@@ -210,7 +238,7 @@ body.edit-mode .index-row:hover{opacity:1;}
 
 <nav>
   <!-- Logo: Option A — sharp core + wide bilateral ghost trail -->
-  <svg id="logo-svg" viewBox="-40 0 380 30" xmlns="http://www.w3.org/2000/svg" overflow="visible" style="display:block;height:30px;width:auto;">
+  <svg id="logo-svg" viewBox="-40 0 380 30" xmlns="http://www.w3.org/2000/svg" overflow="visible" style="display:block;height:30px;width:auto;margin-left:-8px;">
     <defs>
       <filter id="logo-trail" x="-60%" y="-50%" width="220%" height="200%">
         <feGaussianBlur stdDeviation="13 0"/>
@@ -304,6 +332,13 @@ body.edit-mode .index-row:hover{opacity:1;}
       </p>
     </div>
   </div>
+</div>
+
+<!-- MOBILE BOTTOM TABS (shown only on mobile via CSS) -->
+<div id="mobile-tabs" style="display:none;">
+  <button class="nav-tab active" data-view="projects">Projects</button>
+  <button class="nav-tab" data-view="index">Index</button>
+  <button class="nav-tab" data-view="about">About</button>
 </div>
 
 <div class="seo-only" aria-hidden="true">
@@ -496,11 +531,19 @@ function switchView(name){
   document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active');});
   document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active');});
   document.getElementById('view-'+name).classList.add('active');
-  document.querySelector('[data-view="'+name+'"]').classList.add('active');
+  document.querySelectorAll('[data-view="'+name+'"]').forEach(function(t){t.classList.add('active');});
 }
 document.querySelectorAll('.nav-tab').forEach(function(tab){
   tab.addEventListener('click',function(){switchView(tab.dataset.view);});
 });
+
+// show mobile tabs on small screens
+(function(){
+  var mt=document.getElementById('mobile-tabs');
+  function checkMobile(){mt.style.display=window.innerWidth<=768?'flex':'none';}
+  checkMobile();
+  window.addEventListener('resize',checkMobile);
+})();
 
 show(pool[0]);
 </script>
