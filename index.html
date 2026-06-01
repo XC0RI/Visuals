@@ -13,7 +13,7 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{
-  background:#f2f2f2;height:100%;overflow:hidden;
+  background:#f2f2f2;height:100%;min-height:100%;overflow:hidden;
   font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif;
   color:#1d1d1f;-webkit-font-smoothing:antialiased;
 }
@@ -26,6 +26,9 @@ nav{
   transition:none;
 }
 body.view-projects nav{
+  background:#111;
+}
+body.view-projects{
   background:#111;
 }
 
@@ -110,8 +113,8 @@ body.view-projects .nav-tab.active{background:rgba(255,255,255,0.18);color:#fff;
 .img-info-title{font-size:15px;font-weight:600;letter-spacing:-.02em;color:#fff;margin-bottom:6px;}
 .img-info-line{font-size:13px;color:rgba(255,255,255,0.55);line-height:1.7;}
 
-.arrow{position:fixed;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#fff;opacity:0;padding:12px;transition:opacity .2s,transform .12s;z-index:200;}
-#view-projects:hover .arrow{opacity:.3;}
+.arrow{position:fixed;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#fff;opacity:.25;padding:12px;transition:opacity .2s,transform .12s;z-index:200;}
+#view-projects:hover .arrow{opacity:.6;}
 .arrow:hover{opacity:1 !important;}
 .arrow:active{transform:translateY(-50%) scale(0.88);}
 #arrow-prev{left:8px;}
@@ -310,10 +313,10 @@ body.view-projects #page-fade{background:#111;}
     </div>
   </div>
   <button class="arrow" id="arrow-prev" aria-label="Previous">
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <svg width="28" height="28" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </button>
   <button class="arrow" id="arrow-next" aria-label="Next">
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7 4L13 10L7 16" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <svg width="28" height="28" viewBox="0 0 20 20" fill="none"><path d="M7 4L13 10L7 16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </button>
 </div>
 
