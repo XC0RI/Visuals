@@ -13,7 +13,7 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{
-  background:#f5f5f5;height:100%;
+  background:#fff;height:100%;
   font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif;
   color:#1d1d1f;-webkit-font-smoothing:antialiased;
   font-weight:300;letter-spacing:.01em;
@@ -24,19 +24,11 @@ nav{
   position:fixed;top:0;left:0;right:0;z-index:9999;
   display:flex;justify-content:space-between;align-items:center;
   padding:0 40px;height:52px;
-  background:#f5f5f5;
-  transition:background .3s,color .3s;
+  background:#fff;
 }
-body.view-home nav{background:transparent;}
-
 #logo-svg{display:block;height:28px;width:auto;overflow:visible;cursor:pointer;flex-shrink:0;}
-
-/* default logo: dark */
 #logo-text-blur{fill:rgba(29,29,31,0.35);}
 #logo-text-sharp{fill:#1d1d1f;}
-/* on hero: white */
-body.view-home #logo-text-blur{fill:rgba(255,255,255,0.35);}
-body.view-home #logo-text-sharp{fill:#fff;}
 
 .nav-tabs{display:flex;gap:28px;align-items:flex-end;margin-bottom:10px;padding:0;}
 .nav-tab{
@@ -48,119 +40,61 @@ body.view-home #logo-text-sharp{fill:#fff;}
 .nav-tab:hover{color:#555;}
 .nav-tab.active{color:#333;font-weight:400;}
 .nav-tab:focus{outline:none;}
-/* on hero: white */
-body.view-home .nav-tab{color:rgba(255,255,255,0.6);}
-body.view-home .nav-tab:hover{color:#fff;}
-body.view-home .nav-tab.active{color:#fff;}
 
 /* ── VIEWS ── */
 .view{display:none;position:fixed;top:0;left:0;right:0;bottom:0;}
 .view.active{display:block;}
 
 /* ── HOME ── */
-#view-home{background:#000;}
-.hero-img{width:100%;height:100%;object-fit:cover;display:block;opacity:0.9;}
+#view-home{
+  display:flex;align-items:center;justify-content:center;
+  background:#fff;
+}
+.hero-img{
+  width:50%;max-height:90vh;
+  object-fit:contain;display:block;
+}
 
 /* grain */
 #grain{
-  position:fixed;inset:0;z-index:9990;pointer-events:none;opacity:0.04;
+  position:fixed;inset:0;z-index:9990;pointer-events:none;opacity:0.035;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size:180px 180px;mix-blend-mode:overlay;
 }
 
 /* ── PROJECTS LIST ── */
-#view-projects{
-  overflow-y:auto;
-  background:#f5f5f5;
-  padding-top:52px;
-}
-.project-list{
-  padding:0 40px 80px;
-  position:relative;
-}
+#view-projects{overflow-y:auto;background:#fff;padding-top:52px;}
+.project-list{padding:0 40px 80px 340px;position:relative;}
 .project-list-head{
-  display:grid;
-  grid-template-columns:1fr 140px 80px 200px;
-  gap:0 32px;
-  padding:12px 0 10px;
+  display:grid;grid-template-columns:1fr 140px 80px 200px;
+  gap:0 32px;padding:12px 0 10px;
   border-bottom:0.5px solid rgba(0,0,0,0.15);
 }
-.project-list-head span{
-  font-size:10px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:#aaa;
-}
+.project-list-head span{font-size:10px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:#aaa;}
 .project-row{
-  display:grid;
-  grid-template-columns:1fr 140px 80px 200px;
-  gap:0 32px;
-  padding:11px 0;
-  border-bottom:0.5px solid rgba(0,0,0,0.07);
-  cursor:pointer;
-  align-items:center;
-  transition:opacity .14s;
-  position:relative;
+  display:grid;grid-template-columns:1fr 140px 80px 200px;
+  gap:0 32px;padding:9px 0;border-bottom:none;
+  cursor:pointer;align-items:center;transition:opacity .14s;
 }
 .project-row:hover{opacity:.5;}
 .pr-title{font-size:13px;font-weight:300;color:#1d1d1f;}
-.pr-type{font-size:12px;color:#888;font-weight:300;}
-.pr-year{font-size:12px;color:#888;font-weight:300;}
-.pr-office{font-size:12px;color:#888;font-weight:300;}
-
-/* hover preview image */
-#hover-preview{
-  position:fixed;right:40px;top:50%;transform:translateY(-50%);
-  width:320px;pointer-events:none;z-index:8000;
-  opacity:0;transition:opacity .18s;
-}
-#hover-preview img{display:block;width:100%;height:auto;box-shadow:0 4px 24px rgba(0,0,0,0.12);}
+.pr-type,.pr-year,.pr-office{font-size:12px;color:#888;font-weight:300;}
 
 /* ── PROJECT DETAIL ── */
-#view-detail{
-  overflow-y:auto;
-  background:#f5f5f5;
-  padding-top:52px;
-}
-.detail-images{
-  width:100%;
-}
-.detail-img-wrap{
-  width:100%;
-  border-bottom:1px solid #f5f5f5;
-}
-.detail-img-wrap img{
-  display:block;width:100%;height:auto;
-}
+#view-detail{overflow-y:auto;background:#fff;padding-top:52px;}
+.detail-images{width:100%;display:flex;flex-direction:column;align-items:center;padding:20px 0 0;}
+.detail-img-wrap{width:50%;margin-bottom:2px;}
+.detail-img-wrap img{display:block;width:100%;height:auto;}
 .detail-info{
-  padding:40px 40px 80px;
-  display:grid;
-  grid-template-columns:200px 1fr;
-  gap:0 48px;
-  max-width:860px;
+  padding:32px 40px 80px;
+  display:grid;grid-template-columns:140px 1fr;gap:0 32px;
+  width:50%;margin:0 auto;
 }
-.detail-label{
-  font-size:10px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:#aaa;
-  padding:16px 0 0;border-top:0.5px solid rgba(0,0,0,0.1);align-self:start;
-}
-.detail-label.first{border-top:none;padding-top:0;}
-.detail-value{
-  font-size:13px;font-weight:300;color:#1d1d1f;
-  padding:16px 0;border-top:0.5px solid rgba(0,0,0,0.1);line-height:1.75;
-}
-.detail-value.first{border-top:none;padding-top:0;}
-.back-btn{
-  display:inline-flex;align-items:center;gap:8px;
-  font-size:11px;font-weight:300;letter-spacing:.06em;text-transform:uppercase;
-  color:#888;cursor:pointer;background:none;border:none;font-family:inherit;
-  padding:16px 40px;transition:color .15s;
-}
-.back-btn:hover{color:#333;}
-.back-btn:focus{outline:none;}
+.detail-label{font-size:10px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:#aaa;padding:6px 0 0;}
+.detail-value{font-size:13px;font-weight:300;color:#1d1d1f;padding:6px 0;line-height:1.6;}
 
-/* ── ABOUT ── */
-#view-about{
-  overflow-y:auto;
-  background:#f5f5f5;
-  padding-top:52px;
-}
+/* ── INFO ── */
+#view-about{overflow-y:auto;background:#fff;padding-top:52px;}
 .about-inner{padding:32px 40px 80px;max-width:860px;margin:0 auto;}
 .about-grid{display:grid;grid-template-columns:200px 1fr;gap:0 48px;}
 .about-label{font-size:10px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:#aaa;padding:24px 0 0;border-top:0.5px solid rgba(0,0,0,0.1);align-self:start;}
@@ -178,7 +112,7 @@ body.view-home .nav-tab.active{color:#fff;}
 /* ── LOGIN/EDIT ── */
 #edit-badge{display:none;position:fixed;bottom:20px;right:20px;z-index:9999;background:#1d1d1f;color:#fff;font-size:10px;font-weight:400;letter-spacing:.06em;text-transform:uppercase;border-radius:100px;padding:6px 14px;cursor:pointer;}
 #edit-badge.show{display:block;}
-#login-overlay{display:none;position:fixed;inset:0;z-index:99999;background:rgba(245,245,245,0.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);align-items:center;justify-content:center;flex-direction:column;gap:16px;}
+#login-overlay{display:none;position:fixed;inset:0;z-index:99999;background:rgba(255,255,255,0.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);align-items:center;justify-content:center;flex-direction:column;gap:16px;}
 #login-overlay.show{display:flex;}
 #login-overlay input{font-family:inherit;font-size:14px;font-weight:300;border:0.5px solid rgba(0,0,0,0.2);border-radius:8px;padding:10px 16px;outline:none;width:220px;text-align:center;background:#fff;color:#1d1d1f;}
 #login-overlay input:focus{border-color:rgba(0,0,0,0.4);}
@@ -186,16 +120,12 @@ body.view-home .nav-tab.active{color:#fff;}
 #login-submit:hover{opacity:.7;}
 #login-error{font-size:11px;color:#c00;display:none;}
 
-/* page fade */
-#page-fade{position:fixed;inset:0;z-index:99998;pointer-events:none;opacity:0;background:#f5f5f5;}
+#page-fade{position:fixed;inset:0;z-index:99998;pointer-events:none;opacity:0;background:#fff;}
 
 /* mobile */
-#mobile-tabs{display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#f5f5f5;border-top:0.5px solid rgba(0,0,0,0.08);justify-content:center;gap:0;padding:8px 16px calc(8px + env(safe-area-inset-bottom));}
-body.view-home #mobile-tabs{background:transparent;border-top-color:transparent;}
+#mobile-tabs{display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#fff;border-top:0.5px solid rgba(0,0,0,0.08);justify-content:center;gap:0;padding:8px 16px calc(8px + env(safe-area-inset-bottom));}
 #mobile-tabs .nav-tab{font-size:11px;padding:6px 16px;color:#aaa;}
 #mobile-tabs .nav-tab.active{color:#555;}
-body.view-home #mobile-tabs .nav-tab{color:rgba(255,255,255,0.5);}
-body.view-home #mobile-tabs .nav-tab.active{color:#fff;}
 
 .seo-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;}
 
@@ -203,17 +133,16 @@ body.view-home #mobile-tabs .nav-tab.active{color:#fff;}
   nav{padding:0 20px;height:48px;justify-content:center;}
   .nav-tabs{display:none !important;}
   #logo-svg{height:22px;margin:0 auto;display:block;}
-  .project-list{padding:0 16px 100px;}
+  .hero-img{width:90%;}
+  .project-list{padding:0 16px 100px 16px;}
   .project-list-head,.project-row{grid-template-columns:1fr 80px;}
   .project-list-head span:nth-child(2),.project-list-head span:nth-child(4),
   .pr-type,.pr-office{display:none;}
-  #hover-preview{display:none;}
-  .detail-info{grid-template-columns:1fr;padding:32px 20px 80px;}
+  .detail-images .detail-img-wrap,.detail-info{width:90%;}
   .about-inner{padding:24px 20px 80px;}
   .about-grid{grid-template-columns:1fr;}
   .about-label,.about-content{border-top:none;padding-top:0;}
   .about-label{padding-bottom:4px;}
-  .back-btn{padding:12px 20px;}
 }
 </style>
 </head>
@@ -231,7 +160,7 @@ body.view-home #mobile-tabs .nav-tab.active{color:#fff;}
   </svg>
   <div class="nav-tabs">
     <button class="nav-tab" data-view="projects">Projects</button>
-    <button class="nav-tab" data-view="about">About</button>
+    <button class="nav-tab" data-view="about">Info</button>
   </div>
 </nav>
 
@@ -239,31 +168,26 @@ body.view-home #mobile-tabs .nav-tab.active{color:#fff;}
 
 <!-- HOME -->
 <div id="view-home" class="view active">
-  <img class="hero-img" src="./images/27.jpeg" alt="GATE VISUAL STUDIO">
+  <img class="hero-img" src="./images/27.jpeg" alt="GATE VISUAL STUDIO" onerror="this.style.opacity='0'">
 </div>
 
-<!-- PROJECTS LIST -->
+<!-- PROJECTS -->
 <div id="view-projects" class="view">
-  <div class="project-list" id="projectList">
+  <div class="project-list">
     <div class="project-list-head">
-      <span>Project</span>
-      <span>Type</span>
-      <span>Year</span>
-      <span>Office</span>
+      <span>Project</span><span>Type</span><span>Year</span><span>Office</span>
     </div>
     <div id="projectRows"></div>
   </div>
 </div>
-<div id="hover-preview"><img id="hoverImg" src="" alt=""></div>
 
-<!-- PROJECT DETAIL -->
+<!-- DETAIL -->
 <div id="view-detail" class="view">
-  <button class="back-btn" id="backBtn">← Projects</button>
   <div class="detail-images" id="detailImages"></div>
   <div class="detail-info" id="detailInfo"></div>
 </div>
 
-<!-- ABOUT -->
+<!-- INFO -->
 <div id="view-about" class="view">
   <div class="about-inner">
     <div class="about-grid">
@@ -306,7 +230,7 @@ body.view-home #mobile-tabs .nav-tab.active{color:#fff;}
 <div id="edit-badge">✎ Edit mode — save</div>
 <div id="mobile-tabs">
   <button class="nav-tab" data-view="projects">Projects</button>
-  <button class="nav-tab" data-view="about">About</button>
+  <button class="nav-tab" data-view="about">Info</button>
 </div>
 <div id="page-fade"></div>
 <div class="seo-only"><h1>GATE VISUAL STUDIO</h1><p>Architectural visualization practice based in Zürich and Paris.</p></div>
@@ -315,8 +239,6 @@ body.view-home #mobile-tabs .nav-tab.active{color:#fff;}
 document.getElementById('copy-year').textContent = new Date().getFullYear();
 var EDIT_PASSWORD = 'gate2025';
 
-// ── PROJECTS DATA ──
-// Group by project name: each unique project = one row, images = detail view
 var IMAGES_DEFAULT=[
   {src:"./images/01.jpeg",project:"Wohnen auf der Quartiersinsel Bremen",year:"2025",office:"Studio Corso Architekten, München",type:"Competition"},
   {src:"./images/02.jpeg",project:"Interior Studies, Housing Refurbishment, Bodensee",year:"2025",office:"Office Bau Bau, Zürich",type:"Refurbishment"},
@@ -345,34 +267,26 @@ var IMAGES_DEFAULT=[
   {src:"./images/26.jpeg",project:"GO OFF THE WALL",year:"2026",office:"Vans, Highsnobiety, Zalando — Nostan Productions",type:"Renders"},
   {src:"./images/27.jpeg",project:"GO OFF THE WALL",year:"2026",office:"Vans, Highsnobiety, Zalando — Nostan Productions",type:"Renders"}
 ];
-
 function loadImages(){try{var s=localStorage.getItem('gvs_images');if(s)return JSON.parse(s);}catch(e){}return IMAGES_DEFAULT.map(function(im){return Object.assign({},im);});}
 function saveImages(){try{localStorage.setItem('gvs_images',JSON.stringify(IMAGES));}catch(e){}}
 var IMAGES=loadImages();
 
-// Derive unique projects
 function getProjects(){
   var seen={},list=[];
   IMAGES.forEach(function(im){
     if(!seen[im.project]){
       seen[im.project]=true;
-      list.push({
-        project:im.project,year:im.year,office:im.office,type:im.type,
-        thumb:im.src,
-        images:IMAGES.filter(function(x){return x.project===im.project;})
-      });
+      list.push({project:im.project,year:im.year,office:im.office,type:im.type,
+        images:IMAGES.filter(function(x){return x.project===im.project;})});
     }
   });
   return list;
 }
 
 // ── BUILD PROJECT LIST ──
-var projectRows=document.getElementById('projectRows');
-var hoverPreview=document.getElementById('hover-preview');
-var hoverImg=document.getElementById('hoverImg');
-
 function buildProjectList(){
-  projectRows.innerHTML='';
+  var rows=document.getElementById('projectRows');
+  rows.innerHTML='';
   getProjects().forEach(function(p){
     var row=document.createElement('div');row.className='project-row';
     var t=document.createElement('div');t.className='pr-title';t.textContent=p.project;
@@ -380,21 +294,9 @@ function buildProjectList(){
     var y=document.createElement('div');y.className='pr-year';y.textContent=p.year;
     var o=document.createElement('div');o.className='pr-office';o.textContent=p.office||'—';
     row.appendChild(t);row.appendChild(ty);row.appendChild(y);row.appendChild(o);
-    row.addEventListener('mouseenter',function(e){
-      hoverImg.src=p.thumb;hoverPreview.style.opacity='1';positionHover(e);
-    });
-    row.addEventListener('mousemove',positionHover);
-    row.addEventListener('mouseleave',function(){hoverPreview.style.opacity='0';});
     row.addEventListener('click',function(){openDetail(p);});
-    projectRows.appendChild(row);
+    rows.appendChild(row);
   });
-}
-
-function positionHover(e){
-  var y=e.clientY-160;
-  if(y+320>window.innerHeight)y=window.innerHeight-340;
-  if(y<60)y=60;
-  hoverPreview.style.top=y+'px';
 }
 
 // ── PROJECT DETAIL ──
@@ -408,59 +310,64 @@ function openDetail(p){
     wrap.appendChild(img);di.appendChild(wrap);
   });
   dinfo.innerHTML='';
-  var fields=[
-    {label:'Project',value:p.project},
-    {label:'Year',value:p.year},
-    {label:'Type',value:p.type||'—'},
-    {label:'Office',value:p.office||'—'}
-  ];
-  fields.forEach(function(f,i){
-    var lbl=document.createElement('div');lbl.className='detail-label'+(i===0?' first':'');lbl.textContent=f.label;
-    var val=document.createElement('div');val.className='detail-value'+(i===0?' first':'');val.textContent=f.value;
+  [{label:'Project',value:p.project},{label:'Year',value:p.year},
+   {label:'Type',value:p.type||'—'},{label:'Office',value:p.office||'—'}
+  ].forEach(function(f){
+    var lbl=document.createElement('div');lbl.className='detail-label';lbl.textContent=f.label;
+    var val=document.createElement('div');val.className='detail-value';val.textContent=f.value;
     dinfo.appendChild(lbl);dinfo.appendChild(val);
   });
   document.getElementById('view-detail').scrollTop=0;
-  switchView('detail',false);
+  navigateTo('detail');
 }
 
-document.getElementById('backBtn').addEventListener('click',function(){
-  switchView('projects',false);
-});
+// ── HISTORY-BASED NAVIGATION ──
+var currentView='home';
 
-// ── VIEW SWITCHING ──
-function switchView(name,fade){
-  if(fade===undefined)fade=true;
-  var f=document.getElementById('page-fade');
-  function doSwitch(){
+function navigateTo(name,replace){
+  if(replace){
+    history.replaceState({view:name},'',location.pathname+(name==='home'?'':'#'+name));
+  } else {
+    history.pushState({view:name},'',location.pathname+(name==='home'?'':'#'+name));
+  }
+  showView(name);
+}
+
+function showView(name){
+  var fade=document.getElementById('page-fade');
+  fade.style.transition='none';fade.style.background='#fff';fade.style.opacity='1';
+  requestAnimationFrame(function(){requestAnimationFrame(function(){
     document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active');});
     document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active');});
-    document.getElementById('view-'+name).classList.add('active');
+    var el=document.getElementById('view-'+name);
+    if(el)el.classList.add('active');
     document.querySelectorAll('[data-view="'+name+'"]').forEach(function(t){t.classList.add('active');});
     document.body.className=document.body.className.replace(/\bview-\w+/g,'').trim();
     document.body.classList.add('view-'+name);
-    hoverPreview.style.opacity='0';
-  }
-  if(fade){
-    f.style.transition='none';f.style.background='#f5f5f5';f.style.opacity='1';
-    requestAnimationFrame(function(){requestAnimationFrame(function(){
-      doSwitch();
-      requestAnimationFrame(function(){f.style.transition='opacity .3s ease';f.style.opacity='0';});
-    });});
-  } else {
-    doSwitch();
-  }
+    currentView=name;
+    requestAnimationFrame(function(){
+      fade.style.transition='opacity .3s ease';fade.style.opacity='0';
+    });
+  });});
 }
 
-document.querySelectorAll('.nav-tab').forEach(function(tab){
-  tab.addEventListener('click',function(){switchView(tab.dataset.view);});
+// browser back/forward
+window.addEventListener('popstate',function(e){
+  var name=(e.state&&e.state.view)?e.state.view:'home';
+  showView(name);
 });
 
-// logo = go home
+// tabs
+document.querySelectorAll('.nav-tab').forEach(function(tab){
+  tab.addEventListener('click',function(){navigateTo(tab.dataset.view);});
+});
+
+// logo = home
 var logoClicks=0,logoTimer=null;
 document.getElementById('logo-svg').addEventListener('click',function(){
   logoClicks++;clearTimeout(logoTimer);
   logoTimer=setTimeout(function(){
-    if(logoClicks===1)switchView('home');
+    if(logoClicks===1)navigateTo('home');
     logoClicks=0;
   },300);
   if(logoClicks>=3){clearTimeout(logoTimer);logoClicks=0;if(!editMode)openLogin();else exitEditMode();}
@@ -481,14 +388,21 @@ function enterEdit(){editMode=true;document.getElementById('edit-badge').classLi
 function exitEditMode(){editMode=false;document.getElementById('edit-badge').classList.remove('show');saveImages();}
 document.getElementById('edit-badge').addEventListener('click',function(){if(editMode)exitEditMode();});
 
-// ── MOBILE TABS ──
+// mobile tabs
 (function(){
   var mt=document.getElementById('mobile-tabs');
   function check(){mt.style.display=window.innerWidth<=768?'flex':'none';}
   check();window.addEventListener('resize',check);
 })();
 
+// ── INIT ──
 buildProjectList();
+// set initial history state
+var initView='home';
+var hash=location.hash.replace('#','');
+if(hash&&document.getElementById('view-'+hash))initView=hash;
+history.replaceState({view:initView},'',location.pathname+(initView==='home'?'':'#'+initView));
+showView(initView);
 </script>
 </body>
 </html>
