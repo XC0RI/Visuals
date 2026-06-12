@@ -13,7 +13,7 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{
-  background:#f5f5f5;height:100%;
+  background:#fff;height:100%;
   font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif;
   color:#1d1d1f;-webkit-font-smoothing:antialiased;
   font-weight:300;letter-spacing:.01em;
@@ -24,7 +24,7 @@ nav{
   position:fixed;top:0;left:0;right:0;z-index:9999;
   display:flex;justify-content:space-between;align-items:center;
   padding:0 40px;height:52px;
-  background:#f5f5f5;
+  background:#fff;
   transition:background .3s,color .3s;
 }
 body.view-home nav{background:transparent;}
@@ -71,11 +71,11 @@ body.view-home .nav-tab.active{color:#fff;}
 /* ── PROJECTS LIST ── */
 #view-projects{
   overflow-y:auto;
-  background:#f5f5f5;
+  background:#fff;
   padding-top:52px;
 }
 .project-list{
-  padding:0 40px 80px;
+  padding:0 40px 80px 340px;
   position:relative;
 }
 .project-list-head{
@@ -92,8 +92,8 @@ body.view-home .nav-tab.active{color:#fff;}
   display:grid;
   grid-template-columns:1fr 140px 80px 200px;
   gap:0 32px;
-  padding:11px 0;
-  border-bottom:0.5px solid rgba(0,0,0,0.07);
+  padding:9px 0;
+  border-bottom:none;
   cursor:pointer;
   align-items:center;
   transition:opacity .14s;
@@ -107,16 +107,16 @@ body.view-home .nav-tab.active{color:#fff;}
 
 /* hover preview image */
 #hover-preview{
-  position:fixed;right:40px;top:50%;transform:translateY(-50%);
-  width:320px;pointer-events:none;z-index:8000;
+  position:fixed;left:40px;top:50%;transform:translateY(-50%);
+  width:260px;pointer-events:none;z-index:8000;
   opacity:0;transition:opacity .18s;
 }
-#hover-preview img{display:block;width:100%;height:auto;box-shadow:0 4px 24px rgba(0,0,0,0.12);}
+#hover-preview img{display:block;width:100%;height:auto;}
 
 /* ── PROJECT DETAIL ── */
 #view-detail{
   overflow-y:auto;
-  background:#f5f5f5;
+  background:#fff;
   padding-top:52px;
 }
 .detail-images{
@@ -124,7 +124,7 @@ body.view-home .nav-tab.active{color:#fff;}
 }
 .detail-img-wrap{
   width:100%;
-  border-bottom:1px solid #f5f5f5;
+  border-bottom:1px solid #fff;
 }
 .detail-img-wrap img{
   display:block;width:100%;height:auto;
@@ -134,7 +134,8 @@ body.view-home .nav-tab.active{color:#fff;}
   display:grid;
   grid-template-columns:200px 1fr;
   gap:0 48px;
-  max-width:860px;
+  width:50%;
+  margin:0 auto;
 }
 .detail-label{
   font-size:10px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:#aaa;
@@ -158,7 +159,7 @@ body.view-home .nav-tab.active{color:#fff;}
 /* ── ABOUT ── */
 #view-about{
   overflow-y:auto;
-  background:#f5f5f5;
+  background:#fff;
   padding-top:52px;
 }
 .about-inner{padding:32px 40px 80px;max-width:860px;margin:0 auto;}
@@ -187,10 +188,10 @@ body.view-home .nav-tab.active{color:#fff;}
 #login-error{font-size:11px;color:#c00;display:none;}
 
 /* page fade */
-#page-fade{position:fixed;inset:0;z-index:99998;pointer-events:none;opacity:0;background:#f5f5f5;}
+#page-fade{position:fixed;inset:0;z-index:99998;pointer-events:none;opacity:0;background:#fff;}
 
 /* mobile */
-#mobile-tabs{display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#f5f5f5;border-top:0.5px solid rgba(0,0,0,0.08);justify-content:center;gap:0;padding:8px 16px calc(8px + env(safe-area-inset-bottom));}
+#mobile-tabs{display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#fff;border-top:0.5px solid rgba(0,0,0,0.08);justify-content:center;gap:0;padding:8px 16px calc(8px + env(safe-area-inset-bottom));}
 body.view-home #mobile-tabs{background:transparent;border-top-color:transparent;}
 #mobile-tabs .nav-tab{font-size:11px;padding:6px 16px;color:#aaa;}
 #mobile-tabs .nav-tab.active{color:#555;}
@@ -441,7 +442,7 @@ function switchView(name,fade){
     hoverPreview.style.opacity='0';
   }
   if(fade){
-    f.style.transition='none';f.style.background='#f5f5f5';f.style.opacity='1';
+    f.style.transition='none';f.style.background='#fff';f.style.opacity='1';
     requestAnimationFrame(function(){requestAnimationFrame(function(){
       doSwitch();
       requestAnimationFrame(function(){f.style.transition='opacity .3s ease';f.style.opacity='0';});
