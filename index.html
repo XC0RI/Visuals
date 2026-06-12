@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Gate Visual Studio – Architectural Visualization | Zürich & Paris</title>
-<meta name="description" content="Gate Visual Studio is an architectural visualization practice based in Zürich and Paris, working across rendering, image-making, web design, and design consulting.">
-<meta property="og:title" content="Gate Visual Studio – Architectural Visualization">
+<title>GATE VISUAL STUDIO – Architectural Visualization | Zürich & Paris</title>
+<meta name="description" content="Gate Visual Studio is an architectural visualization practice based in Zürich and Paris.">
+<meta property="og:title" content="GATE VISUAL STUDIO">
 <meta property="og:url" content="https://gatevisuals.xyz">
 <meta property="og:type" content="website">
 <meta name="robots" content="index, follow">
@@ -13,7 +13,7 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{
-  background:#f5f5f5;height:100%;overflow:hidden;
+  background:#f5f5f5;height:100%;
   font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif;
   color:#1d1d1f;-webkit-font-smoothing:antialiased;
   font-weight:300;letter-spacing:.01em;
@@ -25,175 +25,209 @@ nav{
   display:flex;justify-content:space-between;align-items:center;
   padding:0 40px;height:52px;
   background:#f5f5f5;
-  transition:background .25s;
+  transition:background .3s,color .3s;
 }
 body.view-home nav{background:transparent;}
 
-#logo-svg{display:block;height:30px;width:auto;overflow:visible;cursor:default;}
+#logo-svg{display:block;height:28px;width:auto;overflow:visible;cursor:pointer;flex-shrink:0;}
 
-.nav-tabs{display:flex;gap:28px;align-self:flex-end;margin-bottom:10px;background:none;padding:0;}
+/* default logo: dark */
+#logo-text-blur{fill:rgba(29,29,31,0.35);}
+#logo-text-sharp{fill:#1d1d1f;}
+/* on hero: white */
+body.view-home #logo-text-blur{fill:rgba(255,255,255,0.35);}
+body.view-home #logo-text-sharp{fill:#fff;}
+
+.nav-tabs{display:flex;gap:28px;align-items:flex-end;margin-bottom:10px;padding:0;}
 .nav-tab{
   font-size:12px;font-weight:300;color:#888;cursor:pointer;
   background:transparent;border:none;font-family:inherit;
-  padding:0;letter-spacing:.04em;
+  padding:0;letter-spacing:.06em;text-transform:uppercase;
   transition:color .15s;white-space:nowrap;
 }
 .nav-tab:hover{color:#555;}
-.nav-tab.active{color:#555;font-weight:400;}
+.nav-tab.active{color:#333;font-weight:400;}
 .nav-tab:focus{outline:none;}
-
-/* on fullscreen hero — tabs white */
-body.view-home .nav-tab{color:rgba(0,0,0,0.5);}
-body.view-home .nav-tab:hover{color:#000;}
-body.view-home .nav-tab.active{color:#000;font-weight:400;}
-body.view-home #logo-svg text{fill:#1d1d1f !important;}
-body.view-home #logo-svg text:first-of-type{fill:rgba(29,29,31,0.35) !important;}
+/* on hero: white */
+body.view-home .nav-tab{color:rgba(255,255,255,0.6);}
+body.view-home .nav-tab:hover{color:#fff;}
+body.view-home .nav-tab.active{color:#fff;}
 
 /* ── VIEWS ── */
-.view{display:none;position:fixed;top:0;left:0;right:0;bottom:0;overflow:hidden;}
-.view.active{display:flex;}
+.view{display:none;position:fixed;top:0;left:0;right:0;bottom:0;}
+.view.active{display:block;}
 
-/* ── PROJECTS: fullscreen hero ── */
-#view-home{
-  align-items:stretch;justify-content:stretch;
-  background:#000;
-}
-.hero-img{
-  width:100%;height:100%;
-  object-fit:cover;
-  display:block;
-  opacity:0.92;
-}
+/* ── HOME ── */
+#view-home{background:#000;}
+.hero-img{width:100%;height:100%;object-fit:cover;display:block;opacity:0.9;}
 
-/* grain overlay */
+/* grain */
 #grain{
-  position:fixed;inset:0;z-index:9998;
-  pointer-events:none;
-  opacity:0.045;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  background-repeat:repeat;
-  background-size:200px 200px;
-  mix-blend-mode:overlay;
+  position:fixed;inset:0;z-index:9990;pointer-events:none;opacity:0.04;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:180px 180px;mix-blend-mode:overlay;
 }
 
-/* ── INDEX: masonry image grid (juliawerlen style) ── */
+/* ── PROJECTS LIST ── */
 #view-projects{
   overflow-y:auto;
-  display:none;
-  background:#111;
-  flex-direction:column;
+  background:#f5f5f5;
   padding-top:52px;
 }
-#view-projects.active{display:flex;}
-
-.masonry-grid{
-  columns:5;
-  column-gap:0;
-  width:100%;
-  padding:0;
-}
-.masonry-cell{
-  break-inside:avoid;
-  cursor:pointer;
+.project-list{
+  padding:0 40px 80px;
   position:relative;
-  overflow:hidden;
-  display:block;
 }
-.masonry-cell img{
+.project-list-head{
+  display:grid;
+  grid-template-columns:1fr 140px 80px 200px;
+  gap:0 32px;
+  padding:12px 0 10px;
+  border-bottom:0.5px solid rgba(0,0,0,0.15);
+}
+.project-list-head span{
+  font-size:10px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:#aaa;
+}
+.project-row{
+  display:grid;
+  grid-template-columns:1fr 140px 80px 200px;
+  gap:0 32px;
+  padding:11px 0;
+  border-bottom:0.5px solid rgba(0,0,0,0.07);
+  cursor:pointer;
+  align-items:center;
+  transition:opacity .14s;
+  position:relative;
+}
+.project-row:hover{opacity:.5;}
+.pr-title{font-size:13px;font-weight:300;color:#1d1d1f;}
+.pr-type{font-size:12px;color:#888;font-weight:300;}
+.pr-year{font-size:12px;color:#888;font-weight:300;}
+.pr-office{font-size:12px;color:#888;font-weight:300;}
+
+/* hover preview image */
+#hover-preview{
+  position:fixed;right:40px;top:50%;transform:translateY(-50%);
+  width:320px;pointer-events:none;z-index:8000;
+  opacity:0;transition:opacity .18s;
+}
+#hover-preview img{display:block;width:100%;height:auto;box-shadow:0 4px 24px rgba(0,0,0,0.12);}
+
+/* ── PROJECT DETAIL ── */
+#view-detail{
+  overflow-y:auto;
+  background:#f5f5f5;
+  padding-top:52px;
+}
+.detail-images{
+  width:100%;
+}
+.detail-img-wrap{
+  width:100%;
+  border-bottom:1px solid #f5f5f5;
+}
+.detail-img-wrap img{
   display:block;width:100%;height:auto;
-  transition:opacity .2s;
 }
-.masonry-cell:hover img{opacity:.75;}
-.masonry-meta{
-  padding:10px 12px 18px;
+.detail-info{
+  padding:40px 40px 80px;
+  display:grid;
+  grid-template-columns:200px 1fr;
+  gap:0 48px;
+  max-width:860px;
 }
-.masonry-title{
-  font-size:11px;font-weight:300;color:#ccc;
-  line-height:1.5;
+.detail-label{
+  font-size:10px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:#aaa;
+  padding:16px 0 0;border-top:0.5px solid rgba(0,0,0,0.1);align-self:start;
 }
-.masonry-sub{
-  font-size:10px;color:#666;margin-top:2px;line-height:1.4;
+.detail-label.first{border-top:none;padding-top:0;}
+.detail-value{
+  font-size:13px;font-weight:300;color:#1d1d1f;
+  padding:16px 0;border-top:0.5px solid rgba(0,0,0,0.1);line-height:1.75;
 }
+.detail-value.first{border-top:none;padding-top:0;}
+.back-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:11px;font-weight:300;letter-spacing:.06em;text-transform:uppercase;
+  color:#888;cursor:pointer;background:none;border:none;font-family:inherit;
+  padding:16px 40px;transition:color .15s;
+}
+.back-btn:hover{color:#333;}
+.back-btn:focus{outline:none;}
 
 /* ── ABOUT ── */
 #view-about{
-  overflow-y:auto;display:none;
-  padding:48px 40px 80px;align-content:start;
+  overflow-y:auto;
   background:#f5f5f5;
+  padding-top:52px;
 }
-#view-about.active{display:grid;}
-.about-grid{display:grid;grid-template-columns:200px 1fr;gap:0 48px;max-width:860px;width:100%;margin:0 auto;}
-.about-label{font-size:11px;font-weight:400;letter-spacing:.06em;text-transform:uppercase;color:#aeaeb2;padding:24px 0 0;border-top:0.5px solid rgba(0,0,0,0.1);align-self:start;}
+.about-inner{padding:32px 40px 80px;max-width:860px;margin:0 auto;}
+.about-grid{display:grid;grid-template-columns:200px 1fr;gap:0 48px;}
+.about-label{font-size:10px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:#aaa;padding:24px 0 0;border-top:0.5px solid rgba(0,0,0,0.1);align-self:start;}
 .about-label.first{border-top:none;padding-top:0;}
 .about-content{font-size:13px;font-weight:300;line-height:1.75;color:#1d1d1f;padding:24px 0;border-top:0.5px solid rgba(0,0,0,0.1);}
 .about-content.first{border-top:none;padding-top:0;}
-.about-content p+p{margin-top:14px;}
-.about-content a{color:#1d1d1f;text-decoration:none;border-bottom:none;transition:color .15s;}
+.about-content p+p{margin-top:12px;}
+.about-content a{color:#1d1d1f;text-decoration:none;transition:color .15s;}
 .about-content a:hover{color:#aaa;}
-.about-legal{font-size:11px;color:#aeaeb2;line-height:1.7;}
+.about-legal{font-size:11px;color:#aaa;line-height:1.7;}
 .contact-links{display:flex;flex-direction:column;gap:0;}
-.contact-btn{display:inline-block;width:fit-content;font-size:13px;font-weight:300;color:#1d1d1f;text-decoration:none !important;border-bottom:none !important;line-height:1.75;transition:color .15s;}
-.contact-btn:hover{color:#aaa;text-decoration:none !important;}
+.contact-btn{display:inline-block;font-size:13px;font-weight:300;color:#1d1d1f;text-decoration:none;line-height:1.75;transition:color .15s;}
+.contact-btn:hover{color:#aaa;}
 
-/* ── LOGIN / EDIT ── */
-#edit-badge{display:none;position:fixed;bottom:20px;right:20px;z-index:9999;background:#1d1d1f;color:#fff;font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;border-radius:100px;padding:6px 14px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.15);}
+/* ── LOGIN/EDIT ── */
+#edit-badge{display:none;position:fixed;bottom:20px;right:20px;z-index:9999;background:#1d1d1f;color:#fff;font-size:10px;font-weight:400;letter-spacing:.06em;text-transform:uppercase;border-radius:100px;padding:6px 14px;cursor:pointer;}
 #edit-badge.show{display:block;}
-#login-overlay{display:none;position:fixed;inset:0;z-index:99999;background:rgba(235,235,235,0.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);align-items:center;justify-content:center;flex-direction:column;gap:16px;}
+#login-overlay{display:none;position:fixed;inset:0;z-index:99999;background:rgba(245,245,245,0.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);align-items:center;justify-content:center;flex-direction:column;gap:16px;}
 #login-overlay.show{display:flex;}
-#login-overlay input{font-family:inherit;font-size:14px;font-weight:400;border:0.5px solid rgba(0,0,0,0.2);border-radius:8px;padding:10px 16px;outline:none;width:220px;text-align:center;background:#fff;color:#1d1d1f;}
+#login-overlay input{font-family:inherit;font-size:14px;font-weight:300;border:0.5px solid rgba(0,0,0,0.2);border-radius:8px;padding:10px 16px;outline:none;width:220px;text-align:center;background:#fff;color:#1d1d1f;}
 #login-overlay input:focus{border-color:rgba(0,0,0,0.4);}
-#login-submit{font-family:inherit;font-size:12px;font-weight:500;background:#1d1d1f;color:#fff;border:none;cursor:pointer;border-radius:100px;padding:8px 24px;transition:opacity .15s;}
-#login-submit:hover{opacity:.75;}
+#login-submit{font-family:inherit;font-size:12px;font-weight:400;background:#1d1d1f;color:#fff;border:none;cursor:pointer;border-radius:100px;padding:8px 24px;transition:opacity .15s;letter-spacing:.04em;}
+#login-submit:hover{opacity:.7;}
 #login-error{font-size:11px;color:#c00;display:none;}
-
-/* edit mode */
-body.edit-mode .masonry-title[contenteditable],
-body.edit-mode .masonry-sub[contenteditable]{outline:none;border-bottom:1px dashed rgba(255,255,255,0.3);cursor:text;min-width:40px;display:inline-block;}
-body.edit-mode .masonry-cell{cursor:default;}
-body.edit-mode .masonry-cell:hover img{opacity:1;}
 
 /* page fade */
 #page-fade{position:fixed;inset:0;z-index:99998;pointer-events:none;opacity:0;background:#f5f5f5;}
 
-.seo-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;}
-
 /* mobile */
-#mobile-tabs{display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#f5f5f5;border-top:0.5px solid rgba(0,0,0,0.1);justify-content:center;gap:0;padding:8px 16px calc(8px + env(safe-area-inset-bottom));transition:background .25s;}
-body.view-home #mobile-tabs{background:transparent;}
-#mobile-tabs .nav-tab{font-size:11px;padding:6px 16px;background:transparent;border:none;font-family:inherit;color:#aaa;cursor:pointer;transition:color .15s;white-space:nowrap;font-weight:300;}
-#mobile-tabs .nav-tab.active{color:#555;font-weight:400;}
-body.view-home #mobile-tabs .nav-tab{color:rgba(0,0,0,0.45);}
-body.view-home #mobile-tabs .nav-tab.active{color:#000;}
+#mobile-tabs{display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#f5f5f5;border-top:0.5px solid rgba(0,0,0,0.08);justify-content:center;gap:0;padding:8px 16px calc(8px + env(safe-area-inset-bottom));}
+body.view-home #mobile-tabs{background:transparent;border-top-color:transparent;}
+#mobile-tabs .nav-tab{font-size:11px;padding:6px 16px;color:#aaa;}
+#mobile-tabs .nav-tab.active{color:#555;}
+body.view-home #mobile-tabs .nav-tab{color:rgba(255,255,255,0.5);}
+body.view-home #mobile-tabs .nav-tab.active{color:#fff;}
+
+.seo-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;}
 
 @media(max-width:768px){
   nav{padding:0 20px;height:48px;justify-content:center;}
-  #logo-svg{height:24px;margin:0 auto !important;display:block;}
   .nav-tabs{display:none !important;}
-  .view{top:0;}
-  #view-projects{padding-top:48px;}
-  .masonry-grid{columns:2;column-gap:0;}
-  #view-about{padding:64px 20px 80px;}
+  #logo-svg{height:22px;margin:0 auto;display:block;}
+  .project-list{padding:0 16px 100px;}
+  .project-list-head,.project-row{grid-template-columns:1fr 80px;}
+  .project-list-head span:nth-child(2),.project-list-head span:nth-child(4),
+  .pr-type,.pr-office{display:none;}
+  #hover-preview{display:none;}
+  .detail-info{grid-template-columns:1fr;padding:32px 20px 80px;}
+  .about-inner{padding:24px 20px 80px;}
   .about-grid{grid-template-columns:1fr;}
   .about-label,.about-content{border-top:none;padding-top:0;}
   .about-label{padding-bottom:4px;}
-}
-@media(max-width:400px){
-  .nav-tab{font-size:10px;padding:3px 8px;}
-  #logo-svg{height:18px;}
+  .back-btn{padding:12px 20px;}
 }
 </style>
 </head>
 <body class="view-home">
 
 <nav>
-  <svg id="logo-svg" viewBox="0 0 360 28" xmlns="http://www.w3.org/2000/svg" overflow="visible" style="display:block;height:30px;width:auto;">
+  <svg id="logo-svg" viewBox="0 0 380 28" xmlns="http://www.w3.org/2000/svg" overflow="visible">
     <defs>
       <filter id="logo-trail" x="-60%" y="-50%" width="220%" height="200%">
         <feGaussianBlur stdDeviation="20 0"/>
       </filter>
     </defs>
-    <text x="0" y="22" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif" font-size="16" font-weight="300" letter-spacing="1.5" fill="rgba(29,29,31,0.35)" filter="url(#logo-trail)">Gate Visual Studio</text>
-    <text x="0" y="22" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif" font-size="16" font-weight="300" letter-spacing="1.5" fill="#1d1d1f">Gate Visual Studio</text>
+    <text id="logo-text-blur" x="0" y="21" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif" font-size="16" font-weight="300" letter-spacing="2" filter="url(#logo-trail)">GATE VISUAL STUDIO</text>
+    <text id="logo-text-sharp" x="0" y="21" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif" font-size="16" font-weight="300" letter-spacing="2">GATE VISUAL STUDIO</text>
   </svg>
   <div class="nav-tabs">
     <button class="nav-tab" data-view="projects">Projects</button>
@@ -201,51 +235,65 @@ body.view-home #mobile-tabs .nav-tab.active{color:#000;}
   </div>
 </nav>
 
-<!-- GRAIN -->
 <div id="grain"></div>
 
-<!-- PROJECTS: fullscreen hero -->
+<!-- HOME -->
 <div id="view-home" class="view active">
-  <img class="hero-img" src="./images/27.jpeg" alt="Gate Visual Studio — GO OFF THE WALL" onerror="this.style.display='none';this.parentElement.style.background='#f5f5f5'">
+  <img class="hero-img" src="./images/27.jpeg" alt="GATE VISUAL STUDIO">
 </div>
 
-<!-- INDEX: masonry grid -->
+<!-- PROJECTS LIST -->
 <div id="view-projects" class="view">
-  <div class="masonry-grid" id="masonryGrid"></div>
+  <div class="project-list" id="projectList">
+    <div class="project-list-head">
+      <span>Project</span>
+      <span>Type</span>
+      <span>Year</span>
+      <span>Office</span>
+    </div>
+    <div id="projectRows"></div>
+  </div>
+</div>
+<div id="hover-preview"><img id="hoverImg" src="" alt=""></div>
+
+<!-- PROJECT DETAIL -->
+<div id="view-detail" class="view">
+  <button class="back-btn" id="backBtn">← Projects</button>
+  <div class="detail-images" id="detailImages"></div>
+  <div class="detail-info" id="detailInfo"></div>
 </div>
 
 <!-- ABOUT -->
 <div id="view-about" class="view">
-  <div class="about-grid">
-    <div class="about-label first">About</div>
-    <div class="about-content first">
-      <p>We are an architectural visualization practice operating at the intersection of rendering and image-making, web design, and design consulting. Informed by professional experience in Zürich, Munich, and Aachen, we develop the visual language of architecture and space.</p>
-      <p style="margin-top:14px;">Gate Visual Studio was founded by Kian Matine, based between Zürich and Paris — with experience across architectural competition, visualization, scenography, and web design, and a drive toward new forms of spatial and digital expression.</p>
-    </div>
-    <div class="about-label">Services</div>
-    <div class="about-content">
-      <p>Architectural Visualization &amp; Image-Making<br>Web Design &amp; Digital Presence<br>Design Consulting</p>
-    </div>
-    <div class="about-label">Contact</div>
-    <div class="about-content">
-      <div class="contact-links">
-        <a href="mailto:info@gatevisuals.xyz" class="contact-btn">Mail</a>
-        <a href="https://instagram.com/gatevisuals" target="_blank" rel="noopener" class="contact-btn">Instagram</a>
-        <a href="mailto:info@gatevisuals.xyz?subject=Portfolio Request" class="contact-btn">Request Portfolio</a>
+  <div class="about-inner">
+    <div class="about-grid">
+      <div class="about-label first">About</div>
+      <div class="about-content first">
+        <p>We are an architectural visualization practice operating at the intersection of rendering and image-making, web design, and design consulting. Informed by professional experience in Zürich, Munich, and Aachen, we develop the visual language of architecture and space.</p>
+        <p style="margin-top:12px;">GATE VISUAL STUDIO was founded by Kian Matine, based between Zürich and Paris — with experience across architectural competition, visualization, scenography, and web design, and a drive toward new forms of spatial and digital expression.</p>
       </div>
-    </div>
-    <div class="about-label">Copyright</div>
-    <div class="about-content">
-      <p class="about-legal">
-        &copy; <span id="copy-year"></span> Gate Visual Studio. All rights reserved.<br><br>
-        All images, renderings, and visual content displayed on this website are the exclusive property of Gate Visual Studio or their respective clients and collaborating offices. Reproduction, distribution, or use of any content without prior written permission is strictly prohibited.<br><br>
-        Gate Visual Studio is a registered trade name. VAT not applicable under §19 UStG (Kleinunternehmerregelung).<br><br>
-        <strong>Responsible for content:</strong> Gate Visual Studio, Paris 75018 / Zürich<br>
-        <a href="mailto:info@gatevisuals.xyz">info@gatevisuals.xyz</a><br><br>
-        <strong>Disclaimer:</strong> Despite careful editorial control, we assume no liability for the content of external links. The operators of linked pages are solely responsible for their content.<br><br>
-        <strong>Privacy:</strong> This website does not use cookies, tracking scripts, or analytics tools. No personal data is collected or stored.<br><br>
-        Website by Gate Visual Studio.
-      </p>
+      <div class="about-label">Services</div>
+      <div class="about-content">
+        <p>Architectural Visualization &amp; Image-Making<br>Web Design &amp; Digital Presence<br>Design Consulting</p>
+      </div>
+      <div class="about-label">Contact</div>
+      <div class="about-content">
+        <div class="contact-links">
+          <a href="mailto:info@gatevisuals.xyz" class="contact-btn">Mail</a>
+          <a href="https://instagram.com/gatevisuals" target="_blank" rel="noopener" class="contact-btn">Instagram</a>
+          <a href="mailto:info@gatevisuals.xyz?subject=Portfolio Request" class="contact-btn">Request Portfolio</a>
+        </div>
+      </div>
+      <div class="about-label">Copyright</div>
+      <div class="about-content">
+        <p class="about-legal">
+          &copy; <span id="copy-year"></span> Gate Visual Studio. All rights reserved.<br><br>
+          All images, renderings, and visual content are the exclusive property of Gate Visual Studio or their respective clients. Reproduction without prior written permission is prohibited.<br><br>
+          Gate Visual Studio is a registered trade name. VAT not applicable under §19 UStG.<br><br>
+          <strong>Privacy:</strong> This website does not use cookies, tracking scripts, or analytics tools. No personal data is collected or stored.<br><br>
+          Website by Gate Visual Studio.
+        </p>
+      </div>
     </div>
   </div>
 </div>
@@ -255,25 +303,21 @@ body.view-home #mobile-tabs .nav-tab.active{color:#000;}
   <button id="login-submit">Enter</button>
   <span id="login-error">Incorrect password</span>
 </div>
-<div id="edit-badge">✎ Edit mode — click here to save</div>
-
+<div id="edit-badge">✎ Edit mode — save</div>
 <div id="mobile-tabs">
   <button class="nav-tab" data-view="projects">Projects</button>
   <button class="nav-tab" data-view="about">About</button>
 </div>
-
 <div id="page-fade"></div>
-
-<div class="seo-only" aria-hidden="true">
-  <h1>Gate Visual Studio</h1>
-  <p>Gate Visual Studio is an architectural visualization practice based in Zürich and Paris.</p>
-</div>
+<div class="seo-only"><h1>GATE VISUAL STUDIO</h1><p>Architectural visualization practice based in Zürich and Paris.</p></div>
 
 <script>
 document.getElementById('copy-year').textContent = new Date().getFullYear();
 var EDIT_PASSWORD = 'gate2025';
 
-var IMAGES=[
+// ── PROJECTS DATA ──
+// Group by project name: each unique project = one row, images = detail view
+var IMAGES_DEFAULT=[
   {src:"./images/01.jpeg",project:"Wohnen auf der Quartiersinsel Bremen",year:"2025",office:"Studio Corso Architekten, München",type:"Competition"},
   {src:"./images/02.jpeg",project:"Interior Studies, Housing Refurbishment, Bodensee",year:"2025",office:"Office Bau Bau, Zürich",type:"Refurbishment"},
   {src:"./images/03.jpeg",project:"Interior Studies, Housing Refurbishment, Bodensee",year:"2025",office:"Office Bau Bau, Zürich",type:"Refurbishment"},
@@ -302,124 +346,149 @@ var IMAGES=[
   {src:"./images/27.jpeg",project:"GO OFF THE WALL",year:"2026",office:"Vans, Highsnobiety, Zalando — Nostan Productions",type:"Renders"}
 ];
 
-function loadImages(){
-  try{var s=localStorage.getItem('gvs_images');if(s)return JSON.parse(s);}catch(e){}
-  return IMAGES.map(function(im){return Object.assign({},im);});
-}
+function loadImages(){try{var s=localStorage.getItem('gvs_images');if(s)return JSON.parse(s);}catch(e){}return IMAGES_DEFAULT.map(function(im){return Object.assign({},im);});}
 function saveImages(){try{localStorage.setItem('gvs_images',JSON.stringify(IMAGES));}catch(e){}}
-IMAGES=loadImages();
+var IMAGES=loadImages();
 
-// ── MASONRY GRID ──
-var grid=document.getElementById('masonryGrid');
-function buildGrid(){
-  grid.innerHTML='';
-  IMAGES.forEach(function(im,i){
-    var cell=document.createElement('div');cell.className='masonry-cell';cell.dataset.idx=i;
-    var img=document.createElement('img');img.src=im.src;img.alt=im.project;img.loading='lazy';
-    var meta=document.createElement('div');meta.className='masonry-meta';
-    var title=document.createElement('div');title.className='masonry-title';title.textContent=im.project;
-    var sub=document.createElement('div');sub.className='masonry-sub';
-    sub.textContent=im.year+(im.office?' — '+im.office:'')+(im.type?' · '+im.type:'');
-    meta.appendChild(title);meta.appendChild(sub);
-    cell.appendChild(img);cell.appendChild(meta);
-    cell.addEventListener('click',function(){
-      if(document.body.classList.contains('edit-mode'))return;
+// Derive unique projects
+function getProjects(){
+  var seen={},list=[];
+  IMAGES.forEach(function(im){
+    if(!seen[im.project]){
+      seen[im.project]=true;
+      list.push({
+        project:im.project,year:im.year,office:im.office,type:im.type,
+        thumb:im.src,
+        images:IMAGES.filter(function(x){return x.project===im.project;})
+      });
+    }
+  });
+  return list;
+}
+
+// ── BUILD PROJECT LIST ──
+var projectRows=document.getElementById('projectRows');
+var hoverPreview=document.getElementById('hover-preview');
+var hoverImg=document.getElementById('hoverImg');
+
+function buildProjectList(){
+  projectRows.innerHTML='';
+  getProjects().forEach(function(p){
+    var row=document.createElement('div');row.className='project-row';
+    var t=document.createElement('div');t.className='pr-title';t.textContent=p.project;
+    var ty=document.createElement('div');ty.className='pr-type';ty.textContent=p.type||'—';
+    var y=document.createElement('div');y.className='pr-year';y.textContent=p.year;
+    var o=document.createElement('div');o.className='pr-office';o.textContent=p.office||'—';
+    row.appendChild(t);row.appendChild(ty);row.appendChild(y);row.appendChild(o);
+    row.addEventListener('mouseenter',function(e){
+      hoverImg.src=p.thumb;hoverPreview.style.opacity='1';positionHover(e);
     });
-    grid.appendChild(cell);
+    row.addEventListener('mousemove',positionHover);
+    row.addEventListener('mouseleave',function(){hoverPreview.style.opacity='0';});
+    row.addEventListener('click',function(){openDetail(p);});
+    projectRows.appendChild(row);
   });
 }
-buildGrid();
 
-// ── LOGIN & EDIT ──
-var editMode=false;
-var loginOverlay=document.getElementById('login-overlay');
-var editBadge=document.getElementById('edit-badge');
-var loginInput=document.getElementById('login-input');
-var loginError=document.getElementById('login-error');
-var logoClickCount=0,logoTimer=null;
-document.getElementById('logo-svg').addEventListener('click',function(){
-  logoClickCount++;clearTimeout(logoTimer);
-  logoTimer=setTimeout(function(){
-    if(logoClickCount===1) goHome();
-    logoClickCount=0;
-  },300);
-  if(logoClickCount>=3){clearTimeout(logoTimer);logoClickCount=0;if(!editMode)openLogin();else exitEditMode();}
+function positionHover(e){
+  var y=e.clientY-160;
+  if(y+320>window.innerHeight)y=window.innerHeight-340;
+  if(y<60)y=60;
+  hoverPreview.style.top=y+'px';
+}
+
+// ── PROJECT DETAIL ──
+function openDetail(p){
+  var di=document.getElementById('detailImages');
+  var dinfo=document.getElementById('detailInfo');
+  di.innerHTML='';
+  p.images.forEach(function(im){
+    var wrap=document.createElement('div');wrap.className='detail-img-wrap';
+    var img=document.createElement('img');img.src=im.src;img.alt=im.project;img.loading='lazy';
+    wrap.appendChild(img);di.appendChild(wrap);
+  });
+  dinfo.innerHTML='';
+  var fields=[
+    {label:'Project',value:p.project},
+    {label:'Year',value:p.year},
+    {label:'Type',value:p.type||'—'},
+    {label:'Office',value:p.office||'—'}
+  ];
+  fields.forEach(function(f,i){
+    var lbl=document.createElement('div');lbl.className='detail-label'+(i===0?' first':'');lbl.textContent=f.label;
+    var val=document.createElement('div');val.className='detail-value'+(i===0?' first':'');val.textContent=f.value;
+    dinfo.appendChild(lbl);dinfo.appendChild(val);
+  });
+  document.getElementById('view-detail').scrollTop=0;
+  switchView('detail',false);
+}
+
+document.getElementById('backBtn').addEventListener('click',function(){
+  switchView('projects',false);
 });
-function openLogin(){loginOverlay.classList.add('show');loginInput.value='';loginError.style.display='none';setTimeout(function(){loginInput.focus();},100);}
-function closeLogin(){loginOverlay.classList.remove('show');}
-document.getElementById('login-submit').addEventListener('click',checkPassword);
-loginInput.addEventListener('keydown',function(e){if(e.key==='Enter')checkPassword();});
-loginOverlay.addEventListener('click',function(e){if(e.target===loginOverlay)closeLogin();});
-function checkPassword(){
-  if(loginInput.value===EDIT_PASSWORD){closeLogin();enterEditMode();}
-  else{loginError.style.display='block';loginInput.value='';loginInput.focus();}
-}
-function enterEditMode(){
-  editMode=true;document.body.classList.add('edit-mode');editBadge.classList.add('show');
-  grid.querySelectorAll('.masonry-title,.masonry-sub').forEach(function(el){
-    el.contentEditable='true';
-    el.addEventListener('blur',collectEdits);
-  });
-}
-function exitEditMode(){
-  editMode=false;document.body.classList.remove('edit-mode');editBadge.classList.remove('show');
-  grid.querySelectorAll('.masonry-title,.masonry-sub').forEach(function(el){el.contentEditable='false';});
-  saveImages();
-}
-function collectEdits(){
-  grid.querySelectorAll('.masonry-cell').forEach(function(cell){
-    var i=parseInt(cell.dataset.idx);if(isNaN(i))return;
-    var t=cell.querySelector('.masonry-title');
-    var s=cell.querySelector('.masonry-sub');
-    if(t)IMAGES[i].project=t.textContent.trim();
-  });
-}
-editBadge.addEventListener('click',function(){if(editMode)exitEditMode();});
 
 // ── VIEW SWITCHING ──
-function goHome(){
-  var fade=document.getElementById('page-fade');
-  fade.style.transition='none';fade.style.background='#000';fade.style.opacity='1';
-  requestAnimationFrame(function(){requestAnimationFrame(function(){
-    document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active');});
-    document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active');});
-    document.getElementById('view-home').classList.add('active');
-    document.body.className=document.body.className.replace(/\bview-\w+/g,'').trim();
-    document.body.classList.add('view-home');
-    requestAnimationFrame(function(){fade.style.transition='opacity .35s ease';fade.style.opacity='0';});
-  });});
-}
-function switchView(name){
-  var fade=document.getElementById('page-fade');
-  var destColor=name==='projects'?'transparent':'#f5f5f5';
-  fade.style.transition='none';
-  fade.style.background=name==='home'?'#000':'#f5f5f5';
-  fade.style.opacity='1';
-  requestAnimationFrame(function(){requestAnimationFrame(function(){
+function switchView(name,fade){
+  if(fade===undefined)fade=true;
+  var f=document.getElementById('page-fade');
+  function doSwitch(){
     document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active');});
     document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active');});
     document.getElementById('view-'+name).classList.add('active');
     document.querySelectorAll('[data-view="'+name+'"]').forEach(function(t){t.classList.add('active');});
     document.body.className=document.body.className.replace(/\bview-\w+/g,'').trim();
     document.body.classList.add('view-'+name);
-    requestAnimationFrame(function(){
-      fade.style.transition='opacity .35s ease';
-      fade.style.opacity='0';
-    });
-  });});
+    hoverPreview.style.opacity='0';
+  }
+  if(fade){
+    f.style.transition='none';f.style.background='#f5f5f5';f.style.opacity='1';
+    requestAnimationFrame(function(){requestAnimationFrame(function(){
+      doSwitch();
+      requestAnimationFrame(function(){f.style.transition='opacity .3s ease';f.style.opacity='0';});
+    });});
+  } else {
+    doSwitch();
+  }
 }
+
 document.querySelectorAll('.nav-tab').forEach(function(tab){
   tab.addEventListener('click',function(){switchView(tab.dataset.view);});
 });
 
-// mobile tabs
+// logo = go home
+var logoClicks=0,logoTimer=null;
+document.getElementById('logo-svg').addEventListener('click',function(){
+  logoClicks++;clearTimeout(logoTimer);
+  logoTimer=setTimeout(function(){
+    if(logoClicks===1)switchView('home');
+    logoClicks=0;
+  },300);
+  if(logoClicks>=3){clearTimeout(logoTimer);logoClicks=0;if(!editMode)openLogin();else exitEditMode();}
+});
+
+// ── LOGIN/EDIT ──
+var editMode=false;
+function openLogin(){var o=document.getElementById('login-overlay');o.classList.add('show');document.getElementById('login-input').value='';document.getElementById('login-error').style.display='none';setTimeout(function(){document.getElementById('login-input').focus();},100);}
+function closeLogin(){document.getElementById('login-overlay').classList.remove('show');}
+document.getElementById('login-submit').addEventListener('click',checkPw);
+document.getElementById('login-input').addEventListener('keydown',function(e){if(e.key==='Enter')checkPw();});
+document.getElementById('login-overlay').addEventListener('click',function(e){if(e.target===this)closeLogin();});
+function checkPw(){
+  if(document.getElementById('login-input').value===EDIT_PASSWORD){closeLogin();enterEdit();}
+  else{document.getElementById('login-error').style.display='block';document.getElementById('login-input').value='';}
+}
+function enterEdit(){editMode=true;document.getElementById('edit-badge').classList.add('show');}
+function exitEditMode(){editMode=false;document.getElementById('edit-badge').classList.remove('show');saveImages();}
+document.getElementById('edit-badge').addEventListener('click',function(){if(editMode)exitEditMode();});
+
+// ── MOBILE TABS ──
 (function(){
   var mt=document.getElementById('mobile-tabs');
   function check(){mt.style.display=window.innerWidth<=768?'flex':'none';}
   check();window.addEventListener('resize',check);
 })();
 
-document.body.classList.add('view-home');
+buildProjectList();
 </script>
 </body>
 </html>
