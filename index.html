@@ -142,7 +142,7 @@ body.view-home .nav-tab.active{color:#fff;}
   nav{padding:0 20px;height:48px;justify-content:center;}
   .nav-tabs{display:none !important;}
   #logo-svg{height:22px;margin:0 auto;display:block;}
-  .hero-img{width:90%;}
+  .hero-img{width:100%;}
   .project-list{padding:0 16px 100px 16px;}
   .project-list-head,.project-row{grid-template-columns:1fr 80px;}
   .project-list-head span:nth-child(2),.project-list-head span:nth-child(4),
@@ -262,7 +262,6 @@ var IMAGES_DEFAULT=[
   {src:"./images/11.jpeg",project:"Rammed Earth Construction",year:"2025",office:"private",type:"Study"},
   {src:"./images/12.jpeg",project:"Rammed Earth Construction",year:"2025",office:"private",type:"Study"},
   {src:"./images/13.jpeg",project:"Rammed Earth Construction",year:"2025",office:"private",type:"Study"},
-  {src:"./images/14.jpeg",project:"Photovoltaic Roof System",year:"2025",office:"private",type:"Study"},
   {src:"./images/15.jpeg",project:"Scenographic Interior Design",year:"2025",office:"private",type:"Study"},
   {src:"./images/16.jpeg",project:"Scenographic Interior Design",year:"2025",office:"private",type:"Study"},
   {src:"./images/17.jpeg",project:"Scenographic Interior Design",year:"2025",office:"private",type:"Study"},
@@ -289,12 +288,10 @@ function getProjects(){
         images:IMAGES.filter(function(x){return x.project===im.project;})});
     }
   });
-  // newest first
   list.sort(function(a,b){return parseInt(b.year)-parseInt(a.year);});
   return list;
 }
 
-// ── BUILD PROJECT LIST ──
 function buildProjectList(){
   var rows=document.getElementById('projectRows');
   rows.innerHTML='';
@@ -310,7 +307,6 @@ function buildProjectList(){
   });
 }
 
-// ── PROJECT DETAIL ──
 function openDetail(p){
   var di=document.getElementById('detailImages');
   var dinfo=document.getElementById('detailInfo');
@@ -331,9 +327,6 @@ function openDetail(p){
   document.getElementById('view-detail').scrollTop=0;
   navigateTo('detail');
 }
-
-// ── HISTORY-BASED NAVIGATION ──
-var currentView='home';
 
 function navigateTo(name,replace){
   try{
@@ -364,18 +357,17 @@ function showView(name){
   });});
 }
 
-// browser back/forward
+var currentView='home';
+
 window.addEventListener('popstate',function(e){
   var name=(e.state&&e.state.view)?e.state.view:'home';
   showView(name);
 });
 
-// tabs
 document.querySelectorAll('.nav-tab').forEach(function(tab){
   tab.addEventListener('click',function(){navigateTo(tab.dataset.view);});
 });
 
-// logo = home
 var logoClicks=0,logoTimer=null;
 document.getElementById('logo-svg').addEventListener('click',function(){
   logoClicks++;clearTimeout(logoTimer);
@@ -386,7 +378,6 @@ document.getElementById('logo-svg').addEventListener('click',function(){
   if(logoClicks>=3){clearTimeout(logoTimer);logoClicks=0;if(!editMode)openLogin();else exitEditMode();}
 });
 
-// ── LOGIN/EDIT ──
 var editMode=false;
 function openLogin(){var o=document.getElementById('login-overlay');o.classList.add('show');document.getElementById('login-input').value='';document.getElementById('login-error').style.display='none';setTimeout(function(){document.getElementById('login-input').focus();},100);}
 function closeLogin(){document.getElementById('login-overlay').classList.remove('show');}
@@ -401,16 +392,13 @@ function enterEdit(){editMode=true;document.getElementById('edit-badge').classLi
 function exitEditMode(){editMode=false;document.getElementById('edit-badge').classList.remove('show');saveImages();}
 document.getElementById('edit-badge').addEventListener('click',function(){if(editMode)exitEditMode();});
 
-// mobile tabs
 (function(){
   var mt=document.getElementById('mobile-tabs');
   function check(){mt.style.display=window.innerWidth<=768?'flex':'none';}
   check();window.addEventListener('resize',check);
 })();
 
-// ── INIT ──
 buildProjectList();
-// set initial history state
 var initView='home';
 var hash=location.hash.replace('#','');
 if(hash&&document.getElementById('view-'+hash))initView=hash;
